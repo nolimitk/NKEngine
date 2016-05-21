@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="NKCore">
+      <UniqueIdentifier>{9ea064ec-44ff-419a-bc22-78f5adefc778}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NKCore\DataStructures">
+      <UniqueIdentifier>{c8a6b9ca-9326-4503-9caf-8278cdc10b83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NKEngine">
+      <UniqueIdentifier>{0dd77820-a398-4b89-a556-209aa52b93cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NKLog">
+      <UniqueIdentifier>{79c0e977-08cf-411a-ab42-03dcf4b18b10}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="NKCore\DataStructures\TNode.h">
+      <Filter>NKCore\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\DataStructures\TQueue.h">
+      <Filter>NKCore\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\DataStructures\TSortedList.h">
+      <Filter>NKCore\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\DataStructures\TIndexedQueue.h">
+      <Filter>NKCore\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\NKDataTypes.h">
+      <Filter>NKCore</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\NKString.h">
+      <Filter>NKCore</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\NKThread.h">
+      <Filter>NKCore</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\Singleton.h">
+      <Filter>NKCore</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\Buffer.h">
+      <Filter>NKCore</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\ByteStream.h">
+      <Filter>NKCore</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\Guard.h">
+      <Filter>NKCore</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\NKClock.h">
+      <Filter>NKCore</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\NKMemory.h">
+      <Filter>NKCore</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore.h">
+      <Filter>NKCore</Filter>
+    </ClInclude>
+    <ClInclude Include="NKEngine.h">
+      <Filter>NKEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\DataStructures\TQueueSafe.h">
+      <Filter>NKCore\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\UniqueID.h">
+      <Filter>NKCore</Filter>
+    </ClInclude>
+    <ClInclude Include="NKLog\LogBuilder.h">
+      <Filter>NKLog</Filter>
+    </ClInclude>
+    <ClInclude Include="NKLog\LogCategory.h">
+      <Filter>NKLog</Filter>
+    </ClInclude>
+    <ClInclude Include="NKLog\LogDevice.h">
+      <Filter>NKLog</Filter>
+    </ClInclude>
+    <ClInclude Include="NKLog\LogDeviceDetails.h">
+      <Filter>NKLog</Filter>
+    </ClInclude>
+    <ClInclude Include="NKLog\LogLayout.h">
+      <Filter>NKLog</Filter>
+    </ClInclude>
+    <ClInclude Include="NKLog\NKLogger.h">
+      <Filter>NKLog</Filter>
+    </ClInclude>
+    <ClInclude Include="NKLog\AsyncLog.h">
+      <Filter>NKLog</Filter>
+    </ClInclude>
+    <ClInclude Include="NKLog\Log.h">
+      <Filter>NKLog</Filter>
+    </ClInclude>
+    <ClInclude Include="NKLog.h">
+      <Filter>NKLog</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="NKCore\NKString.cpp">
+      <Filter>NKCore</Filter>
+    </ClCompile>
+    <ClCompile Include="NKCore\NKThread.cpp">
+      <Filter>NKCore</Filter>
+    </ClCompile>
+    <ClCompile Include="NKCore\ByteStream.cpp">
+      <Filter>NKCore</Filter>
+    </ClCompile>
+    <ClCompile Include="NKCore\Guard.cpp">
+      <Filter>NKCore</Filter>
+    </ClCompile>
+    <ClCompile Include="NKCore\NKClock.cpp">
+      <Filter>NKCore</Filter>
+    </ClCompile>
+    <ClCompile Include="NKCore\NKMemory.cpp">
+      <Filter>NKCore</Filter>
+    </ClCompile>
+    <ClCompile Include="NKCore\UniqueID.cpp">
+      <Filter>NKCore</Filter>
+    </ClCompile>
+    <ClCompile Include="NKLog\LogDevice.cpp">
+      <Filter>NKLog</Filter>
+    </ClCompile>
+    <ClCompile Include="NKLog\LogDeviceDetails.cpp">
+      <Filter>NKLog</Filter>
+    </ClCompile>
+    <ClCompile Include="NKLog\NKLogger.cpp">
+      <Filter>NKLog</Filter>
+    </ClCompile>
+    <ClCompile Include="NKLog\AsyncLog.cpp">
+      <Filter>NKLog</Filter>
+    </ClCompile>
+    <ClCompile Include="NKLog\Log.cpp">
+      <Filter>NKLog</Filter>
+    </ClCompile>
+    <ClCompile Include="NKLog\LogBuilder.cpp">
+      <Filter>NKLog</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

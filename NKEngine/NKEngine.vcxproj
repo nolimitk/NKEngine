@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1AB835C8-91F8-4802-8356-821660B97EFA}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>NKEngine</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\propertysheet\NKBasePropertySheet.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\propertysheet\NKBasePropertySheet.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>$(ProjectName)_Debug</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ProgramDataBaseFileName>$(IntDir)$(ProjectName)_Debug.pdb</ProgramDataBaseFileName>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="NKCore.h" />
+    <ClInclude Include="NKCore\Buffer.h" />
+    <ClInclude Include="NKCore\ByteStream.h" />
+    <ClInclude Include="NKCore\DataStructures\TIndexedQueue.h" />
+    <ClInclude Include="NKCore\DataStructures\TNode.h" />
+    <ClInclude Include="NKCore\DataStructures\TQueue.h" />
+    <ClInclude Include="NKCore\DataStructures\TQueueSafe.h" />
+    <ClInclude Include="NKCore\DataStructures\TSortedList.h" />
+    <ClInclude Include="NKCore\Guard.h" />
+    <ClInclude Include="NKCore\NKClock.h" />
+    <ClInclude Include="NKCore\NKDataTypes.h" />
+    <ClInclude Include="NKCore\NKMemory.h" />
+    <ClInclude Include="NKCore\NKString.h" />
+    <ClInclude Include="NKCore\NKThread.h" />
+    <ClInclude Include="NKCore\Singleton.h" />
+    <ClInclude Include="NKCore\UniqueID.h" />
+    <ClInclude Include="NKEngine.h" />
+    <ClInclude Include="NKLog.h" />
+    <ClInclude Include="NKLog\AsyncLog.h" />
+    <ClInclude Include="NKLog\Log.h" />
+    <ClInclude Include="NKLog\LogBuilder.h" />
+    <ClInclude Include="NKLog\LogCategory.h" />
+    <ClInclude Include="NKLog\LogDevice.h" />
+    <ClInclude Include="NKLog\LogDeviceDetails.h" />
+    <ClInclude Include="NKLog\LogLayout.h" />
+    <ClInclude Include="NKLog\NKLogger.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="NKCore\ByteStream.cpp" />
+    <ClCompile Include="NKCore\Guard.cpp" />
+    <ClCompile Include="NKCore\NKClock.cpp" />
+    <ClCompile Include="NKCore\NKMemory.cpp" />
+    <ClCompile Include="NKCore\NKString.cpp" />
+    <ClCompile Include="NKCore\NKThread.cpp" />
+    <ClCompile Include="NKCore\UniqueID.cpp" />
+    <ClCompile Include="NKLog\AsyncLog.cpp" />
+    <ClCompile Include="NKLog\Log.cpp" />
+    <ClCompile Include="NKLog\LogBuilder.cpp" />
+    <ClCompile Include="NKLog\LogDevice.cpp" />
+    <ClCompile Include="NKLog\LogDeviceDetails.cpp" />
+    <ClCompile Include="NKLog\NKLogger.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
