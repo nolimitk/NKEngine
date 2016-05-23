@@ -79,6 +79,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CrashReport.h" />
     <ClInclude Include="NKCore.h" />
     <ClInclude Include="NKCore\Buffer.h" />
     <ClInclude Include="NKCore\ByteStream.h" />
@@ -96,6 +97,7 @@
     <ClInclude Include="NKCore\Singleton.h" />
     <ClInclude Include="NKCore\UniqueID.h" />
     <ClInclude Include="NKEngine.h" />
+    <ClInclude Include="NKEngineLog.h" />
     <ClInclude Include="NKLog.h" />
     <ClInclude Include="NKLog\AsyncLog.h" />
     <ClInclude Include="NKLog\Log.h" />
@@ -107,6 +109,7 @@
     <ClInclude Include="NKLog\NKLogger.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CrashReport.cpp" />
     <ClCompile Include="NKCore\ByteStream.cpp" />
     <ClCompile Include="NKCore\Guard.cpp" />
     <ClCompile Include="NKCore\NKClock.cpp" />
@@ -114,6 +117,7 @@
     <ClCompile Include="NKCore\NKString.cpp" />
     <ClCompile Include="NKCore\NKThread.cpp" />
     <ClCompile Include="NKCore\UniqueID.cpp" />
+    <ClCompile Include="NKEngineLog.cpp" />
     <ClCompile Include="NKLog\AsyncLog.cpp" />
     <ClCompile Include="NKLog\Log.cpp" />
     <ClCompile Include="NKLog\LogBuilder.cpp" />

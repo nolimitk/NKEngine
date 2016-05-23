@@ -93,6 +93,12 @@
     <ClInclude Include="NKLog.h">
       <Filter>NKLog</Filter>
     </ClInclude>
+    <ClInclude Include="NKEngineLog.h">
+      <Filter>NKEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="CrashReport.h">
+      <Filter>NKEngine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NKCore\NKString.cpp">
@@ -133,6 +139,12 @@
     </ClCompile>
     <ClCompile Include="NKLog\LogBuilder.cpp">
       <Filter>NKLog</Filter>
+    </ClCompile>
+    <ClCompile Include="NKEngineLog.cpp">
+      <Filter>NKEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="CrashReport.cpp">
+      <Filter>NKEngine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
