@@ -48,6 +48,8 @@ namespace NKNetwork
 		virtual ~IOCPManager(void);
 
 		friend class WorkerThread;
+		friend class AsyncServerSocket;
+		friend class Connection;
 	};
 }
 

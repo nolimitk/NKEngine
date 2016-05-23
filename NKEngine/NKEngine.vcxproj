@@ -108,10 +108,14 @@
     <ClInclude Include="NKLog\LogLayout.h" />
     <ClInclude Include="NKLog\NKLogger.h" />
     <ClInclude Include="NKNetwork.h" />
+    <ClInclude Include="NKNetwork\AsyncServerSocket.h" />
+    <ClInclude Include="NKNetwork\AsyncSocket.h" />
+    <ClInclude Include="NKNetwork\Connection.h" />
     <ClInclude Include="NKNetwork\Event.h" />
     <ClInclude Include="NKNetwork\EventContext.h" />
     <ClInclude Include="NKNetwork\EventSlot.h" />
     <ClInclude Include="NKNetwork\IOCPManager.h" />
+    <ClInclude Include="NKNetwork\NetworkEvent.h" />
     <ClInclude Include="NKNetwork\Packet.h" />
     <ClInclude Include="NKNetwork\Protocol.h" />
     <ClInclude Include="NKNetwork\WinSockLib.h" />
@@ -133,6 +137,9 @@
     <ClCompile Include="NKLog\LogDevice.cpp" />
     <ClCompile Include="NKLog\LogDeviceDetails.cpp" />
     <ClCompile Include="NKLog\NKLogger.cpp" />
+    <ClCompile Include="NKNetwork\AsyncServerSocket.cpp" />
+    <ClCompile Include="NKNetwork\AsyncSocket.cpp" />
+    <ClCompile Include="NKNetwork\Connection.cpp" />
     <ClCompile Include="NKNetwork\Event.cpp" />
     <ClCompile Include="NKNetwork\EventContext.cpp" />
     <ClCompile Include="NKNetwork\EventSlot.cpp" />

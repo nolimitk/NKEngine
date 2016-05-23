@@ -129,6 +129,18 @@
     <ClInclude Include="NKNetwork\EventSlot.h">
       <Filter>NKNetwork</Filter>
     </ClInclude>
+    <ClInclude Include="NKNetwork\AsyncSocket.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="NKNetwork\Connection.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="NKNetwork\AsyncServerSocket.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="NKNetwork\NetworkEvent.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NKCore\NKString.cpp">
@@ -195,6 +207,15 @@
       <Filter>NKNetwork</Filter>
     </ClCompile>
     <ClCompile Include="NKNetwork\EventSlot.cpp">
+      <Filter>NKNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="NKNetwork\Connection.cpp">
+      <Filter>NKNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="NKNetwork\AsyncServerSocket.cpp">
+      <Filter>NKNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="NKNetwork\AsyncSocket.cpp">
       <Filter>NKNetwork</Filter>
     </ClCompile>
   </ItemGroup>
