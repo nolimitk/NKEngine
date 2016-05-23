@@ -6,6 +6,7 @@
 // byte stream
 
 #include "NKDataTypes.h"
+#include "Buffer.h"
 #include <memory>
 
 namespace NKCore
@@ -29,6 +30,10 @@ namespace NKCore
 		template<typename T>
 		bool write(T value);
 		bool write(byte* value, size_t size);
+
+	protected:
+		inline byte* get(void) const { return _buffer.get()->get(); }
+		inline size_t size(void) const { return _buffer.get()->_size; }
 				
 	protected:
 		std::shared_ptr<Buffer> _buffer;
@@ -47,7 +52,7 @@ namespace NKCore
 			sizeof(T) > _length - _offset ||
 			_buffer == nullptr) return (T)0;
 		T val;
-		val = *(T *)(_buffer.get()->get() + _offset);
+		val = *(T *)(get() + _offset);
 		return val;
 	}
 
@@ -62,9 +67,9 @@ namespace NKCore
 	template<typename T>
 	bool ByteStream::write(T value)
 	{
-		if (_length > _buffer.get()->_size - sizeof(T)) return false;
+		if (_length > size() - sizeof(T)) return false;
 
-		T *pCurrent = (T *)(_buffer.get()->get() + _length);
+		T *pCurrent = (T *)(get() + _length);
 		*pCurrent = value;
 
 		_length += sizeof(T);
@@ -149,8 +154,11 @@ namespace NKCore
 
 	///
 
-	class ReadStream
+	class ReadStream : public ByteStream
 	{
+	private:
+		ByteStream::write;
+
 	public:
 		// @write, when it write directly on buffer, update the length of buffer.
 		bool update(size_t length);
@@ -159,41 +167,14 @@ namespace NKCore
 		bool moveRead(void);
 
 	public:
-		inline size_t getLength(void) const { return _length - _offset; }
-		inline byte* getRemainBuffer(void) const { return _buffer + _length; }
-		inline size_t getRemainSize(void) const { return _size - _length; }
-
+		inline byte* getRemainBuffer(void) const { return get() + _length; }
+		inline size_t getRemainSize(void) const { return size() - _length; }
+		
 	public:
-		template<typename T>
-		T peek(void);
-		bool peek(byte** pTarget, size_t size);
-
-		/*template<typename T>
-		T read(void);*/
-		bool read(byte** pTarget, size_t size);
-
-	protected:
-		byte* _buffer;
-		size_t _size; // size of stream
-		size_t _length; // length of written
-		size_t _offset; // offset of read
-
-	public:
-		ReadStream(const Buffer& buffer);
+		ReadStream(const std::shared_ptr<Buffer>& buffer);
 		virtual ~ReadStream(void);
 	};
-
-	template<typename T>
-	T ReadStream::peek(void)
-	{
-		if (_length < _offset ||
-			sizeof(T) > _length - _offset ||
-			_buffer == nullptr) return (T)0;
-		T val;
-		val = *(T *)(_buffer + _offset);
-		return val;
-	}
-
+	
 	class WriteStream
 	{
 	public:

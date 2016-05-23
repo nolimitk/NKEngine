@@ -30,7 +30,7 @@ namespace NKCore
 		}
 
 		friend class ByteStream;
-		friend class ReadStream;
+		//friend class ReadStream;
 		friend class WriteStream;
 	};
 }

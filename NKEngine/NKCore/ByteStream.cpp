@@ -1,5 +1,4 @@
 #include "ByteStream.h"
-#include "Buffer.h"
 
 using namespace NKCore;
 
@@ -20,7 +19,7 @@ bool ByteStream::peek(byte** pTarget, size_t size)
 		size > _length - _offset ||
 		_buffer == nullptr ||
 		pTarget == nullptr) return false;
-	*pTarget = _buffer.get()->get() + _offset;
+	*pTarget = get() + _offset;
 	return true;
 }
 
@@ -33,11 +32,11 @@ bool ByteStream::read(byte** pTarget, size_t size)
 
 bool ByteStream::write(byte* val, size_t size)
 {
-	if (_length > _buffer.get()->_size - size ||
+	if (_length > ByteStream::size() - size ||
 		_buffer == nullptr ||
 		val == nullptr) return false;
 
-	memcpy_s(_buffer.get()->get() + _length, _buffer.get()->_size - _length, val, size);
+	memcpy_s(get() + _length, ByteStream::size() - _length, val, size);
 	_length += size;
 	return true;
 }
@@ -142,12 +141,8 @@ bool ByteStream::write(byte* val, size_t size)
 //	return write( pSource->getBuffer(), pSource->getLength() );
 //}
 
-ReadStream::ReadStream(const Buffer& buffer)
-	:_buffer(buffer.get())
-	, _size(buffer._size)
-	, _length(0)
-	, _offset(0)
-	//	:ByteStream(buffer)
+ReadStream::ReadStream(const std::shared_ptr<Buffer>& buffer)
+	:ByteStream(buffer)
 {
 }
 
@@ -157,7 +152,7 @@ ReadStream::~ReadStream(void)
 
 bool ReadStream::update(size_t length)
 {
-	if (_length > _size - length) return false;
+	if (_length > size() - length) return false;
 	_length += length;
 	return true;
 }
@@ -168,28 +163,11 @@ bool ReadStream::moveRead(void)
 	if (_offset == 0) return true;
 	if (_length > _offset)
 	{
-		memmove(_buffer, _buffer + _offset, _length - _offset);
+		memmove(get(), get() + _offset, _length - _offset);
 	}
 	_length -= _offset;
 	_offset = 0;
 	return true;
-}
-
-bool ReadStream::peek(byte** pTarget, size_t size)
-{
-	if (_length < _offset ||
-		size > _length - _offset ||
-		_buffer == nullptr ||
-		pTarget == nullptr) return false;
-	*pTarget = _buffer + _offset;
-	return true;
-}
-
-bool ReadStream::read(byte** pTarget, size_t size)
-{
-	bool ret = peek(pTarget, size);
-	if (ret == true) _offset += size;
-	return ret;
 }
 
 
