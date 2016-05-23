@@ -28,7 +28,7 @@ NKLogger::NKLogger(const NKWString& name)
 	console_log->registerCategory(_category._id);
 	daily_file_log->registerCategory(_category._id);
 
-	for (int i = 0; i < sizeof(_layout); ++i)
+	for (int i = 0; i < _countof(_layout); ++i)
 	{
 		console_log->registerLayout(_layout[i]._id);
 		daily_file_log->registerLayout(_layout[i]._id);
