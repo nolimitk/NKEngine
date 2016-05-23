@@ -51,7 +51,7 @@ namespace NKUnitTest
 		}
 	};
 
-	NKUnitTestFramework* getInstance(void);
+	NKUnitTestFramework& getInstance(void);
 
 	void thread_test(const uint32_t count, std::function<void(void)> func);
 	bool register_test(NKUnitTestFramework::UNITTEST_FUNC func, bool benchmark = false);

@@ -18,15 +18,15 @@ bool NKUnitTest::NKUnitTestFramework::run(bool benchmark_execute)
 
 	NKUNITTESTLOG_INFO(L"nkunittest has ended");
 
-	//NKUnittestLogSingleton::destroy();
+	NKUnittestLogSingleton::destroy();
 
 	return true;
 }
 
-NKUnitTest::NKUnitTestFramework* NKUnitTest::getInstance(void)
+NKUnitTest::NKUnitTestFramework& NKUnitTest::getInstance(void)
 {
 	static NKUnitTest::NKUnitTestFramework instance;
-	return &instance;
+	return instance;
 }
 
 void NKUnitTest::thread_test(const uint32_t count, std::function<void(void)> func)
@@ -41,9 +41,10 @@ void NKUnitTest::thread_test(const uint32_t count, std::function<void(void)> fun
 	{
 		t[i].join();
 	}
+	SAFE_DELETE_ARRAY(t);
 }
 
 bool NKUnitTest::register_test(NKUnitTestFramework::UNITTEST_FUNC func, bool benchmark)
 {
-	return getInstance()->push(func, benchmark);
+	return getInstance().push(func, benchmark);
 }

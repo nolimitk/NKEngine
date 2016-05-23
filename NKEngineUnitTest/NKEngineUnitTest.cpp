@@ -5,7 +5,7 @@
 
 int main()
 {
-	NKUnitTest::getInstance()->run(true);
+	NKUnitTest::getInstance().run(true);
     return 0;
 }
 
