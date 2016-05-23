@@ -117,6 +117,18 @@
     <ClInclude Include="NKNetwork\Event.h">
       <Filter>NKNetwork</Filter>
     </ClInclude>
+    <ClInclude Include="NKNetwork\Protocol.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="NKNetwork.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="NKNetwork\Packet.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="NKNetwork\EventSlot.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NKCore\NKString.cpp">
@@ -177,6 +189,12 @@
       <Filter>NKNetwork</Filter>
     </ClCompile>
     <ClCompile Include="NKNetwork\Event.cpp">
+      <Filter>NKNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="NKNetwork\Packet.cpp">
+      <Filter>NKNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="NKNetwork\EventSlot.cpp">
       <Filter>NKNetwork</Filter>
     </ClCompile>
   </ItemGroup>
