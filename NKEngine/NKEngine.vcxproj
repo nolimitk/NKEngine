@@ -107,6 +107,11 @@
     <ClInclude Include="NKLog\LogDeviceDetails.h" />
     <ClInclude Include="NKLog\LogLayout.h" />
     <ClInclude Include="NKLog\NKLogger.h" />
+    <ClInclude Include="NKNetwork\Event.h" />
+    <ClInclude Include="NKNetwork\EventContext.h" />
+    <ClInclude Include="NKNetwork\IOCPManager.h" />
+    <ClInclude Include="NKNetwork\WinSockLib.h" />
+    <ClInclude Include="NKNetwork\WorkerThread.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CrashReport.cpp" />
@@ -124,6 +129,11 @@
     <ClCompile Include="NKLog\LogDevice.cpp" />
     <ClCompile Include="NKLog\LogDeviceDetails.cpp" />
     <ClCompile Include="NKLog\NKLogger.cpp" />
+    <ClCompile Include="NKNetwork\Event.cpp" />
+    <ClCompile Include="NKNetwork\EventContext.cpp" />
+    <ClCompile Include="NKNetwork\IOCPManager.cpp" />
+    <ClCompile Include="NKNetwork\WinSockLib.cpp" />
+    <ClCompile Include="NKNetwork\WorkerThread.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -13,6 +13,9 @@
     <Filter Include="NKLog">
       <UniqueIdentifier>{79c0e977-08cf-411a-ab42-03dcf4b18b10}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NKNetwork">
+      <UniqueIdentifier>{ae191e23-4bae-4d6e-aa95-2fde664f982e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NKCore\DataStructures\TNode.h">
@@ -99,6 +102,21 @@
     <ClInclude Include="CrashReport.h">
       <Filter>NKEngine</Filter>
     </ClInclude>
+    <ClInclude Include="NKNetwork\WinSockLib.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="NKNetwork\IOCPManager.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="NKNetwork\WorkerThread.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="NKNetwork\EventContext.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="NKNetwork\Event.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NKCore\NKString.cpp">
@@ -145,6 +163,21 @@
     </ClCompile>
     <ClCompile Include="CrashReport.cpp">
       <Filter>NKEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="NKNetwork\WinSockLib.cpp">
+      <Filter>NKNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="NKNetwork\IOCPManager.cpp">
+      <Filter>NKNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="NKNetwork\WorkerThread.cpp">
+      <Filter>NKNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="NKNetwork\EventContext.cpp">
+      <Filter>NKNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="NKNetwork\Event.cpp">
+      <Filter>NKNetwork</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
