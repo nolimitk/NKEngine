@@ -7,6 +7,7 @@
 
 #include "../NKCore.h"
 #include "Event.h"
+#include "RecvStream.h"
 
 namespace NKNetwork
 {
@@ -44,7 +45,7 @@ namespace NKNetwork
 	protected:
 		SOCKET _socket;
 		NKWString _address;
-		NKCore::ReadStream _recv_stream;
+		RecvStream _recv_stream;
 
 	public:
 		AsyncSocket(void);

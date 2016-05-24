@@ -1,4 +1,5 @@
 #include "Packet.h"
+#include "RecvStream.h"
 
 using namespace NKNetwork;
 using namespace std;
@@ -82,7 +83,7 @@ Packet::~Packet(void)
 //	return true;
 //}
 
-bool NKNetwork::Packet::read(NKCore::ReadStream & stream)
+bool NKNetwork::Packet::read(RecvStream & stream)
 {
 	if (stream.read((byte**)&_pHeader, sizeof(PROTOCOLHEAD)) == false) return false;
 	if (getDataSize() > 0)

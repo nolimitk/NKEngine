@@ -1,4 +1,5 @@
 #include "EventContext.h"
+#include "RecvStream.h"
 
 using namespace NKNetwork;
 
@@ -37,7 +38,7 @@ WSABUFContext::WSABUFContext(void)
 	memset(&_wsabuf, 0, sizeof(_wsabuf));
 }
 
-NKNetwork::ReceiveContext::ReceiveContext(const NKCore::ReadStream & stream)
+NKNetwork::ReceiveContext::ReceiveContext(const RecvStream & stream)
 {
 	_wsabuf.buf = (CHAR*)stream.getRemainBuffer();
 	_wsabuf.len = (ULONG)stream.getRemainSize();

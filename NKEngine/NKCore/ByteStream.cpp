@@ -141,36 +141,6 @@ bool ByteStream::write(byte* val, size_t size)
 //	return write( pSource->getBuffer(), pSource->getLength() );
 //}
 
-ReadStream::ReadStream(const std::shared_ptr<Buffer>& buffer)
-	:ByteStream(buffer)
-{
-}
-
-ReadStream::~ReadStream(void)
-{
-}
-
-bool ReadStream::update(size_t length)
-{
-	if (_length > size() - length) return false;
-	_length += length;
-	return true;
-}
-
-bool ReadStream::moveRead(void)
-{
-	if (_length < _offset) return false;
-	if (_offset == 0) return true;
-	if (_length > _offset)
-	{
-		memmove(get(), get() + _offset, _length - _offset);
-	}
-	_length -= _offset;
-	_offset = 0;
-	return true;
-}
-
-
 WriteStream::WriteStream(const Buffer& buffer)
 	:_buffer(buffer.get())
 	, _size(buffer._size)

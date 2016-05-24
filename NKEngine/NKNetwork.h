@@ -11,9 +11,10 @@
 #include "NKNetwork/Event.h"
 #include "NKNetwork/EventContext.h"
 #include "NKNetwork/Packet.h"
-//#include "NKNetwork/AsyncSocket.h"
-//#include "NKNetwork/AsyncServerSocket.h"
-//#include "NKNetwork/Connection.h"
+#include "NKNetwork/RecvStream.h"
+#include "NKNetwork/AsyncSocket.h"
+#include "NKNetwork/AsyncServerSocket.h"
+#include "NKNetwork/Connection.h"
 
 #pragma comment(lib, "Mswsock.lib")
 

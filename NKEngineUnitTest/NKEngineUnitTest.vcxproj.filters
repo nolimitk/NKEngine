@@ -50,5 +50,8 @@
     <ClCompile Include="NKUnitTestUtils.cpp">
       <Filter>NKUnitTest</Filter>
     </ClCompile>
+    <ClCompile Include="NKNetworkTest.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

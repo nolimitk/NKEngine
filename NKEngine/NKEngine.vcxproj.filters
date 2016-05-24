@@ -141,6 +141,9 @@
     <ClInclude Include="NKNetwork\NetworkEvent.h">
       <Filter>NKNetwork</Filter>
     </ClInclude>
+    <ClInclude Include="NKNetwork\RecvStream.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NKCore\NKString.cpp">
@@ -217,6 +220,12 @@
     </ClCompile>
     <ClCompile Include="NKNetwork\AsyncSocket.cpp">
       <Filter>NKNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="NKNetwork\RecvStream.cpp">
+      <Filter>NKNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="NKEngine.cpp">
+      <Filter>NKEngine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

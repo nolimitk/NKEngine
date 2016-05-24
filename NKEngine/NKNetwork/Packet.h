@@ -10,6 +10,8 @@
 
 namespace NKNetwork
 {
+	class RecvStream;
+
 	class Packet// : public NKCore::ByteStream
 	{
 		// for send by protobuf
@@ -46,7 +48,7 @@ namespace NKNetwork
 
 		// for receive
 	public:
-		bool read(NKCore::ReadStream &stream);
+		bool read(RecvStream& stream);
 				
 	protected:
 		// @nolimitk 구조체 접근을 위한 interface

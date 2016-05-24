@@ -11,12 +11,19 @@
 
 #include "NKCore.h"
 #include "NKLog.h"
+#include "NKNetwork.h"
 
 #if defined _DEBUG
 #pragma comment(lib, "nkengine_debug.lib")
 #else
 #pragma comment(lib, "nkengine.lib")
 #endif
+
+namespace NKEngine
+{
+	bool StartEngine(void);
+	void ReleaseEngine(void);
+};
 
 #endif // __NKENGINE_HEADER__
 

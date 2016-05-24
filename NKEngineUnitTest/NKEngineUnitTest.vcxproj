@@ -92,6 +92,7 @@
     <ClCompile Include="NKCoreDataStructureTest.cpp" />
     <ClCompile Include="NKCoreTest.cpp" />
     <ClCompile Include="NKEngineUnitTest.cpp" />
+    <ClCompile Include="NKNetworkTest.cpp" />
     <ClCompile Include="NKUnitTest.cpp" />
     <ClCompile Include="NKUnittestLog.cpp" />
     <ClCompile Include="NKUnitTestUtils.cpp" />

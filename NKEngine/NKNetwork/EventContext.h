@@ -11,6 +11,7 @@ namespace NKNetwork
 {
 	class AsyncSocket;
 	class EventObject;
+	class RecvStream;
 
 	enum class EVENTCONTEXTTYPE : int
 	{
@@ -79,7 +80,7 @@ namespace NKNetwork
 	class ReceiveContext : public WSABUFContext
 	{
 	public:
-		ReceiveContext(const NKCore::ReadStream& stream);
+		ReceiveContext(const RecvStream& stream);
 	};
 
 	class SendContext : public WSABUFContext

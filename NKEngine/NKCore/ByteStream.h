@@ -152,29 +152,7 @@ namespace NKCore
 	//	return true;
 	//}
 
-	///
-
-	class ReadStream : public ByteStream
-	{
-	private:
-		ByteStream::write;
-
-	public:
-		// @write, when it write directly on buffer, update the length of buffer.
-		bool update(size_t length);
-
-	public:
-		bool moveRead(void);
-
-	public:
-		inline byte* getRemainBuffer(void) const { return get() + _length; }
-		inline size_t getRemainSize(void) const { return size() - _length; }
-		
-	public:
-		ReadStream(const std::shared_ptr<Buffer>& buffer);
-		virtual ~ReadStream(void);
-	};
-	
+	///	
 	class WriteStream
 	{
 	public:
