@@ -144,6 +144,9 @@
     <ClInclude Include="NKNetwork\RecvStream.h">
       <Filter>NKNetwork</Filter>
     </ClInclude>
+    <ClInclude Include="NKNetwork\SendStream.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NKCore\NKString.cpp">
@@ -226,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="NKEngine.cpp">
       <Filter>NKEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="NKNetwork\SendStream.cpp">
+      <Filter>NKNetwork</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

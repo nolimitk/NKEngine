@@ -8,6 +8,7 @@
 #include "IOCPManager.h"
 #include "EventContext.h"
 #include "Packet.h"
+#include "SendStream.h"
 
 using namespace NKNetwork;
 using namespace std;
@@ -214,7 +215,7 @@ bool AsyncSocket::recv(void)
 //	return true;
 //}
 
-bool AsyncSocket::send(const NKCore::WriteStream& stream)
+bool AsyncSocket::send(const SendStream& stream)
 {
 	//__GUARD__;
 

@@ -119,6 +119,7 @@
     <ClInclude Include="NKNetwork\Packet.h" />
     <ClInclude Include="NKNetwork\Protocol.h" />
     <ClInclude Include="NKNetwork\RecvStream.h" />
+    <ClInclude Include="NKNetwork\SendStream.h" />
     <ClInclude Include="NKNetwork\WinSockLib.h" />
     <ClInclude Include="NKNetwork\WorkerThread.h" />
   </ItemGroup>
@@ -148,6 +149,7 @@
     <ClCompile Include="NKNetwork\IOCPManager.cpp" />
     <ClCompile Include="NKNetwork\Packet.cpp" />
     <ClCompile Include="NKNetwork\RecvStream.cpp" />
+    <ClCompile Include="NKNetwork\SendStream.cpp" />
     <ClCompile Include="NKNetwork\WinSockLib.cpp" />
     <ClCompile Include="NKNetwork\WorkerThread.cpp" />
   </ItemGroup>

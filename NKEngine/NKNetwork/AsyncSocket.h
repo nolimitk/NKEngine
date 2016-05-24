@@ -12,7 +12,7 @@
 namespace NKNetwork
 {
 	class Packet;
-	class WriteStream;
+	class SendStream;
 
 	class AsyncSocket : public EventObject
 	{
@@ -25,7 +25,7 @@ namespace NKNetwork
 		bool close(void);
 		bool recv(void);
 		/*bool send(byte *pSendData, uint16_t len);*/
-		bool send(const NKCore::WriteStream& stream);
+		bool send(const SendStream& stream);
 		bool disconnect(void);
 
 	public:

@@ -6,6 +6,7 @@
 #include "IOCPManager.h"
 #include "NetworkEvent.h"
 #include "Packet.h"
+#include "SendStream.h"
 
 using namespace NKNetwork;
 using namespace std;
@@ -172,7 +173,7 @@ bool Connection::onReceived(const Packet& packet)
 			ackHead._commandid = (uint16_t)(SYSTEM_PROTOCOL::PINGPONG);
 			
 			NKCore::Buffer buffer(BUFFER_LENGTH_8K);
-			NKCore::WriteStream ackPacket(buffer);
+			SendStream ackPacket(make_shared<NKCore::Buffer>(BUFFER_LENGTH_8K));
 			ackPacket.write((byte*)&ackHead, sizeof(ackHead));
 
 			send(ackPacket);
