@@ -79,6 +79,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Configuration.h" />
     <ClInclude Include="CrashReport.h" />
     <ClInclude Include="NKCore.h" />
     <ClInclude Include="NKCore\Buffer.h" />
@@ -124,6 +125,7 @@
     <ClInclude Include="NKNetwork\WorkerThread.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Configuration.cpp" />
     <ClCompile Include="CrashReport.cpp" />
     <ClCompile Include="NKCore\ByteStream.cpp" />
     <ClCompile Include="NKCore\Guard.cpp" />
