@@ -12,6 +12,7 @@
 #include "NKCore.h"
 #include "NKLog.h"
 #include "NKNetwork.h"
+#include "NKUtils.h"
 
 #if defined _DEBUG
 #pragma comment(lib, "nkengine_debug.lib")

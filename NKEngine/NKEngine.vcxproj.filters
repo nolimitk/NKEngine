@@ -156,6 +156,9 @@
     <ClInclude Include="ConsoleCommander.h">
       <Filter>NKEngine</Filter>
     </ClInclude>
+    <ClInclude Include="NKUtils.h">
+      <Filter>NKEngine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NKCore\NKString.cpp">
@@ -249,6 +252,9 @@
       <Filter>NKEngine</Filter>
     </ClCompile>
     <ClCompile Include="ConsoleCommander.cpp">
+      <Filter>NKEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="NKUtils.cpp">
       <Filter>NKEngine</Filter>
     </ClCompile>
   </ItemGroup>
