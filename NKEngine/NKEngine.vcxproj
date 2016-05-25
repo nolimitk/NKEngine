@@ -80,6 +80,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Configuration.h" />
+    <ClInclude Include="ConsoleCommander.h" />
     <ClInclude Include="CrashReport.h" />
     <ClInclude Include="NKCore.h" />
     <ClInclude Include="NKCore\Buffer.h" />
@@ -123,9 +124,11 @@
     <ClInclude Include="NKNetwork\SendStream.h" />
     <ClInclude Include="NKNetwork\WinSockLib.h" />
     <ClInclude Include="NKNetwork\WorkerThread.h" />
+    <ClInclude Include="StringCommander.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Configuration.cpp" />
+    <ClCompile Include="ConsoleCommander.cpp" />
     <ClCompile Include="CrashReport.cpp" />
     <ClCompile Include="NKCore\ByteStream.cpp" />
     <ClCompile Include="NKCore\Guard.cpp" />
@@ -154,6 +157,7 @@
     <ClCompile Include="NKNetwork\SendStream.cpp" />
     <ClCompile Include="NKNetwork\WinSockLib.cpp" />
     <ClCompile Include="NKNetwork\WorkerThread.cpp" />
+    <ClCompile Include="StringCommander.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

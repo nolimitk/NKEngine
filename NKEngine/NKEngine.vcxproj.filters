@@ -150,6 +150,12 @@
     <ClInclude Include="Configuration.h">
       <Filter>NKEngine</Filter>
     </ClInclude>
+    <ClInclude Include="StringCommander.h">
+      <Filter>NKEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleCommander.h">
+      <Filter>NKEngine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NKCore\NKString.cpp">
@@ -237,6 +243,12 @@
       <Filter>NKNetwork</Filter>
     </ClCompile>
     <ClCompile Include="Configuration.cpp">
+      <Filter>NKEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="StringCommander.cpp">
+      <Filter>NKEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleCommander.cpp">
       <Filter>NKEngine</Filter>
     </ClCompile>
   </ItemGroup>
