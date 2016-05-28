@@ -16,6 +16,9 @@
     <Filter Include="NKNetwork">
       <UniqueIdentifier>{ae191e23-4bae-4d6e-aa95-2fde664f982e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NKScheduler">
+      <UniqueIdentifier>{45f1b726-0bac-4811-8f41-7c971ecf281e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NKCore\DataStructures\TNode.h">
@@ -126,9 +129,6 @@
     <ClInclude Include="NKNetwork\Packet.h">
       <Filter>NKNetwork</Filter>
     </ClInclude>
-    <ClInclude Include="NKNetwork\EventSlot.h">
-      <Filter>NKNetwork</Filter>
-    </ClInclude>
     <ClInclude Include="NKNetwork\AsyncSocket.h">
       <Filter>NKNetwork</Filter>
     </ClInclude>
@@ -158,6 +158,12 @@
     </ClInclude>
     <ClInclude Include="NKUtils.h">
       <Filter>NKEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="NKScheduler\EventSlot.h">
+      <Filter>NKScheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="NKScheduler.h">
+      <Filter>NKScheduler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -224,9 +230,6 @@
     <ClCompile Include="NKNetwork\Packet.cpp">
       <Filter>NKNetwork</Filter>
     </ClCompile>
-    <ClCompile Include="NKNetwork\EventSlot.cpp">
-      <Filter>NKNetwork</Filter>
-    </ClCompile>
     <ClCompile Include="NKNetwork\Connection.cpp">
       <Filter>NKNetwork</Filter>
     </ClCompile>
@@ -256,6 +259,9 @@
     </ClCompile>
     <ClCompile Include="NKUtils.cpp">
       <Filter>NKEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="NKScheduler\EventSlot.cpp">
+      <Filter>NKScheduler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -4,12 +4,12 @@
 // 13.09.05
 // event slot
 
-#include "Event.h"
+#include "../NKNetwork.h"
 #include <atomic>
 
-namespace NKNetwork
+namespace NKScheduler
 {
-	class EventSlot : public EventObject
+	class EventSlot : public NKNetwork::EventObject, public NKCore::TNode<EventSlot>
 	{
 	public:
 		void UnRegister(void);
@@ -26,26 +26,21 @@ namespace NKNetwork
 		inline void registerSlot(int slotType, int slotIndex, uint64_t executeIndex) { _slotType = slotType; _slotIndex = slotIndex; _executeSlotIndex = executeIndex; }
 
 	public:
-		inline void SetNext(EventSlot *pNext) { _pNext = pNext; }
-		inline EventSlot *GetNext(void) { return _pNext; }
-		inline void SetPrev(EventSlot *pPrev) { _pPrev = pPrev; }
-		inline EventSlot *GetPrev(void) { return _pPrev; }
 		inline int getSlotType(void) { return _slotType; }
 		inline int getSlotIndex(void) { return _slotIndex; }
 		inline uint64_t getExecuteSlotIndex(void) { return _executeSlotIndex; }
 
 	public:
-		virtual bool onProcess(EventContext& event_context, uint32_t transferred) override;
+		virtual bool onProcess(NKNetwork::EventContext& event_context, uint32_t transferred) override;
 
 	protected:
-		// @transaction reserved에 의해 모두 thread safe하다.
+		/// @transaction reserved에 의해 모두 thread safe하다.
 		std::atomic<bool> _reserved;
-		EventSlot *_pNext;
-		EventSlot *_pPrev;
 		// 1 short, 2 long , 3 instant
 		int _slotType;
 		int _slotIndex;
 		uint64_t _executeSlotIndex;
+		///
 
 	public:
 		EventSlot(void);

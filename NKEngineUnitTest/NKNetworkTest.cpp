@@ -25,7 +25,7 @@ NKTEST(IOCPManager_Test)
 {
 	_ASSERT(NKNetwork::IOCPManager::getInstance()->create() == true);
 
-	class TestEvent : public NKNetwork::EventObject
+	class MockEvent : public NKNetwork::EventObject
 	{
 		virtual bool onProcess(NKNetwork::EventContext& event_context, uint32_t transferred) override
 		{
@@ -33,17 +33,8 @@ NKTEST(IOCPManager_Test)
 			return true;
 		}
 	};
-
-	class TestEvent2 : public NKNetwork::EventObject
-	{
-		virtual bool onProcess(NKNetwork::EventContext& event_context, uint32_t transferred)
-		{
-			NKUNITTESTLOG_INFO(L"%s", __FUNCTIONW__);
-			return true;
-		}
-	};
-
-	shared_ptr<TestEvent> test_event = make_shared<TestEvent>();
+	
+	shared_ptr<MockEvent> test_event = make_shared<MockEvent>();
 
 	_ASSERT(NKNetwork::IOCPManager::getInstance()->postEvent(dynamic_pointer_cast<NKNetwork::EventObject>(test_event), 0) == true);
 

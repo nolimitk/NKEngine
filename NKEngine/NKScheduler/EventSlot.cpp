@@ -1,13 +1,10 @@
 #include "EventSlot.h"
 #include "../NKEngineLog.h"
-#include "EventContext.h"
 
-using namespace NKNetwork;
+using namespace NKScheduler;
 
 EventSlot::EventSlot(void)
-	:_pNext(nullptr)
-	,_pPrev(nullptr)
-	,_slotIndex(-1)
+	:_slotIndex(-1)
 	,_slotType(0)
 	,_executeSlotIndex(0)
 {
@@ -22,8 +19,8 @@ void EventSlot::UnRegister(void)
 	_slotIndex = -1;
 	_executeSlotIndex = 0;
 	
-	SetNext(nullptr);
-	SetPrev(nullptr);
+	setNext(nullptr);
+	setPrev(nullptr);
 }
 
 bool EventSlot::TryReserve(void)
@@ -43,11 +40,11 @@ void EventSlot::ReleaseReserve(void)
 	}
 }
 
-bool EventSlot::onProcess(EventContext& event_context, uint32_t transferred)
+bool EventSlot::onProcess(NKNetwork::EventContext& event_context, uint32_t transferred)
 {
-	_ASSERT(event_context._type == EVENTCONTEXTTYPE::SCHEDULER );
+	_ASSERT(event_context._type == NKNetwork::EVENTCONTEXTTYPE::SCHEDULER );
 
-	SchedulerContext& scheduler_context = static_cast<SchedulerContext&>(event_context);
+	NKNetwork::SchedulerContext& scheduler_context = static_cast<NKNetwork::SchedulerContext&>(event_context);
 	NKENGINELOG_INFO( L"slot executed, %I64u", scheduler_context._param );
 	
 	return true;

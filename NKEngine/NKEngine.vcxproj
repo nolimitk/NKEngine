@@ -115,7 +115,6 @@
     <ClInclude Include="NKNetwork\Connection.h" />
     <ClInclude Include="NKNetwork\Event.h" />
     <ClInclude Include="NKNetwork\EventContext.h" />
-    <ClInclude Include="NKNetwork\EventSlot.h" />
     <ClInclude Include="NKNetwork\IOCPManager.h" />
     <ClInclude Include="NKNetwork\NetworkEvent.h" />
     <ClInclude Include="NKNetwork\Packet.h" />
@@ -124,6 +123,8 @@
     <ClInclude Include="NKNetwork\SendStream.h" />
     <ClInclude Include="NKNetwork\WinSockLib.h" />
     <ClInclude Include="NKNetwork\WorkerThread.h" />
+    <ClInclude Include="NKScheduler.h" />
+    <ClInclude Include="NKScheduler\EventSlot.h" />
     <ClInclude Include="NKUtils.h" />
     <ClInclude Include="StringCommander.h" />
   </ItemGroup>
@@ -151,13 +152,13 @@
     <ClCompile Include="NKNetwork\Connection.cpp" />
     <ClCompile Include="NKNetwork\Event.cpp" />
     <ClCompile Include="NKNetwork\EventContext.cpp" />
-    <ClCompile Include="NKNetwork\EventSlot.cpp" />
     <ClCompile Include="NKNetwork\IOCPManager.cpp" />
     <ClCompile Include="NKNetwork\Packet.cpp" />
     <ClCompile Include="NKNetwork\RecvStream.cpp" />
     <ClCompile Include="NKNetwork\SendStream.cpp" />
     <ClCompile Include="NKNetwork\WinSockLib.cpp" />
     <ClCompile Include="NKNetwork\WorkerThread.cpp" />
+    <ClCompile Include="NKScheduler\EventSlot.cpp" />
     <ClCompile Include="NKUtils.cpp" />
     <ClCompile Include="StringCommander.cpp" />
   </ItemGroup>

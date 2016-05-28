@@ -325,7 +325,7 @@ void indexedQueueTest(int size_index, int node_count)
 		int param = i + 1;
 		MockNode* mock = new MockNode(param);
 		mock->_v = 10 * (param);
-		int index = NKEngine::randomValue(0, size_index);
+		int index = NKEngine::randomValue(0, size_index-1);
 		_ASSERT(indexed_queue.push(index, mock) == true);
 		_counts_index[index]++;
 	}
@@ -386,7 +386,7 @@ void indexedQueueEraseTest(int size_index, int node_count)
 		int param = i + 1;
 		std::unique_ptr<MockNode> mock = std::make_unique<MockNode>(param);
 		mock->_v = 10 * (param);
-		int index = NKEngine::randomValue(0,size_index);
+		int index = NKEngine::randomValue(0,size_index-1);
 		_ASSERT(indexed_queue.push(index, mock.get()) == true);
 		_list_array[index].push_back(std::move(mock));
 	}
