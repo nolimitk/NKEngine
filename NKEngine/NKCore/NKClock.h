@@ -24,6 +24,7 @@ namespace NKCore
 
 	protected:
 		static const int64_t DEFAULT_ACCURACY_VALUE;
+		static const int64_t ERROR_RANGE_VALUE;
 		std::chrono::time_point<std::chrono::high_resolution_clock> _start_tick;
 
 	public:
