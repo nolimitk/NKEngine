@@ -23,7 +23,7 @@ bool NKUnitTest::NKReporter::print(void)
 	{
 		TestResult test_result = _queue.front();
 		_queue.pop();
-		NKUNITTESTLOG_INFO(L"unittest failed, %s, %d, %s", test_result._filename, test_result._line, test_result._msg);
+		NKUNITTESTLOG_ERROR(L"unittest failed, %s, %d, %s", test_result._filename.c_str(), test_result._line, test_result._msg.c_str());
 	}
 
 	return false;
