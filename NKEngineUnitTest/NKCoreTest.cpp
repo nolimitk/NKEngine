@@ -39,12 +39,12 @@ NKTEST(NKClock_Test)
 	clock.sleepAccurate(1000);
 	{
 		int64_t sleep_tick = clock.getElapsedMicroSec();
-		_ASSERT(sleep_tick > 0 && sleep_tick < 2000);
+		_TEST(sleep_tick > 0 && sleep_tick < 2000);
 	}
 	clock.sleepAccurate(20*1000);
 	{
 		int64_t sleep_tick = clock.getElapsedMicroSec();
-		_ASSERT(sleep_tick > 20*1000 && sleep_tick < 22*1000);
+		_TEST(sleep_tick > 20*1000 && sleep_tick < 22*1000);
 	}
 
 	return true;
