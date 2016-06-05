@@ -1,10 +1,8 @@
 #include "NKUnitTest.h"
 #include <thread>
 
-bool NKUnitTest::NKUnitTestFramework::run(bool benchmark_execute)
+bool NKUnitTest::NKUnitQueue::run(bool benchmark_execute)
 {
-	NKUNITTESTLOG_INFO(L"nkunittest has started");
-
 	while (_queue.empty() == false)
 	{
 		TestNode test_node = _queue.front();
@@ -15,6 +13,34 @@ bool NKUnitTest::NKUnitTestFramework::run(bool benchmark_execute)
 		}
 		test_node._func();
 	}
+
+	return true;
+}
+
+bool NKUnitTest::NKReporter::print(void)
+{
+	while (_queue.empty() == false)
+	{
+		TestResult test_result = _queue.front();
+		_queue.pop();
+		NKUNITTESTLOG_INFO(L"unittest failed, %s, %d, %s", test_result._filename, test_result._line, test_result._msg);
+	}
+
+	return false;
+}
+
+bool NKUnitTest::NKUnitTestFramework::run(bool benchmark_execute)
+{
+	NKUNITTESTLOG_INFO(L"nkunittest has started");
+
+	if (_unit_queue.run(benchmark_execute) == false)
+	{
+		NKUNITTESTLOG_INFO(L"nkunittest failed to run");
+		_ASSERT(0);
+		return false;
+	}
+
+	_reporter.print();
 
 	NKUNITTESTLOG_INFO(L"nkunittest has ended");
 
@@ -44,7 +70,12 @@ void NKUnitTest::thread_test(const uint32_t count, std::function<void(void)> fun
 	SAFE_DELETE_ARRAY(t);
 }
 
-bool NKUnitTest::register_test(NKUnitTestFramework::UNITTEST_FUNC func, bool benchmark)
+bool NKUnitTest::register_test(NKUnitQueue::UNITTEST_FUNC func, bool benchmark)
 {
-	return getInstance().push(func, benchmark);
+	return getInstance().pushUnit(func, benchmark);
+}
+
+bool NKUnitTest::register_result(NKWString filename, int line, NKWString msg)
+{
+	return getInstance().pushResult(filename, line, msg);
 }

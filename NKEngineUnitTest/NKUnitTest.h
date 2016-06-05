@@ -15,7 +15,7 @@
 
 namespace NKUnitTest
 {
-	class NKUnitTestFramework
+	class NKUnitQueue
 	{
 	public:
 		typedef std::function<bool(void)> UNITTEST_FUNC;
@@ -26,27 +26,78 @@ namespace NKUnitTest
 		public:
 			UNITTEST_FUNC _func;
 			bool _benchmark;
+
+		public:
+			TestNode(UNITTEST_FUNC func, bool benchmark)
+				:_func(func)
+				, _benchmark(benchmark)
+			{
+			}
 		};
 
 	public:
 		bool push(UNITTEST_FUNC func, bool benchmark)
 		{
-			TestNode test_node;
-			test_node._func = func;
-			test_node._benchmark = benchmark;
-			_queue.push(test_node);
+			_queue.push(TestNode(func,benchmark));
 			return true;
 		}
-
 		bool run(bool benchmark_execute);
 
 	protected:
 		std::queue<TestNode> _queue;
-		bool _benchmark_execute;
+
+	public:
+		NKUnitQueue(void)
+		{
+		}
+	};
+
+	class NKReporter
+	{
+	protected:
+		class TestResult
+		{
+		public:
+			NKWString _filename;
+			int _line;
+			NKWString _msg;
+
+		public:
+			TestResult(NKWString& filename, int line, NKWString& msg)
+				:_filename(filename)
+				,_line(line)
+				,_msg(msg)
+			{
+			}
+		};
+
+	public:
+		bool push(NKWString& filename, int line, NKWString& msg)
+		{
+			_queue.push(TestResult(filename, line, msg));
+			return true;
+		}
+		bool print(void);
+
+	protected:
+		std::queue<TestResult> _queue;
+	};
+
+	class NKUnitTestFramework
+	{
+	public:
+		inline bool pushUnit(NKUnitQueue::UNITTEST_FUNC func, bool benchmark){ return _unit_queue.push(func, benchmark); }
+		bool run(bool benchmark_execute);
+
+	public:
+		inline bool pushResult(NKWString& filename, int line, NKWString& msg) { return _reporter.push(filename, line, msg); }
+
+	protected:
+		NKUnitQueue _unit_queue;
+		NKReporter _reporter;
 
 	public:
 		NKUnitTestFramework(void)
-			:_benchmark_execute(true)
 		{
 		}
 	};
@@ -54,7 +105,8 @@ namespace NKUnitTest
 	NKUnitTestFramework& getInstance(void);
 
 	void thread_test(const uint32_t count, std::function<void(void)> func);
-	bool register_test(NKUnitTestFramework::UNITTEST_FUNC func, bool benchmark = false);
+	bool register_test(NKUnitQueue::UNITTEST_FUNC func, bool benchmark = false);
+	bool register_result(NKWString filename, int line, NKWString msg);
 	
 #define NKTEST(testname) bool NKTest_##testname##(void); \
 bool NKTest_##testname##_flag = NKUnitTest::register_test(NKTest_##testname##); \
@@ -64,6 +116,7 @@ bool NKTest_##testname##(void)
 bool NKTest_Benchmark_##testname##_flag = NKUnitTest::register_test(NKTest_Benchmark_##testname##,true); \
 bool NKTest_Benchmark_##testname##(void)
 
+#define _TEST(expr) if( (expr) == false ){ NKUnitTest::register_result(__FILEW__,__LINE__,L ## #expr); }
 }
 
 #endif // __NKUNITTEST_HEADER__

@@ -8,3 +8,8 @@ NKUnittestLog::NKUnittestLog(void)
 NKUnittestLog::~NKUnittestLog(void)
 {
 }
+
+void NKUnittestLog::turnOffConsoleLog(void)
+{
+
+}

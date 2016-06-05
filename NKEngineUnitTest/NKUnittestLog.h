@@ -10,6 +10,9 @@
 class NKUnittestLog : public NKLog::NKLogger
 {
 public:
+	void turnOffConsoleLog(void);
+
+public:
 	NKUnittestLog(void);
 	virtual ~NKUnittestLog(void);
 };
