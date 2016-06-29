@@ -165,6 +165,15 @@
     <ClInclude Include="NKScheduler.h">
       <Filter>NKScheduler</Filter>
     </ClInclude>
+    <ClInclude Include="NKScheduler\RealTimeJob.h">
+      <Filter>NKScheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="NKScheduler\SerializeContainer.h">
+      <Filter>NKScheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="NKScheduler\Scheduler.h">
+      <Filter>NKScheduler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NKCore\NKString.cpp">
@@ -261,6 +270,15 @@
       <Filter>NKEngine</Filter>
     </ClCompile>
     <ClCompile Include="NKScheduler\EventSlot.cpp">
+      <Filter>NKScheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="NKScheduler\RealTimeJob.cpp">
+      <Filter>NKScheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="NKScheduler\SerializeContainer.cpp">
+      <Filter>NKScheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="NKScheduler\Scheduler.cpp">
       <Filter>NKScheduler</Filter>
     </ClCompile>
   </ItemGroup>

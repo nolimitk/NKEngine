@@ -125,6 +125,9 @@
     <ClInclude Include="NKNetwork\WorkerThread.h" />
     <ClInclude Include="NKScheduler.h" />
     <ClInclude Include="NKScheduler\EventSlot.h" />
+    <ClInclude Include="NKScheduler\RealTimeJob.h" />
+    <ClInclude Include="NKScheduler\Scheduler.h" />
+    <ClInclude Include="NKScheduler\SerializeContainer.h" />
     <ClInclude Include="NKUtils.h" />
     <ClInclude Include="StringCommander.h" />
   </ItemGroup>
@@ -159,6 +162,9 @@
     <ClCompile Include="NKNetwork\WinSockLib.cpp" />
     <ClCompile Include="NKNetwork\WorkerThread.cpp" />
     <ClCompile Include="NKScheduler\EventSlot.cpp" />
+    <ClCompile Include="NKScheduler\RealTimeJob.cpp" />
+    <ClCompile Include="NKScheduler\Scheduler.cpp" />
+    <ClCompile Include="NKScheduler\SerializeContainer.cpp" />
     <ClCompile Include="NKUtils.cpp" />
     <ClCompile Include="StringCommander.cpp" />
   </ItemGroup>
