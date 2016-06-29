@@ -5,9 +5,13 @@
 
 int main()
 {
-	NKUnitTest::getInstance().run(true);
+	//KUnitTest::getInstance().run(true);
+	NKUnitTest::getInstance().run(false);
 
 	NKEngine::ReleaseEngine();
+
+	char pause;
+	std::cin >> pause;
 
     return 0;
 }
