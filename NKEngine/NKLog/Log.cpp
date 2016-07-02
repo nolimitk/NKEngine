@@ -28,7 +28,7 @@ bool Log::write(const LogLayout& layout, const LogCategory& category, const NKWS
 {
 	if (log.empty() == true) return false;
 	if ( _turnon == false) return false;
-	if (_logDeviceQueue.front() == nullptr) return false;
+	if (_logDeviceQueue.empty() == true) return false;
 
 	NKWString build_log = (_builder != nullptr) ? _builder->publish(layout, category, log) : log;
 	
@@ -39,7 +39,7 @@ bool Log::writeDeviceDetails(const LogLayout& layout, const LogCategory& categor
 {
 	if (log.empty() == true) return false;
 	if (_turnon == false) return false;
-	if (_logDeviceQueue.front() == nullptr) return false;
+	if (_logDeviceQueue.empty() == true) return false;
 
 	for_each(_logDeviceQueue.begin(), _logDeviceQueue.end(),
 		[&layout, &category, &log]
@@ -48,19 +48,11 @@ bool Log::writeDeviceDetails(const LogLayout& layout, const LogCategory& categor
 			logDevice->write(layout, category, log);
 		}
 	);
-	
-	/*std::shared_ptr<LogDevice> logDevice = _logDeviceQueue.front();
-	while (logDevice != nullptr)
-	{
-		logDevice->write(layout, category, log);
-		logDevice = logDevice->getNext();
-	}*/
 
 	return true;
 }
 
 void Log::clearLogDevices(void)
 {
-	//_logDeviceQueue.popQueue();
 	_logDeviceQueue.clear();
 }
