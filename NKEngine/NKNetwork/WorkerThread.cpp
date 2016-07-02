@@ -53,6 +53,7 @@ using namespace std;
 
 WorkerThread::WorkerThread(const IOCPManager& iocp_manager)
 	:_completion_port(iocp_manager.getCompletionPort())
+	, _update_tick(0)
 {
 }
 
@@ -62,8 +63,8 @@ WorkerThread::~WorkerThread(void)
 
 bool WorkerThread::onStart(void)
 {
-	_last_tick = _clock.getElapsedMicroSec();
-	NKENGINELOG_INFO( L"worker thread started,thread %u", getThreadID() );
+	_update_tick = _clock.getElapsedMicroSec();
+	NKENGINELOG_INFO( L"[WORKERTHREAD],%u,started", getThreadID() );
 	return true;
 }
 
@@ -71,22 +72,20 @@ bool WorkerThread::onRun(void)
 {
 	// event OnUpdate
 	uint64_t current_tick = _clock.getElapsedMicroSec();
-
-	NKENGINELOG_INFO(L"worker thread wait,thread %u, time %I64d", getThreadID(), current_tick);
-	onUpdate(current_tick);
-	int64_t update_elapsed_time = _clock.getElapsedMicroSec() - current_tick;
-	if (update_elapsed_time > UPDATE_UNIT)
+	int64_t update_elapsed_time = current_tick - _update_tick;
+	DWORD sleep_gap = 0;
+	
+	if (update_elapsed_time >= 0)
 	{
-		NKENGINELOG_ERROR(L"worker thread update, it takes too much times, thread %u, time %I64d", getThreadID(), update_elapsed_time);
-		_ASSERT(0);
-		update_elapsed_time = UPDATE_UNIT;
+		onUpdate(current_tick);
+		_update_tick = current_tick + UPDATE_UNIT;
+		sleep_gap = UPDATE_UNIT / 1000;
 	}
 	else
 	{
-		NKENGINELOG_INFO(L"worker thread update, thread %u, time %I64dus", getThreadID(), update_elapsed_time);
+		sleep_gap = static_cast<DWORD>((_update_tick - current_tick) / 1000);
+		//NKENGINELOG_INFO(L"[WORKERTHREAD],%u,idle,sleep %d, %llu - %llu", getThreadID(), sleep_gap, _update_tick, current_tick);
 	}
-	
-	DWORD sleep_gap = static_cast<DWORD>((UPDATE_UNIT - update_elapsed_time) / 1000);
 	///
 
 	DWORD transferred = 0;
@@ -103,12 +102,12 @@ bool WorkerThread::onRun(void)
 	{
 		if (completion_key == (PULONG_PTR)IOCPManager::COMPLETION_KEY::END_EVENT)
 		{
-			NKENGINELOG_INFO( L"worker thread end event,thread %u", getThreadID());
+			NKENGINELOG_INFO( L"[WORKERTHREAD],%u,end event", getThreadID());
 			keep_run = false;
 		}
 		else if (event_context == nullptr)
 		{
-			NKENGINELOG_ERROR( L"[CRITICAL],event context is null, thread %u", getThreadID() );
+			NKENGINELOG_ERROR( L"[WORKERTHREAD],%u,[CRITICAL] event context is null", getThreadID() );
 			_ASSERT(0);
 		}
 		else
@@ -116,7 +115,7 @@ bool WorkerThread::onRun(void)
 			shared_ptr<EventObject> event_object = event_context->_event_object;
 			if (event_object == nullptr)
 			{
-				NKENGINELOG_ERROR(L"[CRITICAL],event object is null, thread %u", getThreadID());
+				NKENGINELOG_ERROR(L"[WORKERTHREAD],%u,[CRITICAL] event object is null", getThreadID());
 				_ASSERT(0);
 			}
 			event_object->onProcess(*event_context,transferred);
@@ -126,8 +125,8 @@ bool WorkerThread::onRun(void)
 	{
 		if (event_context == nullptr)
 		{
-			NKENGINELOG_SOCKETERROR( GetLastError(), L"process failed with no event context,thread %u", getThreadID());
-			_ASSERT(0);
+			// GQCS timeout, worker thread debugging log, do not remove
+			//NKENGINELOG_INFO(L"[WORKERTHREAD],%u,timeout,sleep %u", getThreadID(), sleep_gap);
 		}
 		else
 		{
@@ -140,20 +139,18 @@ bool WorkerThread::onRun(void)
 			event_object->onProcessFailed(*event_context,transferred);
 		}
 	}
-
-	int64_t last_tick = _clock.getElapsedMicroSec() - current_tick;
 	
 	return keep_run;
 }
 
 bool WorkerThread::onEnd(void)
 {
-	NKENGINELOG_INFO(L"worker thread to exit,thread %u", getThreadID());
+	NKENGINELOG_INFO(L"[WORKERTHREAD],%u,exit", getThreadID());
 	return true;
 }
 
 bool WorkerThread::onUpdate(int64_t delta)
 {
-	NKENGINELOG_INFO(L"worker thread to update,thread %u, delta %d", getThreadID(), delta);
+	NKENGINELOG_INFO(L"[WORKERTHREAD],%u,update,delta %lldus", getThreadID(), delta);
 	return true;
 }

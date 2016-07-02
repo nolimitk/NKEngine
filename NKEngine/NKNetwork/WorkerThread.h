@@ -61,7 +61,7 @@ namespace NKNetwork
 	protected:
 		HANDLE _completion_port;
 		NKCore::NKClock _clock;
-		uint64_t _last_tick;
+		uint64_t _update_tick;
 		
 	public:
 		WorkerThread(const IOCPManager& iocp_manager);
