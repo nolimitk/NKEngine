@@ -12,6 +12,7 @@
 
 namespace NKCore
 {
+	// this is lock-free guaranteed spinlock
 	class SpinLock
 	{
 	public:
