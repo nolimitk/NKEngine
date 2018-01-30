@@ -5,19 +5,17 @@
 // 14.06.11
 // guard
 
-#include "NKDataTypes.h"
-
 namespace NKCore
 {
 	const static int MAX_DEPTH = 10;
 	const static int MAX_FUNCTION_NAME_LENGTH = 1024;
-	extern __declspec(thread) wchar g_customCallstack[MAX_DEPTH][MAX_FUNCTION_NAME_LENGTH];
+	extern __declspec(thread) wchar_t g_customCallstack[MAX_DEPTH][MAX_FUNCTION_NAME_LENGTH];
 	extern __declspec(thread) int g_indexCallstack;
 
 	class Guard
 	{
 	public:
-		Guard(wchar *funcName);
+		Guard(wchar_t *funcName);
 		~Guard(void);
 	};
 }
