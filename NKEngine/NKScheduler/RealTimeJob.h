@@ -25,22 +25,22 @@ namespace NKScheduler
 		inline bool GetReserved(void) { return (_reserved != 0); }
 
 	public:
-		inline void registerAsShort(int slotIndex, uint64 executeIndex) { registerJob(1, slotIndex, executeIndex); }
-		inline void registerAsLong(uint64 executeIndex) { registerJob(2, -1, executeIndex); }
-		inline void registerAsInstant(uint64 executeIndex) { registerJob(3, -1, executeIndex); }
-		inline void registerJob(int slotType, int slotIndex, uint64 executeIndex) { _slotType = slotType; _slotIndex = slotIndex; _executeSlotIndex = executeIndex; }
+		inline void registerAsShort(int slotIndex, uint64_t executeIndex) { registerJob(1, slotIndex, executeIndex); }
+		inline void registerAsLong(uint64_t executeIndex) { registerJob(2, -1, executeIndex); }
+		inline void registerAsInstant(uint64_t executeIndex) { registerJob(3, -1, executeIndex); }
+		inline void registerJob(int slotType, int slotIndex, uint64_t executeIndex) { _slotType = slotType; _slotIndex = slotIndex; _executeSlotIndex = executeIndex; }
 
 	public:
 		inline int getSlotType(void) { return _slotType; }
 		inline int getSlotIndex(void) { return _slotIndex; }
-		inline uint64 getExecuteSlotIndex(void) { return _executeSlotIndex; }
+		inline uint64_t getExecuteSlotIndex(void) { return _executeSlotIndex; }
 
 	public:
 		inline void SetContainer(Serializer *pSerializer) { _pContainer = pSerializer; }
 		inline void SetTick(uint tick) { _tick = tick; }
 
 	public:
-		virtual bool Process(uint64 executeIndex) = 0;
+		virtual bool Process(uint64_t executeIndex) = 0;
 		
 	protected:
 		// 재등록을 위해 사용한다.
@@ -53,7 +53,7 @@ namespace NKScheduler
 		// 1 short, 2 long , 3 instant
 		int _slotType;
 		int _slotIndex;
-		uint64 _executeSlotIndex;
+		uint64_t _executeSlotIndex;
 
 	public:
 		RealTimeJob(void);

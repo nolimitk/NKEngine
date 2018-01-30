@@ -13,7 +13,7 @@ namespace NKScheduler
 	class SchedulerClock : public NKCore::Singleton<SchedulerClock>
 	{
 	protected:
-		volatile uint64 _executionIndex;
+		volatile uint64_t _executionIndex;
 
 	public:
 		SchedulerClock(void):_executionIndex(0){}

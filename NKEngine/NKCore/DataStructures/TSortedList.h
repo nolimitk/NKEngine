@@ -14,12 +14,12 @@ namespace NKCore
 	public:
 		bool insert(T* node);
 		T* pop(void);
-		T* pop(uint64 key);
+		T* pop(uint64_t key);
 		T* pick(void) const { return _head; }
 		bool erase(T* node);
 
 	protected:
-		T* _find(uint64 key);
+		T* _find(uint64_t key);
 
 	protected:
 		T* _head;
@@ -103,7 +103,7 @@ namespace NKCore
 	}
 
 	template<typename T>
-	T* TSortedList<T>::pop(uint64 key)
+	T* TSortedList<T>::pop(uint64_t key)
 	{
 		if (_head == nullptr) return nullptr;
 
@@ -151,7 +151,7 @@ namespace NKCore
 	}
 
 	template<typename T>
-	T* TSortedList<T>::_find(uint64 key)
+	T* TSortedList<T>::_find(uint64_t key)
 	{
 		if (_head == nullptr) return nullptr;
 

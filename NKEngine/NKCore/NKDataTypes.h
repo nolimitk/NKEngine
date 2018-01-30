@@ -23,6 +23,5 @@ typedef unsigned int		uint;
 typedef unsigned short		ushort;
 typedef char				int8;
 typedef __int64				int64;
-typedef unsigned __int64	uint64;
 
 #endif // __NKDATATYPES_HEADER__
