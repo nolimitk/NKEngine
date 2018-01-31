@@ -37,8 +37,8 @@ namespace NKCore
 	};
 }
 
-typedef NKCore::NKBasicString<wchar_t> NKWString;
-typedef NKCore::NKBasicString<char> NKString;
+using NKWString = NKCore::NKBasicString<wchar_t>;
+using NKString = NKCore::NKBasicString<char>;
 
 NKWString MultibyteToUnicode(const NKString& source);
 NKString UnicodeToMultibyte(const NKWString& source);

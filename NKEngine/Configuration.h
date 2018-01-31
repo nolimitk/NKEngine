@@ -9,8 +9,8 @@
 
 namespace NKEngine
 {
-	typedef rapidjson::GenericDocument<rapidjson::UTF16<> > WDocument;
-	typedef rapidjson::GenericValue<rapidjson::UTF16<> > WValue;
+	using WDocument = rapidjson::GenericDocument<rapidjson::UTF16<> >;
+	using WValue = rapidjson::GenericValue<rapidjson::UTF16<> >;
 
 	// JSON loader
 	class Configuration

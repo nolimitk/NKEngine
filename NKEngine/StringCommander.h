@@ -23,7 +23,7 @@ namespace NKEngine
 			PARAMTYPE_LONG
 		};
 
-		typedef bool(*COMMANDERFUNCTION)(void* pOwner, wchar_t* wstrParams[MAX_PARAMETERS], int countParams);
+		using COMMANDERFUNCTION = bool(void* pOwner, wchar_t* wstrParams[MAX_PARAMETERS], int countParams);
 
 		struct COMMANDER
 		{
