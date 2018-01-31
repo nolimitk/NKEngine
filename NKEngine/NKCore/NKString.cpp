@@ -1,5 +1,5 @@
 #include "NKString.h"
-#include "NKDataTypes.h"
+#include <windows.h>
 
 NKWString MultibyteToUnicode(const NKString& source)
 {

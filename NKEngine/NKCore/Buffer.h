@@ -6,10 +6,11 @@
 // buffer
 
 #include <memory>
-#include "NKDataTypes.h"
 
 namespace NKCore
 {
+	using byte = unsigned char;
+
 	class Buffer
 	{
 	protected:

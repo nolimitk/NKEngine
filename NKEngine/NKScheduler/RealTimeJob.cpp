@@ -18,7 +18,7 @@ RealTimeJob::~RealTimeJob(void)
 {
 }
 
-bool RealTimeJob::ReExecute(uint tick)
+bool RealTimeJob::ReExecute(uint32_t tick)
 {
 	//return _pContainer->AddTimeJob(this,tick);
 	return false;

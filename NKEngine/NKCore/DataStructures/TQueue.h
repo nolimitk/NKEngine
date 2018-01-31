@@ -6,8 +6,6 @@
 // template queue
 // @todo think about the cache hit
 
-#include "NKCore/NKDataTypes.h"
-
 namespace NKCore
 {
 	// T must be derived from TNode

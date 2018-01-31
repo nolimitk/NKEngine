@@ -33,9 +33,6 @@
     <ClInclude Include="NKCore\DataStructures\TIndexedQueue.h">
       <Filter>NKCore\DataStructures</Filter>
     </ClInclude>
-    <ClInclude Include="NKCore\NKDataTypes.h">
-      <Filter>NKCore</Filter>
-    </ClInclude>
     <ClInclude Include="NKCore\NKString.h">
       <Filter>NKCore</Filter>
     </ClInclude>

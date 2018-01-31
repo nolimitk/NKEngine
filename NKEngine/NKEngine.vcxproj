@@ -92,7 +92,6 @@
     <ClInclude Include="NKCore\DataStructures\TSortedList.h" />
     <ClInclude Include="NKCore\Guard.h" />
     <ClInclude Include="NKCore\NKClock.h" />
-    <ClInclude Include="NKCore\NKDataTypes.h" />
     <ClInclude Include="NKCore\NKMemory.h" />
     <ClInclude Include="NKCore\NKString.h" />
     <ClInclude Include="NKCore\NKThread.h" />

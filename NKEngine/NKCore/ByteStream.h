@@ -5,7 +5,6 @@
 // 16.05.10
 // byte stream
 
-#include "NKDataTypes.h"
 #include "Buffer.h"
 #include <memory>
 

@@ -6,7 +6,6 @@
 // singleton as template
 
 #include <mutex>
-#include "NKDataTypes.h"
 
 namespace NKCore
 {

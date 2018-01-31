@@ -13,7 +13,7 @@ namespace NKScheduler
 	class RealTimeJob : public EventSlot
 	{
 	public:
-		bool ReExecute(uint tick);
+		bool ReExecute(uint32_t tick);
 		bool ReExecute(void);
 
 	public:
@@ -37,7 +37,7 @@ namespace NKScheduler
 
 	public:
 		inline void SetContainer(Serializer *pSerializer) { _pContainer = pSerializer; }
-		inline void SetTick(uint tick) { _tick = tick; }
+		inline void SetTick(uint32_t tick) { _tick = tick; }
 
 	public:
 		virtual bool Process(uint64_t executeIndex) = 0;
@@ -45,11 +45,11 @@ namespace NKScheduler
 	protected:
 		// 재등록을 위해 사용한다.
 		Serializer *_pContainer;
-		uint _tick;
+		uint32_t _tick;
 
 	protected:
 		// @transaction reserved에 의해 모두 thread safe하다.
-		volatile uint _reserved;
+		volatile uint32_t _reserved;
 		// 1 short, 2 long , 3 instant
 		int _slotType;
 		int _slotIndex;

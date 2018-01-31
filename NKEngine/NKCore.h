@@ -5,7 +5,9 @@
 // 16.05.12
 // nk core
 
-#include "NKCore/NKDataTypes.h"
+#include <WinSock2.h>
+#include <Windows.h>
+//#include "NKCore/NKDataTypes.h"
 #include "NKCore/NKMemory.h"
 
 // data structures
