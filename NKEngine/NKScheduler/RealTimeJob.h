@@ -22,7 +22,7 @@ namespace NKScheduler
 	public:
 		bool TryReserve(void);
 		void ReleaseReserve(void);
-		inline bool GetReserved(void) { return (_reserved != 0); }
+		inline bool GetReserved(void) const { return (_reserved != 0); }
 
 	public:
 		inline void registerAsShort(int slotIndex, uint64_t executeIndex) { registerJob(1, slotIndex, executeIndex); }
@@ -31,9 +31,9 @@ namespace NKScheduler
 		inline void registerJob(int slotType, int slotIndex, uint64_t executeIndex) { _slotType = slotType; _slotIndex = slotIndex; _executeSlotIndex = executeIndex; }
 
 	public:
-		inline int getSlotType(void) { return _slotType; }
-		inline int getSlotIndex(void) { return _slotIndex; }
-		inline uint64_t getExecuteSlotIndex(void) { return _executeSlotIndex; }
+		inline int getSlotType(void) const { return _slotType; }
+		inline int getSlotIndex(void) const { return _slotIndex; }
+		inline uint64_t getExecuteSlotIndex(void) const { return _executeSlotIndex; }
 
 	public:
 		inline void SetContainer(Serializer *pSerializer) { _pContainer = pSerializer; }

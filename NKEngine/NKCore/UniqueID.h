@@ -64,7 +64,7 @@ namespace NKCore
 		}
 
 		// @thread-safe, @rwlock-read
-		bool isRegisteredID(const UniqueID& id)
+		bool isRegisteredID(const UniqueID& id) const
 		{
 			std::shared_lock<std::shared_mutex> lock(_s_mutex);
 			auto iter = _set.find(id);
@@ -76,14 +76,14 @@ namespace NKCore
 		}
 
 		// @thread-safe, @rwlock-read
-		size_t size(void)
+		size_t size(void) const
 		{
 			std::shared_lock<std::shared_mutex> lock(_s_mutex);
 			return _set.size();
 		}
 
 	protected:
-		std::shared_mutex _s_mutex;
+		mutable std::shared_mutex _s_mutex;
 		std::set<UniqueID> _set;
 	};
 }

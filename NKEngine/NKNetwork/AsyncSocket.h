@@ -29,9 +29,9 @@ namespace NKNetwork
 		bool disconnect(void);
 
 	public:
-		inline SOCKET getHandle(void) { return _socket; }
+		inline SOCKET getHandle(void) const { return _socket; }
 		inline void setAddress(const NKWString& address) { _address = address; }
-		inline NKWString getAddress(void) { return _address; }
+		inline NKWString getAddress(void) const { return _address; }
 
 	public:
 		virtual bool onProcess(EventContext& event_context, uint32_t transferred) override;

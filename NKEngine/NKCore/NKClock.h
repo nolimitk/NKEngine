@@ -15,7 +15,7 @@ namespace NKCore
 	class NKClock
 	{
 	public:
-		int64_t getElapsedMicroSec(void)
+		int64_t getElapsedMicroSec(void) const
 		{
 			return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - _start_tick).count();
 		}

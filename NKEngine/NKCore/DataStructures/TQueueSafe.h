@@ -47,7 +47,7 @@ namespace NKCore
 		bool push(T* node);
 		T* pop(void);
 		T* popQueue(void);
-		inline T* pick(void) { return _head; }
+		inline T* pick(void) const { return _head; }
 
 	protected:
 		_Mutex _mutex;

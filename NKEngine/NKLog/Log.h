@@ -34,7 +34,7 @@ namespace NKLog
 	public:
 		inline void turnOn(void) { _turnon = true; }
 		inline void turnOff(void) { _turnon = false; }
-		inline bool getTurnOn(void) { return _turnon; }
+		inline bool getTurnOn(void) const { return _turnon; }
 
 	protected:
 		volatile bool _turnon;

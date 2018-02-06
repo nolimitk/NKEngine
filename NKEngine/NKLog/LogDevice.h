@@ -37,7 +37,7 @@ namespace NKLog
 	public:
 		bool registerCategory(const NKCore::UniqueID& id) { return _category_set.registerID(id); }
 		bool unregisterCategory(const NKCore::UniqueID& id) { return _category_set.unregisterID(id); }
-		bool isRegisteredCategory(const NKCore::UniqueID& id) { return _category_set.isRegisteredID(id); }
+		bool isRegisteredCategory(const NKCore::UniqueID& id) const { return _category_set.isRegisteredID(id); }
 
 	protected:
 		NKCore::UniqueIDSetSafe _category_set;
@@ -48,7 +48,7 @@ namespace NKLog
 	public:
 		bool registerLayout(const NKCore::UniqueID& id) { return _layout_set.registerID(id); }
 		bool unregisterLayout(const NKCore::UniqueID& id) { return _layout_set.unregisterID(id); }
-		bool isRegisteredLayout(const NKCore::UniqueID& id) { return _layout_set.isRegisteredID(id); }
+		bool isRegisteredLayout(const NKCore::UniqueID& id) const { return _layout_set.isRegisteredID(id); }
 
 	protected:
 		NKCore::UniqueIDSetSafe _layout_set;
