@@ -18,9 +18,16 @@ Log::~Log(void)
 
 bool Log::registerLogDevice(std::unique_ptr<LogDevice>&& logDevice)
 {
-	if (logDevice == nullptr) return false;
+	if (logDevice == nullptr)
+	{
+		_ASSERT(0);
+		return false;
+	}
+
 	logDevice->setBuilder(nullptr);
-	_logDeviceQueue.push_back(std::move(logDevice));
+
+	std::lock_guard<std::mutex> _lock(__mutex_logDeviceList);
+	_logDeviceList.push_back(std::move(logDevice));
 	return true;
 }
 
@@ -28,7 +35,7 @@ bool Log::write(const LogLayout& layout, const LogCategory& category, const NKWS
 {
 	if (log.empty() == true) return false;
 	if ( _turnon == false) return false;
-	if (_logDeviceQueue.empty() == true) return false;
+	if (emptyDeviceList() == true) return false;
 
 	NKWString build_log = (_builder != nullptr) ? _builder->publish(layout, category, log) : log;
 	
@@ -39,9 +46,10 @@ bool Log::writeDeviceDetails(const LogLayout& layout, const LogCategory& categor
 {
 	if (log.empty() == true) return false;
 	if (_turnon == false) return false;
-	if (_logDeviceQueue.empty() == true) return false;
 
-	for_each(_logDeviceQueue.begin(), _logDeviceQueue.end(),
+	std::lock_guard<std::mutex> _lock(__mutex_logDeviceList);
+
+	for_each(_logDeviceList.begin(), _logDeviceList.end(),
 		[&layout, &category, &log]
 		(std::unique_ptr<LogDevice>& logDevice)
 		{
@@ -54,5 +62,6 @@ bool Log::writeDeviceDetails(const LogLayout& layout, const LogCategory& categor
 
 void Log::clearLogDevices(void)
 {
-	_logDeviceQueue.clear();
+	std::lock_guard<std::mutex> _lock(__mutex_logDeviceList);
+	_logDeviceList.clear();
 }

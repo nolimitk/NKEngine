@@ -6,7 +6,7 @@
 // log
 
 #include "../NKCore.h"
-#include <vector>
+#include <list>
 
 namespace NKLog
 {
@@ -17,18 +17,20 @@ namespace NKLog
 
 	class Log
 	{
-		// @not-thread-safe
+		// @thread-safe
 	public:
 		bool registerLogDevice(std::unique_ptr<LogDevice>&& logDevice);
 		bool write(const LogLayout& layout, const LogCategory& category, const NKWString& log);
 		void clearLogDevices(void);
 
 	protected:
+		bool emptyDeviceList(void) const { std::lock_guard<std::mutex> _lock(__mutex_logDeviceList); return _logDeviceList.empty(); }
 		bool writeDeviceDetails(const LogLayout& layout, const LogCategory& category, const NKWString& log);
 
 	protected:
-		std::vector<std::unique_ptr<LogDevice>> _logDeviceQueue;
-		/// @not-thread-safe
+		std::list<std::unique_ptr<LogDevice>> _logDeviceList;
+		mutable std::mutex __mutex_logDeviceList;
+		/// @thread-safe
 
 		// @thread-safe, @wait-free
 	public:
@@ -41,9 +43,7 @@ namespace NKLog
 		// @thread-safe, @wait-free
 
 		// @not-thread-safe
-		// log builder
 	public:
-		//std::unique_ptr<LogBuilder> getbuilder(void) { return _builder; }
 		bool setBuilder(std::unique_ptr<LogBuilder>&& builder)
 		{
 			_builder = std::move(builder);
@@ -52,7 +52,7 @@ namespace NKLog
 
 	protected:
 		std::unique_ptr<LogBuilder> _builder;
-		///
+		/// @not-thread-safe
 		
 	public:
 		Log(void);
