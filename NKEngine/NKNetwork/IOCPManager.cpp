@@ -25,16 +25,14 @@ bool IOCPManager::create(void)
 
 	if (err != 0)
 	{
-		NKENGINELOG_SOCKETERROR(GetLastError(), L"failed to open windows socket library");
-		_ASSERT(0);
+		NKENGINELOG_SOCKETERROR_ASSERT(GetLastError(), L"failed to open windows socket library");
 		return false;
 	}
 
 	_completion_port = CreateIoCompletionPort(INVALID_HANDLE_VALUE, nullptr, (ULONG_PTR)0, 0);
 	if (_completion_port == nullptr)
 	{
-		NKENGINELOG_SOCKETERROR(GetLastError(), L"failed to create IO completion port");
-		_ASSERT(0);
+		NKENGINELOG_SOCKETERROR_ASSERT(GetLastError(), L"failed to create IO completion port");
 		return false;
 	}
 
@@ -46,8 +44,7 @@ bool IOCPManager::create(void)
 		unique_ptr<WorkerThread> worker_thread = make_unique<WorkerThread>(*this);
 		if (worker_thread->create() == false)
 		{
-			NKENGINELOG_ERROR(L"failed to create thread, %u", GetLastError());
-			_ASSERT(0);
+			NKENGINELOG_ERROR_ASSERT(L"failed to create worker thread, %u/%u, error code %u", i, system_info.dwNumberOfProcessors, GetLastError());
 			return false;
 		}
 		_worker_thread_vector.push_back(std::move(worker_thread));
@@ -56,8 +53,7 @@ bool IOCPManager::create(void)
 	SOCKET socket = WSASocket( AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED );
 	if (socket == INVALID_SOCKET)
 	{
-		NKENGINELOG_SOCKETERROR( WSAGetLastError(), L"failed to create socket for ConnectEx function" );
-		_ASSERT(0);
+		NKENGINELOG_SOCKETERROR_ASSERT( WSAGetLastError(), L"failed to create socket for ConnectEx function" );
 		return false;
 	}
 
@@ -68,8 +64,7 @@ bool IOCPManager::create(void)
 	{
 		closesocket(socket);
 
-		NKENGINELOG_SOCKETERROR( WSAGetLastError(), L"failed to set ConnectEx function" );
-		_ASSERT(0);
+		NKENGINELOG_SOCKETERROR_ASSERT( WSAGetLastError(), L"failed to set ConnectEx function" );
 		return false;
 	}
 
@@ -117,8 +112,7 @@ bool IOCPManager::postEvent(std::shared_ptr<EventObject>& event_object, int64_t 
 		
 	if( PostQueuedCompletionStatus(_completion_port, 0, (ULONG_PTR)COMPLETION_KEY::PROCESS_EVENT, pContext ) == 0 )
 	{
-		NKENGINELOG_SOCKETERROR( GetLastError(), L"failed to post event" );
-		_ASSERT(0);
+		NKENGINELOG_SOCKETERROR_ASSERT( GetLastError(), L"failed to post event" );
 
 		delete pContext;
 		pContext = nullptr;
@@ -131,8 +125,7 @@ bool NKNetwork::IOCPManager::postStop(void)
 {
 	if (PostQueuedCompletionStatus(_completion_port, 0, (ULONG_PTR)COMPLETION_KEY::END_EVENT, nullptr) == 0)
 	{
-		NKENGINELOG_SOCKETERROR(GetLastError(), L"failed to post event");
-		_ASSERT(0);
+		NKENGINELOG_SOCKETERROR_ASSERT(GetLastError(), L"failed to post event");
 		return false;
 	}
 	return true;
