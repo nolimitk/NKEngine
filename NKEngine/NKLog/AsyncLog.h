@@ -46,15 +46,10 @@ namespace NKLog
 		{
 		}
 		virtual ~LogThread(void) {}
-
-		friend class AsyncLog;
 	};
 		
 	class AsyncLog : public Log
 	{
-	public:
-		LogData* getLogdataQueue(void);
-
 		// @thread-safe, @lock-free
 	public:
 		bool write(const LogLayout& layout, const LogCategory& category, const NKWString& log);
@@ -63,6 +58,7 @@ namespace NKLog
 		void close(void);
 		
 	protected:
+		LogData* getLogdataQueue(void);
 		bool write(LogData* pLogData);
 		bool flush(void);
 		
@@ -75,6 +71,8 @@ namespace NKLog
 	public:
 		AsyncLog(void);
 		virtual ~AsyncLog(void);
+
+		friend class LogThread;
 	};
 
 	using AsyncLogSingleton = NKCore::Singleton<AsyncLog>;

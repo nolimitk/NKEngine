@@ -57,8 +57,6 @@ namespace NKLog
 	public:
 		Log(void);
 		virtual ~Log(void);
-
-		friend class LogThread;
 	};
 }
 
