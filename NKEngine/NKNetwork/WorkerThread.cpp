@@ -51,8 +51,8 @@ using namespace std;
 //	return true;
 //}
 
-WorkerThread::WorkerThread(const IOCPManager& iocp_manager)
-	:_completion_port(iocp_manager.getCompletionPort())
+WorkerThread::WorkerThread(const HANDLE completion_portr)
+	:_completion_port(completion_portr)
 	, _update_tick(0)
 {
 }
@@ -107,16 +107,14 @@ bool WorkerThread::onRun(void)
 		}
 		else if (event_context == nullptr)
 		{
-			NKENGINELOG_ERROR( L"[WORKERTHREAD],%u,[CRITICAL] event context is null", getThreadID() );
-			_ASSERT(0);
+			NKENGINELOG_ERROR_ASSERT( L"[WORKERTHREAD],%u,[CRITICAL] event context is null", getThreadID() );
 		}
 		else
 		{
-			shared_ptr<EventObject> event_object = event_context->_event_object;
+			shared_ptr<EventObject>& event_object = event_context->_event_object;
 			if (event_object == nullptr)
 			{
-				NKENGINELOG_ERROR(L"[WORKERTHREAD],%u,[CRITICAL] event object is null", getThreadID());
-				_ASSERT(0);
+				NKENGINELOG_ERROR_ASSERT(L"[WORKERTHREAD],%u,[CRITICAL] event object is null", getThreadID());
 			}
 			event_object->onProcess(*event_context,transferred);
 		}
@@ -130,11 +128,10 @@ bool WorkerThread::onRun(void)
 		}
 		else
 		{
-			shared_ptr<EventObject> event_object = event_context->_event_object;
+			shared_ptr<EventObject>& event_object = event_context->_event_object;
 			if (event_object == nullptr)
 			{
-				NKENGINELOG_ERROR(L"[CRITICAL],event object is null, thread %u", getThreadID());
-				_ASSERT(0);
+				NKENGINELOG_ERROR_ASSERT(L"[WORKERTHREAD],%u,[CRITICAL] event object is null", getThreadID());
 			}
 			event_object->onProcessFailed(*event_context,transferred);
 		}
@@ -151,6 +148,7 @@ bool WorkerThread::onEnd(void)
 
 bool WorkerThread::onUpdate(int64_t delta)
 {
-	NKENGINELOG_INFO(L"[WORKERTHREAD],%u,update,delta %lldus", getThreadID(), delta);
+	// TODO : make a log level
+	//NKENGINELOG_INFO(L"[WORKERTHREAD],%u,update,delta %lldus", getThreadID(), delta);
 	return true;
 }
