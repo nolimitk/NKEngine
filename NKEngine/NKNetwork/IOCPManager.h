@@ -35,8 +35,8 @@ namespace NKNetwork
 		bool postStop(void);
 		bool allWorkerThreadsJoinable(void);
 
-	protected:
-		inline HANDLE getCompletionPort(void) const { return _completion_port; }
+	public:
+		inline const HANDLE getCompletionPort(void) const { return _completion_port; }
 
 	protected:
 		WinSockLib _win_sock_lib;
@@ -47,7 +47,6 @@ namespace NKNetwork
 		IOCPManager(void);
 		virtual ~IOCPManager(void);
 
-		friend class WorkerThread;
 		friend class AsyncServerSocket;
 		friend class Connection;
 	};
