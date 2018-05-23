@@ -39,6 +39,8 @@ AsyncLog::AsyncLog(void)
 
 AsyncLog::~AsyncLog(void)
 {
+	_log_thread.join();
+	flush();
 }
 
 LogData* NKLog::AsyncLog::getLogdataQueue(void)
@@ -53,12 +55,6 @@ bool NKLog::AsyncLog::write(const LogLayout & layout, const LogCategory & catego
 	
 	write(pLogData);
 	return true;
-}
-
-void NKLog::AsyncLog::close(void)
-{
-	_log_thread.join();
-	flush();
 }
 
 bool NKLog::AsyncLog::write(LogData* pLogData)

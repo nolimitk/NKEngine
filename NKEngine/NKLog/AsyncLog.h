@@ -54,14 +54,12 @@ namespace NKLog
 	public:
 		bool write(const LogLayout& layout, const LogCategory& category, const NKWString& log);
 		///
-
-		void close(void);
 		
 	protected:
 		LogData* getLogdataQueue(void);
 		bool write(LogData* pLogData);
 		bool flush(void);
-		
+
 	protected:
 		NKCore::TLockFreeQueue<LogData> _logdata_queue;
 
