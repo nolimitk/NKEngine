@@ -32,11 +32,12 @@ namespace NKNetwork
 		const static int BACKLOG_DEFAULT = 1024;
 
 	protected:
+		const HANDLE _completion_port;
 		SOCKET _socket;
 		AcceptContext _accept_context;
 
 	public:
-		AsyncServerSocket(void);
+		AsyncServerSocket(const HANDLE completion_port);
 		virtual ~AsyncServerSocket(void);
 	};
 }

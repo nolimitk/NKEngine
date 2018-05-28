@@ -45,8 +45,6 @@ namespace NKNetwork
 	//	virtual ~NKTimer(void);
 	//};
 
-	class IOCPManager;
-
 	class WorkerThread : public NKCore::NKThread
 	{
 	public:
@@ -59,12 +57,12 @@ namespace NKNetwork
 		virtual bool onUpdate(int64_t delta);
 
 	protected:
-		HANDLE _completion_port;
+		const HANDLE _completion_port;
 		NKCore::NKClock _clock;
 		uint64_t _update_tick;
 		
 	public:
-		WorkerThread(const IOCPManager& iocp_manager);
+		WorkerThread(const HANDLE completion_port);
 		virtual ~WorkerThread(void);
 	};
 

@@ -73,22 +73,17 @@ bool ConsoleLog::onWrite(const LogLayout& layout, const LogCategory& category, c
 	return true;
 }
 
-FileLog::FileLog(void)
-{
-}
-
-FileLog::~FileLog(void)
-{
-}
-
-bool FileLog::create(const NKWString& filename)
+FileLog::FileLog(const NKWString& filename)
 {
 	wostringstream ext_filename;
 	ext_filename << filename << L".log";
 
-	_fpLog.open( ext_filename.str(), ios::out | ios::app );
+	_fpLog.open(ext_filename.str(), ios::out | ios::app);
+}
 
-	return true;
+FileLog::~FileLog(void)
+{
+	close();
 }
 
 void FileLog::close(void)
@@ -140,26 +135,35 @@ bool FileLog::onWrite(const LogLayout& layout, const LogCategory& category, cons
 	return true;
 }
 
-DailyFileLog::DailyFileLog(void)
+DailyFileLog::DailyFileLog(const NKWString& filename)
+	:DailyFileLog(L"", filename)
 {
+}
+
+NKLog::DailyFileLog::DailyFileLog(const NKWString & rootname, const NKWString & filename)
+	:_root_directory(rootname)
+	,_filename(filename)
+	,FileLog()
+{
+	if (create(_root_directory, _filename) == false)
+	{
+		// TODO throw error
+	}
 }
 
 DailyFileLog::~DailyFileLog(void)
 {
+	close();
 }
 
-void DailyFileLog::setRoot(const NKWString& root)
+bool DailyFileLog::create(const NKWString& rootname, const NKWString& filename)
 {
-	_root_directory = root;
-}
-
-bool DailyFileLog::create(const NKWString& filename)
-{
-	_filename = filename;
-
-	if (_root_directory.empty() == false)
+	if (rootname.empty() == false)
 	{
-		CreateDirectory( _root_directory.c_str(), NULL );
+		if (CreateDirectory(rootname.c_str(), NULL) == FALSE)
+		{
+			return false;
+		}
 	}
 
 	// @TODO feature to create a file per hour
@@ -171,9 +175,9 @@ bool DailyFileLog::create(const NKWString& filename)
 	localtime_s( &_last_creation_time, &today );
 
 	wcsftime( date, sizeof(date), L"%y%m%d", &_last_creation_time);
-	if (_root_directory.empty() == false)
+	if (rootname.empty() == false)
 	{
-		date_filename << L"./" << _root_directory << L"/";
+		date_filename << L"./" << rootname << L"/";
 	}
 	date_filename << _filename << L"_" << date << L".log";
 
@@ -198,7 +202,7 @@ bool DailyFileLog::onWrite(const LogLayout & layout, const LogCategory & categor
 	if (_last_creation_time.tm_yday != structTime.tm_yday)
 	{
 		close();
-		create(_filename);
+		create(_root_directory, _filename);
 	}
 	///
 

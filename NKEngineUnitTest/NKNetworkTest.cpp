@@ -37,6 +37,7 @@ NKTEST(IOCPManager_Test)
 	shared_ptr<MockEvent> test_event = make_shared<MockEvent>();
 	_ASSERT(NKNetwork::IOCPManager::getInstance()->postEvent(dynamic_pointer_cast<NKNetwork::EventObject>(test_event), 0) == true);
 
+	// for worker thread update event test, it remains log.
 	this_thread::sleep_for(500ms);
 
 	NKNetwork::IOCPManager::getInstance()->close();

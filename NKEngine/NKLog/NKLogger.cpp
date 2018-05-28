@@ -21,9 +21,7 @@ NKLogger::NKLogger(const NKWString& name)
 	, _layout{ LogLayout(L"LOG_ERROR", NKLog::LogColor::RED),LogLayout(L"LOG_WARNING", NKLog::LogColor::YELLOW),LogLayout(L"LOG_INFO", NKLog::LogColor::WHITE) }
 {
 	std::unique_ptr<NKLog::ConsoleLog> console_log = make_unique<NKLog::ConsoleLog>();
-	std::unique_ptr<NKLog::DailyFileLog> daily_file_log = make_unique<NKLog::DailyFileLog>();
-	
-	daily_file_log->create(name);
+	std::unique_ptr<NKLog::DailyFileLog> daily_file_log = make_unique<NKLog::DailyFileLog>(name);
 
 	console_log->registerCategory(_category._id);
 	daily_file_log->registerCategory(_category._id);
@@ -41,7 +39,6 @@ NKLogger::NKLogger(const NKWString& name)
 
 NKLogger::~NKLogger(void)
 {
-	AsyncLogSingleton::getInstance()->close();
 	AsyncLogSingleton::destroy();
 }
 

@@ -8,8 +8,9 @@
 using namespace NKNetwork;
 using namespace std;
 
-AsyncServerSocket::AsyncServerSocket(void)
-	:_socket(INVALID_SOCKET)
+AsyncServerSocket::AsyncServerSocket(const HANDLE completion_port)
+	:_completion_port(completion_port)
+	,_socket(INVALID_SOCKET)
 {
 }
 
@@ -22,7 +23,7 @@ bool AsyncServerSocket::open(USHORT port)
 	_socket = WSASocket( AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED );
 	if( _socket == INVALID_SOCKET )
 	{
-		NKENGINELOG_SOCKETERROR( WSAGetLastError(), L"failed to open socket,socket %I64u", _socket);
+		NKENGINELOG_SOCKETERROR_ASSERT( WSAGetLastError(), L"failed to open socket,socket %I64u", _socket);
 		return false;
 	}
 
@@ -35,17 +36,16 @@ bool AsyncServerSocket::open(USHORT port)
 	int err = ::bind( _socket, (SOCKADDR *)&addr, sizeof(addr) );
 	if( err == SOCKET_ERROR )
 	{
-		NKENGINELOG_SOCKETERROR( WSAGetLastError(), L"failed to bind socket,socket %I64u", _socket );
+		NKENGINELOG_SOCKETERROR_ASSERT( WSAGetLastError(), L"failed to bind socket,socket %I64u", _socket );
 
 		close();
 		return false;
 	}
 
 	// listen 전에 completion port와 연결한다.
-	HANDLE hCompletionPort = IOCPManager::getInstance()->getCompletionPort();
-	if( CreateIoCompletionPort( (HANDLE)_socket, hCompletionPort, (ULONG_PTR)IOCPManager::COMPLETION_KEY::PROCESS_EVENT, 0 ) == nullptr)
+	if( CreateIoCompletionPort( (HANDLE)_socket, _completion_port, (ULONG_PTR)IOCPManager::COMPLETION_KEY::PROCESS_EVENT, 0 ) == nullptr)
 	{
-		NKENGINELOG_SOCKETERROR( GetLastError(), L"failed to bind socket to completion port,socket %I64u", _socket );
+		NKENGINELOG_SOCKETERROR_ASSERT( GetLastError(), L"failed to bind socket to completion port,socket %I64u", _socket );
 
 		close();
 		return false;
@@ -59,7 +59,7 @@ bool AsyncServerSocket::open(USHORT port)
 		return false;
 	}
 
-	if( accept(hCompletionPort) == false )
+	if( accept(_completion_port) == false )
 	{
 		return false;
 	}
@@ -156,8 +156,7 @@ bool AsyncServerSocket::onProcess(EventContext& event_context, uint32_t transfer
 	}
 	
 	// ready to accept next socket
-	HANDLE hCompletionPort = IOCPManager::getInstance()->getCompletionPort();
-	if( accept(hCompletionPort) == false )
+	if( accept(_completion_port) == false )
 	{
 		return false;
 	}
@@ -183,7 +182,12 @@ bool AsyncServerSocket::onProcessFailed(EventContext& event_context, uint32_t tr
 	}
 
 	AcceptContext& accept_context = static_cast<AcceptContext&>(event_context);
-	shared_ptr<AsyncSocket> async_socket = dynamic_pointer_cast<AsyncSocket>(accept_context._event_object);
+	shared_ptr<AsyncServerSocket> async_socket = dynamic_pointer_cast<AsyncServerSocket>(accept_context._event_object);
+	if (async_socket == nullptr)
+	{
+		NKENGINELOG_ERROR_ASSERT(L"server socket, casting failed,socket %I64u,transferred %u", _socket, transferred);
+		return false;
+	}
 
 	async_socket->close();
 

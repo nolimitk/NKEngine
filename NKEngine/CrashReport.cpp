@@ -76,7 +76,7 @@ LONG CrashReport::ExceptionFilter( PEXCEPTION_POINTERS pExceptionInfo )
 	}
 
 	// log thread에서 crash가 발생할 수 있다.
-	NKLog::AsyncLogSingleton::getInstance()->close();
+	NKLog::AsyncLogSingleton::destroy();
 
 	if( _previousFilter != NULL )
 		return _previousFilter( pExceptionInfo );

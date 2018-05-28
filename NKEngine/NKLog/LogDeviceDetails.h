@@ -25,44 +25,44 @@ namespace NKLog
 
 	class FileLog : public LogDevice
 	{
-		// @not-thread-safe
-	public:
-		virtual bool create(const NKWString& filename);
-		void close(void);
-		/// @not-thread-safe
-
 	public:
 		virtual bool onWrite(const LogLayout& layout, const LogCategory& category, const NKWString& log) override;
+
+	protected:
+		void close(void);
 		
 	protected:
 		std::wofstream _fpLog;
 
+		// @not-thread-safe
 	public:
-		FileLog(void);
+		FileLog(void) {}
+		FileLog(const NKWString& filename);
 		virtual ~FileLog(void);
+		/// @not-thread-safe
 	};
 		
 	class DailyFileLog : public FileLog
 	{
-		// @not-thread-safe
-	public:
-		void setRoot(const NKWString& root);
-
-	public:
-		virtual bool create(const NKWString& filename);
-		/// @not-thread-safe
-
 	public:
 		virtual bool onWrite(const LogLayout& layout, const LogCategory& category, const NKWString& log) override;
 
+		// @not-thread-safe
 	protected:
-		NKWString _filename;
-		NKWString _root_directory;
+		bool create(const NKWString& rootname, const NKWString& filename);
+		/// @not-thread-safe
+
+	protected:
+		const NKWString _filename;
+		const NKWString _root_directory;
 		struct tm _last_creation_time;
 
+		// @not-thread-safe
 	public:
-		DailyFileLog(void);
+		DailyFileLog(const NKWString& filename);
+		DailyFileLog(const NKWString& rootname, const NKWString& filename);
 		virtual ~DailyFileLog(void);
+		/// @not-thread-safe
 	};
 }
 

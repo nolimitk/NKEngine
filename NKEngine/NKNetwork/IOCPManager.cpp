@@ -39,9 +39,10 @@ bool IOCPManager::create(void)
 	SYSTEM_INFO system_info;
 	GetSystemInfo(&system_info);
 	
+	_worker_thread_vector.reserve(system_info.dwNumberOfProcessors);
 	for (DWORD i = 0; i < system_info.dwNumberOfProcessors; i++)
 	{
-		unique_ptr<WorkerThread> worker_thread = make_unique<WorkerThread>(*this);
+		unique_ptr<WorkerThread> worker_thread = make_unique<WorkerThread>(_completion_port);
 		if (worker_thread->create() == false)
 		{
 			NKENGINELOG_ERROR_ASSERT(L"failed to create worker thread, %u/%u, error code %u", i, system_info.dwNumberOfProcessors, GetLastError());
@@ -82,7 +83,7 @@ void IOCPManager::close(void)
 
 	do
 	{
-		// post stop when all worker threads are joined.
+		// post stop until all worker threads are joined.
 		for (auto iter = _worker_thread_vector.begin(); iter != _worker_thread_vector.end(); iter++)
 		{
 			postStop();
