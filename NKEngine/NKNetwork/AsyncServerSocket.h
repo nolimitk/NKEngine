@@ -38,9 +38,6 @@ namespace NKNetwork
 	public:
 		AsyncServerSocket(void);
 		virtual ~AsyncServerSocket(void);
-
-	private:
-		void* operator new(size_t size){}
 	};
 }
 
