@@ -131,14 +131,21 @@ NKTEST(UniqueID_Test)
 NKTEST(NKString_Test)
 {
 	{
+		NKString str = nullptr;
+		NKString str2(nullptr);
+		NKString str3("nolimitk");
+	}
+
+	{
+		NKWString str = nullptr;
+		NKWString str2(nullptr);
+		NKWString str3(L"nolimitk");
+	}
+
+	{
 		NKString source = "nolimitk";
 		NKWString destnation = MultibyteToUnicode(source);
 		_ASSERT(destnation.empty() == false);
-	}
-	
-	{
-		NKWString test_str = nullptr;
-		NKWString test_str2(nullptr);
 	}
 	
 	return true;
