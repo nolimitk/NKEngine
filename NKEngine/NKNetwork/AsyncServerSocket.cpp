@@ -59,7 +59,7 @@ bool AsyncServerSocket::open(USHORT port)
 		return false;
 	}
 
-	if( accept(_completion_port) == false )
+	if( accept() == false )
 	{
 		return false;
 	}
@@ -90,7 +90,7 @@ bool AsyncServerSocket::close(void)
 	return true;
 }
 
-bool AsyncServerSocket::accept(HANDLE hCompletionPort)
+bool AsyncServerSocket::accept(void)
 {
 	shared_ptr<AsyncSocket> accept_socket = socketAllocator();
 	if(accept_socket == nullptr )
@@ -99,7 +99,7 @@ bool AsyncServerSocket::accept(HANDLE hCompletionPort)
 		return false;
 	}
 
-	if(accept_socket->open(hCompletionPort) == false )
+	if(accept_socket->open(_completion_port) == false )
 	{
 		return false;
 	}
@@ -147,7 +147,6 @@ bool AsyncServerSocket::onProcess(EventContext& event_context, uint32_t transfer
 	//
 
 	onAccept(accept_context._accept_socket);
-	NKENGINELOG_INFO( L"accepted,socket %I64u,new connection,%I64u", _socket, accept_context._accept_socket->getHandle() );
 
 	// peer에서 연결을 바로 종료하면 iocp 등록이 실패할 수 있다.
 	if(accept_context._accept_socket->recv() == false )
@@ -156,7 +155,7 @@ bool AsyncServerSocket::onProcess(EventContext& event_context, uint32_t transfer
 	}
 	
 	// ready to accept next socket
-	if( accept(_completion_port) == false )
+	if( accept() == false )
 	{
 		return false;
 	}
@@ -172,7 +171,7 @@ bool AsyncServerSocket::onProcessFailed(EventContext& event_context, uint32_t tr
 	DWORD lastError = GetLastError();
 	switch( lastError )
 	{
-		// @nolimitk IOCP가 종료 할때 accept 했던 socket이 error를 발생시킨다. 따라서 Server를 종료할 때는 정상이다.
+		// @nolimitk IOCP가 종료 할때 accept를 위해 생성 했던 socket이 error를 발생시킨다. 따라서 Server를 종료할 때는 정상이다.
 	case 995:
 		NKENGINELOG_INFO( L"server socket, terminated,socket %I64u", _socket );
 		break;
