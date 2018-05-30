@@ -35,6 +35,7 @@ namespace NKNetwork
 		bool postStop(void);
 		bool allWorkerThreadsJoinable(void);
 
+		// @TODO interfaece가 아니다. 추후 protected로 전환한다.
 	public:
 		inline const HANDLE getCompletionPort(void) const { return _completion_port; }
 
@@ -46,9 +47,6 @@ namespace NKNetwork
 	public:
 		IOCPManager(void);
 		virtual ~IOCPManager(void);
-
-		friend class AsyncServerSocket;
-		friend class Connection;
 	};
 }
 
