@@ -3,8 +3,8 @@
 
 using namespace NKCore;
 
-__declspec(thread) wchar_t g_customCallstack[MAX_DEPTH][MAX_FUNCTION_NAME_LENGTH] = {0,};
-__declspec(thread) int g_indexCallstack = 0;
+__declspec(thread) wchar_t NKCore::g_customCallstack[MAX_DEPTH][MAX_FUNCTION_NAME_LENGTH] = {0,};
+__declspec(thread) int NKCore::g_indexCallstack = 0;
 
 Guard::Guard(wchar_t *funcName)
 {
