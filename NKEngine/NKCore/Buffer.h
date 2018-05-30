@@ -13,8 +13,9 @@ namespace NKCore
 
 	class Buffer
 	{
-	protected:
+	public:
 		byte* get(void) const { return _internal.get(); }
+		const size_t size(void) const { return _size; }
 
 	protected:
 		std::unique_ptr<byte[]> _internal;
@@ -29,8 +30,6 @@ namespace NKCore
 				_internal = std::make_unique<byte[]>(size);
 			}
 		}
-
-		friend class ByteStream;
 	};
 }
 

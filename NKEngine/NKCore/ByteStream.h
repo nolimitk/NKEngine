@@ -5,13 +5,11 @@
 // 16.05.10
 // byte stream
 
-#include "Buffer.h"
 #include <memory>
+#include "Buffer.h"
 
 namespace NKCore
 {
-	class Buffer;
-
 	class ByteStream
 	{
 	public:
@@ -32,7 +30,7 @@ namespace NKCore
 
 	protected:
 		inline byte* get(void) const { return _buffer.get()->get(); }
-		inline size_t size(void) const { return _buffer.get()->_size; }
+		inline size_t size(void) const { return _buffer.get()->size(); }
 				
 	protected:
 		std::shared_ptr<Buffer> _buffer;
