@@ -14,6 +14,7 @@ namespace NKNetwork
 	// interface
 	class EventObject : public std::enable_shared_from_this<EventObject>
 	{
+		// callbacks
 	public:
 		virtual bool onProcess(EventContext& event_context, uint32_t transferred) = 0;
 		virtual bool onProcessFailed(EventContext& event_context, uint32_t transferred);
