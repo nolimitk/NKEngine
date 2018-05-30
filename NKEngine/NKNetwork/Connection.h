@@ -19,13 +19,12 @@ namespace NKNetwork
 	protected:
 		AsyncSocket::open;
 		AsyncSocket::connect;
-		AsyncSocket::getHandle;
+		//AsyncSocket::getHandle;
 		AsyncSocket::setAddress;
 		
 	public:
-		bool connect(const NKWString& address, uint16_t port, std::unique_ptr<NetworkEvent>&& network_event, bool reconnect = false);
-		bool connect(const NKWString& address, uint16_t port, bool reconnect = false);
-		bool connect(const NKString& address, uint16_t port, bool reconnect = false);
+		bool connect(const HANDLE completion_port, const NKWString& address, uint16_t port);
+		bool connect(const HANDLE completion_port, const NKString& address, uint16_t port);
 		bool reconnect(void);
 
 	public:
@@ -89,8 +88,11 @@ namespace NKNetwork
 		bool _reconnect;
 		
 	public:
-		Connection(void);
+		Connection(std::unique_ptr<NetworkEvent>&& network_event, bool reconnect = false);
 		virtual ~Connection(void);
+		
+	private:
+		void* operator new(size_t size) {}
 	};
 }
 

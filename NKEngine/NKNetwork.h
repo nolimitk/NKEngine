@@ -12,6 +12,7 @@
 #include "NKNetwork/EventContext.h"
 #include "NKNetwork/Packet.h"
 #include "NKNetwork/RecvStream.h"
+#include "NKNetwork/SendStream.h"
 #include "NKNetwork/AsyncSocket.h"
 #include "NKNetwork/AsyncServerSocket.h"
 #include "NKNetwork/Connection.h"

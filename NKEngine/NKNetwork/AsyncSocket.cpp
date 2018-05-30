@@ -4,7 +4,6 @@
 #include <MSWSock.h>
 
 #include "../NKEngineLog.h"
-#include "../NKCore.h"
 #include "IOCPManager.h"
 #include "EventContext.h"
 #include "Packet.h"
@@ -23,9 +22,9 @@ AsyncSocket::~AsyncSocket(void)
 {
 }
 
-bool AsyncSocket::open(HANDLE hCompletionPort)
+bool AsyncSocket::open(const HANDLE completion_port)
 {
-	//__GUARD__;
+	__GUARD__;
 
 	_socket = WSASocket( AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED );
 	if (_socket == INVALID_SOCKET)
@@ -34,7 +33,7 @@ bool AsyncSocket::open(HANDLE hCompletionPort)
 		return false;
 	}
 
-	if (CreateIoCompletionPort( (HANDLE)_socket, hCompletionPort, (ULONG_PTR)IOCPManager::COMPLETION_KEY::PROCESS_EVENT, 0 ) == nullptr)
+	if (CreateIoCompletionPort( (HANDLE)_socket, completion_port, (ULONG_PTR)IOCPManager::COMPLETION_KEY::PROCESS_EVENT, 0 ) == nullptr)
 	{
 		NKENGINELOG_SOCKETERROR( GetLastError(), L"failed to bind socket to completion port,socket %I64u", _socket );
 
@@ -46,12 +45,12 @@ bool AsyncSocket::open(HANDLE hCompletionPort)
 
 	return true;
 
-	//__UNGUARD__;
+	__UNGUARD__;
 }
 
 bool AsyncSocket::connect(const NKString& address, USHORT port)
 {
-	//__GUARD__;
+	__GUARD__;
 
 	SOCKADDR_IN addr;
 	memset( &addr, 0, sizeof(addr) );
@@ -99,6 +98,8 @@ bool AsyncSocket::connect(const NKString& address, USHORT port)
 	memset( pConnectContext, 0, sizeof(EventContext) );
 	pConnectContext->_type = EVENTCONTEXTTYPE::CONNECT;
 	pConnectContext->_event_object = shared_from_this();
+
+	NKENGINELOG_INFO(L"try to connect,socket %I64u,%S:%d", _socket, address.c_str(), port);
 	
 	if( IOCPManager::CONNECTEXFUNC( _socket, (SOCKADDR *)&serverAddr, sizeof(serverAddr), NULL, 0, NULL, pConnectContext ) == SOCKET_ERROR )
 	{
@@ -109,11 +110,29 @@ bool AsyncSocket::connect(const NKString& address, USHORT port)
 		}
 	}
 
-	NKENGINELOG_INFO( L"try to connect,socket %I64u,%S:%d", _socket, address.c_str(), port );
-
 	return true;
 
-	//__UNGUARD__;
+	__UNGUARD__;
+}
+
+bool AsyncSocket::disconnect(void)
+{
+	if (_socket == INVALID_SOCKET)
+	{
+		NKENGINELOG_ERROR(L"socket handle is invalid");
+		return false;
+	}
+
+	NKENGINELOG_INFO(L"disconnect an async socket,socket %I64u", _socket);
+
+	if (shutdown(_socket, SD_SEND) == SOCKET_ERROR)
+	{
+		NKENGINELOG_SOCKETERROR(WSAGetLastError(), L"failed to disconnect,socket %I64u", _socket);
+		close();
+		return false;
+	}
+
+	return true;
 }
 
 bool AsyncSocket::close(void)
@@ -247,11 +266,10 @@ bool AsyncSocket::send(const SendStream& stream)
 	{
 		if( WSAGetLastError() != WSA_IO_PENDING )
 		{
+			NKENGINELOG_SOCKETERROR(WSAGetLastError(), L"failed to send,socket %I64u", _socket);
+
 			delete pSendContext;
 			pSendContext = nullptr;
-
-			NKENGINELOG_SOCKETERROR( WSAGetLastError(), L"failed to send,socket %I64u", _socket );
-
 			return false;
 		}
 	}
@@ -261,29 +279,9 @@ bool AsyncSocket::send(const SendStream& stream)
 	return true;
 }
 
-bool AsyncSocket::disconnect(void)
-{
-	if( _socket == INVALID_SOCKET )
-	{
-		NKENGINELOG_ERROR( L"socket handle is invalid" );
-		return false;
-	}
-
-	if( shutdown(_socket,SD_SEND) == SOCKET_ERROR )
-	{
-		NKENGINELOG_SOCKETERROR( WSAGetLastError(), L"failed to disconnect,socket %I64u", _socket );
-		close();
-		return false;
-	}
-
-	NKENGINELOG_INFO( L"disconnect an async socket,socket %I64u", _socket );
-	
-	return true;
-}
-
 bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 {
-//	__GUARD__;
+	__GUARD__;
 
 	_ASSERT( event_context._type == EVENTCONTEXTTYPE::RECEIVE || event_context._type == EVENTCONTEXTTYPE::SEND || event_context._type == EVENTCONTEXTTYPE::CONNECT );
 
@@ -375,12 +373,12 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 	
 	return true;
 
-	//__UNGUARD__;
+	__UNGUARD__;
 }
 
 bool AsyncSocket::onProcessFailed(EventContext& event_context, uint32_t transferred)
 {
-	//__GUARD__;
+	__GUARD__;
 
 	_ASSERT( event_context._type == EVENTCONTEXTTYPE::RECEIVE || event_context._type == EVENTCONTEXTTYPE::SEND || event_context._type == EVENTCONTEXTTYPE::CONNECT );
 
@@ -440,7 +438,7 @@ bool AsyncSocket::onProcessFailed(EventContext& event_context, uint32_t transfer
 	
 	return true;
 
-	//__UNGUARD__;
+	__UNGUARD__;
 }
 
 bool AsyncSocket::onClosed(void)

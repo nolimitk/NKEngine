@@ -11,15 +11,15 @@
 using namespace NKNetwork;
 using namespace std;
 
-Connection::Connection(void)
-	:_network_event(nullptr)
+Connection::Connection(std::unique_ptr<NetworkEvent>&& network_event, bool reconnect)
+	:_network_event(std::move(network_event))
+	, _reconnect(reconnect)
 	//,_pService(nullptr)
 	//,_pSession(nullptr)
 	, _heart_beat(false)
 	, _last_pongtime(0)
 	, _sent_ping(false)
 	, _port(0)
-	, _reconnect(false)
 {
 }
 
@@ -27,44 +27,32 @@ Connection::~Connection(void)
 {
 }
 
-bool Connection::connect(const NKWString& address, uint16_t port, std::unique_ptr<NetworkEvent>&& network_event, bool reconnect)
+bool Connection::connect(const HANDLE completion_port, const NKWString& address, uint16_t port)
 {
-	_network_event = std::move(network_event);
-		
-	if( connect( address, port, reconnect ) == false )
+	NKString mb_address = UnicodeToMultibyte(address);
+
+	if (mb_address.length() == 0)
 	{
+		NKENGINELOG_ERROR(L"failed to connect,address is invalid string,connection %I64u, %s, %u", _id, address, port);
 		return false;
 	}
 
-	return true;
+	return connect(completion_port, mb_address, port);
 }
 
-bool Connection::connect(const NKWString& address, uint16_t port, bool reconnect)
+bool Connection::connect(const HANDLE completion_port, const NKString& address, uint16_t port)
 {
-	_address = UnicodeToMultibyte(address);
-
-	if (_address.length() == 0)
+	if( open(completion_port) == false )
 	{
-		NKENGINELOG_ERROR(L"failed to connect,address is invalid string,connection %I64u, %s, %u", _id, address, port );
+		NKENGINELOG_ERROR( L"failed to connect,to open a socket is failed,connection %I64u, %S:%d", _id, address, port);
 		return false;
 	}
 
-	return connect(_address, port, reconnect );
-}
-
-bool Connection::connect(const NKString& address, uint16_t port, bool reconnect)
-{
-	if( open( IOCPManager::getInstance()->getCompletionPort() ) == false )
-	{
-		NKENGINELOG_ERROR( L"failed to connect,open to socket is failed,connection %I64u, %S:%d", _id, address, port );
-		return false;
-	}
-
-	_reconnect = reconnect;
+	// for reconnecting
 	_address = address;
 	_port = port;
 
-	if( AsyncSocket::connect(address, port ) == false )
+	if( AsyncSocket::connect(address, port) == false )
 	{
 		return false;
 	}
@@ -87,7 +75,7 @@ bool Connection::reconnect(void)
 	{
 		return false;
 	}
-	return connect( _address, _port, _reconnect );
+	return connect( _address, _port);
 }
 
 bool Connection::onClosed(void)
