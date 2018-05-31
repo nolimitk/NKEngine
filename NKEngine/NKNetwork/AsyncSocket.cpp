@@ -8,12 +8,13 @@
 #include "EventContext.h"
 #include "Packet.h"
 #include "SendStream.h"
+#include "NetworkEvent.h"
 
 using namespace NKNetwork;
 using namespace std;
 
 AsyncSocket::AsyncSocket(void)
-	:_socket(INVALID_SOCKET)
+	: _socket(INVALID_SOCKET)
 	, _recv_stream(make_shared<NKCore::Buffer>(BUFFER_LENGTH_8K))
 {
 }
@@ -189,66 +190,21 @@ bool AsyncSocket::recv(void)
 	return true;
 }
 
-//bool AsyncSocket::send(byte *pSendData, uint16_t len)
-//{
-//	//__GUARD__;
-//
-//	if (_socket == INVALID_SOCKET)
-//	{
-//		NKENGINELOG_ERROR(L"socket handle is invalid");
-//		return false;
-//	}
-//
-//	if( pSendData == NULL || len == 0 )
-//	{
-//		NKENGINELOG_ERROR( L"data is null or length is 0,socket %I64u", _socket);
-//		return false;
-//	}
-//	
-//	// memory copy가 발생하지 않기 위해서는 Send(Packet &) 함수를 사용한다.
-//	BufferContext8K *pBufferContext = new BufferContext8K();
-//	pBufferContext->_type = EVENTCONTEXTTYPE::SEND;
-//	memcpy_s( pBufferContext->_buffer.buf, pBufferContext->_buffer.len, pSendData, len );
-//	pBufferContext->_buffer.len = len;
-//	//
-//
-//	int ret = 0;
-//	DWORD sentBytes = 0;
-//
-//	//RCO_REF(this,RCO_REFERER_TYPE_ASYNCSOCKET);
-//	
-//	ret = WSASend( _socket, &pBufferContext->_buffer, 1, (LPDWORD)&sentBytes, 0, pBufferContext, NULL );
-//	if( ret == SOCKET_ERROR )
-//	{
-//		if( WSAGetLastError() != WSA_IO_PENDING )
-//		{
-////			pBufferContext->Unref();
-////			Unref();
-//			NKENGINELOG_SOCKETERROR( WSAGetLastError(), L"failed to send,socket %I64u", _socket );
-//			return false;
-//		}
-//	}
-//
-//	//__UNGUARD__;
-//
-//	return true;
-//}
-
 bool AsyncSocket::send(const SendStream& stream)
 {
-	//__GUARD__;
+	__GUARD__;
 
 	if ( _socket == INVALID_SOCKET )
 	{
 		NKENGINELOG_ERROR( L"socket handle is invalid" );
 		return false;
 	}
-	
-	/*if ( packet.getLength() == 0 )
+		
+	if (stream.getLength() == 0)
 	{
-		NKENGINELOG_ERROR( L"send stream is null, %I64u", _socket );
+		NKENGINELOG_ERROR( L"send stream is empty, %I64u", _socket );
 		return false;
-	}*/
+	}
 
 	SendContext* pSendContext = new SendContext(stream);
 	pSendContext->_type = EVENTCONTEXTTYPE::SEND;
@@ -274,7 +230,7 @@ bool AsyncSocket::send(const SendStream& stream)
 		}
 	}
 
-	//__UNGUARD__;
+	__UNGUARD__;
 
 	return true;
 }

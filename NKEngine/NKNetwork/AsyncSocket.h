@@ -22,13 +22,13 @@ namespace NKNetwork
 		bool send(const SendStream& stream);
 
 	public:
-		// @TODO open은 좋은 인터페이스는 아니다. AsyncServerSocket에서 accept를 위한 socket 풀을 만들어놀때 필요하다.
+		// @TODO it would be protected. AsyncServerSocket에서 accept를 위한 socket 풀을 만들어놀때 필요하다.
 		bool open(const HANDLE completion_port);
 		
-		// @TODO 이건... 인터페이스는 아니다. disconnect 통지가 오면 AsyncSocket에서 사용하는 함수 
+		// @TODO it would be protected. disconnect 통지가 오면 AsyncServerSocket에서 사용하는 함수 
 		bool close(void);
 
-		// @TODO not interface. recv event를 IOCP에 등록하기 위해 AsyncSocket에서 사용
+		// @TODO it would be protected. recv event를 IOCP에 등록하기 위해 AsyncServerSocket에서 사용
 		bool recv(void);
 				
 	public:
@@ -43,6 +43,7 @@ namespace NKNetwork
 		virtual bool onProcess(EventContext& event_context, uint32_t transferred) override;
 		virtual bool onProcessFailed(EventContext& event_context, uint32_t transferred) override;
 
+	protected:
 		virtual bool onClosed(void);
 		virtual bool onConnected(void);
 		virtual bool onConnectFailed(void);
@@ -56,7 +57,7 @@ namespace NKNetwork
 		SOCKET _socket;
 		NKWString _address;
 		RecvStream _recv_stream;
-
+		
 	public:
 		AsyncSocket(void);
 		virtual ~AsyncSocket(void);
