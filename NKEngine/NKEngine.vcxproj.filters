@@ -129,13 +129,7 @@
     <ClInclude Include="NKNetwork\AsyncSocket.h">
       <Filter>NKNetwork</Filter>
     </ClInclude>
-    <ClInclude Include="NKNetwork\Connection.h">
-      <Filter>NKNetwork</Filter>
-    </ClInclude>
     <ClInclude Include="NKNetwork\AsyncServerSocket.h">
-      <Filter>NKNetwork</Filter>
-    </ClInclude>
-    <ClInclude Include="NKNetwork\NetworkEvent.h">
       <Filter>NKNetwork</Filter>
     </ClInclude>
     <ClInclude Include="NKNetwork\RecvStream.h">
@@ -170,6 +164,9 @@
     </ClInclude>
     <ClInclude Include="NKScheduler\Scheduler.h">
       <Filter>NKScheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="NKNetwork\NetworkCallbacks.h">
+      <Filter>NKNetwork</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -234,9 +231,6 @@
       <Filter>NKNetwork</Filter>
     </ClCompile>
     <ClCompile Include="NKNetwork\Packet.cpp">
-      <Filter>NKNetwork</Filter>
-    </ClCompile>
-    <ClCompile Include="NKNetwork\Connection.cpp">
       <Filter>NKNetwork</Filter>
     </ClCompile>
     <ClCompile Include="NKNetwork\AsyncServerSocket.cpp">

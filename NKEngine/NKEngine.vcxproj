@@ -14,19 +14,19 @@
     <ProjectGuid>{1AB835C8-91F8-4802-8356-821660B97EFA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>NKEngine</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -111,11 +111,10 @@
     <ClInclude Include="NKNetwork.h" />
     <ClInclude Include="NKNetwork\AsyncServerSocket.h" />
     <ClInclude Include="NKNetwork\AsyncSocket.h" />
-    <ClInclude Include="NKNetwork\Connection.h" />
     <ClInclude Include="NKNetwork\Event.h" />
     <ClInclude Include="NKNetwork\EventContext.h" />
     <ClInclude Include="NKNetwork\IOCPManager.h" />
-    <ClInclude Include="NKNetwork\NetworkEvent.h" />
+    <ClInclude Include="NKNetwork\NetworkCallbacks.h" />
     <ClInclude Include="NKNetwork\Packet.h" />
     <ClInclude Include="NKNetwork\Protocol.h" />
     <ClInclude Include="NKNetwork\RecvStream.h" />
@@ -151,7 +150,6 @@
     <ClCompile Include="NKLog\NKLogger.cpp" />
     <ClCompile Include="NKNetwork\AsyncServerSocket.cpp" />
     <ClCompile Include="NKNetwork\AsyncSocket.cpp" />
-    <ClCompile Include="NKNetwork\Connection.cpp" />
     <ClCompile Include="NKNetwork\Event.cpp" />
     <ClCompile Include="NKNetwork\EventContext.cpp" />
     <ClCompile Include="NKNetwork\IOCPManager.cpp" />
