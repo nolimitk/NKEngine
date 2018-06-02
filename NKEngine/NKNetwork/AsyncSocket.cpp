@@ -223,7 +223,7 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 			if( transferred == 0 )
 			{
 				close();
-				onClosed();
+				_callback->onClosed(dynamic_pointer_cast<AsyncSocket>(shared_from_this()));
 			}
 			else
 			{
@@ -263,7 +263,7 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 							return false;
 						}
 
-						onReceived(packet);
+						_callback->onReceived(dynamic_pointer_cast<AsyncSocket>(shared_from_this()), packet);
 
 						if(_recv_stream.getLength() != 0 )
 						{
@@ -286,14 +286,15 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 		{
 			NKENGINELOG_INFO( L"send completed,socket %I64u,length %d", _socket, transferred );
 
-			onSent();
+			_callback->onSent(dynamic_pointer_cast<AsyncSocket>(shared_from_this()));
+
 		}
 		break;
 	case EVENTCONTEXTTYPE::CONNECT:
 		{
 			setsockopt( _socket, SOL_SOCKET, SO_UPDATE_CONNECT_CONTEXT, NULL, 0 );
 
-			onConnected();
+			_callback->onConnected(dynamic_pointer_cast<AsyncSocket>(shared_from_this()));
 
 			recv();
 			
@@ -333,7 +334,7 @@ bool AsyncSocket::onProcessFailed(EventContext& event_context, uint32_t transfer
 			{
 				close();
 			}
-			onClosed();
+			_callback->onClosed(dynamic_pointer_cast<AsyncSocket>(shared_from_this()));
 		}
 		break;
 	case EVENTCONTEXTTYPE::SEND:
@@ -357,7 +358,7 @@ bool AsyncSocket::onProcessFailed(EventContext& event_context, uint32_t transfer
 			}
 
 			close();
-			onConnectFailed();
+			_callback->onConnectFailed(dynamic_pointer_cast<AsyncSocket>(shared_from_this()));
 		}
 		break;
 	default:
@@ -370,29 +371,4 @@ bool AsyncSocket::onProcessFailed(EventContext& event_context, uint32_t transfer
 	return true;
 
 	__UNGUARD__;
-}
-
-bool AsyncSocket::onClosed(void)
-{
-	return true;
-}
-
-bool AsyncSocket::onConnected(void)
-{
-	return true;
-}
-
-bool AsyncSocket::onConnectFailed(void)
-{
-	return true;
-}
-
-bool AsyncSocket::onReceived(const Packet& packet)
-{
-	return true;
-}
-
-bool AsyncSocket::onSent(void)
-{
-	return true;
 }

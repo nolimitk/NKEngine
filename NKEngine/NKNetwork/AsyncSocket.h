@@ -40,14 +40,7 @@ namespace NKNetwork
 	protected:
 		virtual bool onProcess(EventContext& event_context, uint32_t transferred) override;
 		virtual bool onProcessFailed(EventContext& event_context, uint32_t transferred) override;
-
-	protected:
-		virtual bool onClosed(void);
-		virtual bool onConnected(void);
-		virtual bool onConnectFailed(void);
-		virtual bool onReceived(const Packet& packet);
-		virtual bool onSent(void);
-
+		
 	protected:
 		const static int BUFFER_LENGTH_8K = 8000; // tbb small object size
 
