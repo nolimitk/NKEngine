@@ -21,6 +21,9 @@ namespace NKNetwork
 		bool create(void);
 		void close(void);
 		bool postEvent(std::shared_ptr<EventObject>& event_object, int64_t param);
+
+	public:
+		SOCKET openSocket(void);
 	
 	public:
 		static LPFN_CONNECTEX CONNECTEXFUNC;
@@ -34,10 +37,6 @@ namespace NKNetwork
 	protected:
 		bool postStop(void);
 		bool allWorkerThreadsJoinable(void);
-
-		// @TODO interfaece가 아니다. 추후 protected로 전환한다.
-	public:
-		inline const HANDLE getCompletionPort(void) const { return _completion_port; }
 
 	protected:
 		WinSockLib _win_sock_lib;

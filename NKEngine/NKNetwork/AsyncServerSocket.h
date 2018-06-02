@@ -7,27 +7,21 @@
 
 #include <WinSock2.h>
 #include "Event.h"
-#include "EventContext.h"
 
 namespace NKNetwork
 {
-	class AsyncSocket;
+	class ServerCallback;
+	class ClientCallback;
 
 	class AsyncServerSocket : public EventObject
 	{
 	public:
 		bool open(USHORT port);
 		bool close(void);
-
-	protected:
-		virtual std::shared_ptr<AsyncSocket> socketAllocator(void);
-
+				
 	protected:
 		virtual bool onProcess(EventContext& event_context, uint32_t transferred) override;
 		virtual bool onProcessFailed(EventContext& event_context, uint32_t transferred) override;
-
-	protected:
-		virtual void onAccept(std::shared_ptr<AsyncSocket>& async_socket);
 
 	protected:
 		bool accept(void);
@@ -36,12 +30,12 @@ namespace NKNetwork
 		const static int BACKLOG_DEFAULT = 1024;
 
 	protected:
-		const HANDLE _completion_port;
 		SOCKET _socket;
-		AcceptContext _accept_context;
+		std::shared_ptr<ServerCallback> _server_callback;
+		std::shared_ptr<ClientCallback> _client_callback;
 
 	public:
-		AsyncServerSocket(const HANDLE completion_port);
+		AsyncServerSocket(const std::shared_ptr<ServerCallback>& server_callback, const std::shared_ptr<ClientCallback>& client_callback);
 		virtual ~AsyncServerSocket(void);
 
 		// it calls shared_from_this() function internally, so it must not be created by new operator

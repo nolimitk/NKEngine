@@ -101,7 +101,17 @@ void IOCPManager::close(void)
 
 bool IOCPManager::postEvent(std::shared_ptr<EventObject>& event_object, int64_t param)
 {
-	if (event_object == nullptr) return false;
+	if (_completion_port == nullptr)
+	{
+		NKENGINELOG_ERROR_ASSERT(L"iocp manager is not created");
+		return false;
+	}
+
+	if (event_object == nullptr)
+	{
+		NKENGINELOG_ERROR_ASSERT(L"event object is null");
+		return false;
+	}
 
 	// @TODO refactoring using shared_ptr, do not use native pointer
 	SchedulerContext *pContext = new SchedulerContext;
@@ -115,11 +125,42 @@ bool IOCPManager::postEvent(std::shared_ptr<EventObject>& event_object, int64_t 
 	{
 		NKENGINELOG_SOCKETERROR_ASSERT( GetLastError(), L"failed to post event" );
 
-		delete pContext;
-		pContext = nullptr;
+		SAFE_DELETE(pContext);
 		return false;
 	}
 	return true;
+}
+
+SOCKET IOCPManager::openSocket(void)
+{
+	if (_completion_port == nullptr)
+	{
+		NKENGINELOG_ERROR_ASSERT(L"iocp manager is not created");
+		return INVALID_SOCKET;
+	}
+
+	SOCKET socket;
+	socket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
+	if (socket == INVALID_SOCKET)
+	{
+		NKENGINELOG_SOCKETERROR_ASSERT(WSAGetLastError(), L"failed to open a socket");
+		return INVALID_SOCKET;
+	}
+
+	if (CreateIoCompletionPort((HANDLE)socket, _completion_port, (ULONG_PTR)COMPLETION_KEY::PROCESS_EVENT, 0) == nullptr)
+	{
+		NKENGINELOG_SOCKETERROR(GetLastError(), L"failed to associate completion port with ,socket %I64u", socket);
+
+		if (closesocket(socket) == SOCKET_ERROR)
+		{
+			NKENGINELOG_SOCKETERROR(WSAGetLastError(), L"failed to close,socket %I64u", socket);
+		}
+		return INVALID_SOCKET;
+	}
+
+	NKENGINELOG_INFO(L"success to open socket,socket %I64u", socket);
+
+	return socket;
 }
 
 bool NKNetwork::IOCPManager::postStop(void)

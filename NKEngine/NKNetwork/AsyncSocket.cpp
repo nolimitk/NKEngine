@@ -8,45 +8,20 @@
 #include "EventContext.h"
 #include "Packet.h"
 #include "SendStream.h"
-#include "NetworkEvent.h"
+#include "NetworkCallbacks.h"
 
 using namespace NKNetwork;
 using namespace std;
 
-AsyncSocket::AsyncSocket(void)
-	: _socket(INVALID_SOCKET)
+AsyncSocket::AsyncSocket(SOCKET socket, const std::shared_ptr<ClientCallback>& callback)
+	: _socket(socket)
+	, _callback(callback)
 	, _recv_stream(make_shared<NKCore::Buffer>(BUFFER_LENGTH_8K))
 {
 }
 
 AsyncSocket::~AsyncSocket(void)
 {
-}
-
-bool AsyncSocket::open(const HANDLE completion_port)
-{
-	__GUARD__;
-
-	_socket = WSASocket( AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED );
-	if (_socket == INVALID_SOCKET)
-	{
-		NKENGINELOG_SOCKETERROR( WSAGetLastError(), L"failed to open socket" );
-		return false;
-	}
-
-	if (CreateIoCompletionPort( (HANDLE)_socket, completion_port, (ULONG_PTR)IOCPManager::COMPLETION_KEY::PROCESS_EVENT, 0 ) == nullptr)
-	{
-		NKENGINELOG_SOCKETERROR( GetLastError(), L"failed to bind socket to completion port,socket %I64u", _socket );
-
-		close();
-		return false;
-	}
-
-	NKENGINELOG_INFO( L"success to open socket,socket %I64u", _socket );
-
-	return true;
-
-	__UNGUARD__;
 }
 
 bool AsyncSocket::connect(const NKString& address, USHORT port)

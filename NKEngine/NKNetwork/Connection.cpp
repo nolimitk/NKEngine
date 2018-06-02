@@ -12,7 +12,7 @@ using namespace NKNetwork;
 using namespace std;
 
 Connection::Connection(std::unique_ptr<NetworkEvent>&& network_event, bool reconnect)
-	:_network_event(std::move(network_event))
+	: _network_event(std::move(network_event))
 	, _reconnect(reconnect)
 	//,_pService(nullptr)
 	//,_pSession(nullptr)
@@ -27,6 +27,7 @@ Connection::~Connection(void)
 {
 }
 
+/*
 bool Connection::connect(const HANDLE completion_port, const NKWString& address, uint16_t port)
 {
 	NKString mb_address = UnicodeToMultibyte(address);
@@ -59,6 +60,7 @@ bool Connection::connect(const HANDLE completion_port, const NKString& address, 
 
 	return true;
 }
+*/
 
 bool Connection::reconnect(void)
 {

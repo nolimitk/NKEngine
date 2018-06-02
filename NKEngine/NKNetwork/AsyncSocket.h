@@ -13,6 +13,7 @@ namespace NKNetwork
 {
 	class Packet;
 	class SendStream;
+	class ClientCallback;
 
 	class AsyncSocket : public EventObject
 	{
@@ -22,9 +23,6 @@ namespace NKNetwork
 		bool send(const SendStream& stream);
 
 	public:
-		// @TODO it would be protected. AsyncServerSocket에서 accept를 위한 socket 풀을 만들어놀때 필요하다.
-		bool open(const HANDLE completion_port);
-		
 		// @TODO it would be protected. disconnect 통지가 오면 AsyncServerSocket에서 사용하는 함수 
 		bool close(void);
 
@@ -57,9 +55,10 @@ namespace NKNetwork
 		SOCKET _socket;
 		NKWString _address;
 		RecvStream _recv_stream;
+		std::shared_ptr<ClientCallback> _callback;
 		
 	public:
-		AsyncSocket(void);
+		AsyncSocket(SOCKET socket,const std::shared_ptr<ClientCallback>& callback);
 		virtual ~AsyncSocket(void);
 
 		// it calls shared_from_this() function internally, so it must not be created by new operator

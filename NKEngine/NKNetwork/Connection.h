@@ -7,24 +7,23 @@
 
 #include <memory>
 #include "AsyncSocket.h"
-#include "NetworkEvent.h"
+#include "NetworkCallbacks.h"
 
 namespace NKNetwork
 {
-	class Session;
-	class Service;
+	//class Session;
+	//class Service;
 
 	class Connection : public AsyncSocket
 	{
 	protected:
-		AsyncSocket::open;
 		AsyncSocket::connect;
 		//AsyncSocket::getHandle;
 		AsyncSocket::setAddress;
 		
 	public:
-		bool connect(const HANDLE completion_port, const NKWString& address, uint16_t port);
-		bool connect(const HANDLE completion_port, const NKString& address, uint16_t port);
+		//bool connect(const HANDLE completion_port, const NKWString& address, uint16_t port);
+		//bool connect(const HANDLE completion_port, const NKString& address, uint16_t port);
 		bool reconnect(void);
 
 	public:
@@ -91,6 +90,7 @@ namespace NKNetwork
 		Connection(std::unique_ptr<NetworkEvent>&& network_event, bool reconnect = false);
 		virtual ~Connection(void);
 		
+		// it calls shared_from_this() function internally, so it must not be created by new operator
 	private:
 		void* operator new(size_t size) {}
 	};
