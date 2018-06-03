@@ -9,5 +9,4 @@ bool NKEngine::StartEngine(void)
 void NKEngine::ReleaseEngine(void)
 {
 	NKEngineLogSingleton::destroy();
-	NKLog::AsyncLogSingleton::destroy();
 }

@@ -5,8 +5,6 @@
 
 int main()
 {
-	NKEngine::StartEngine();
-
 	//KUnitTest::getInstance().run(true);
 	NKUnitTest::getInstance().run(false);
 

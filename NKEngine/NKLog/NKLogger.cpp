@@ -39,6 +39,20 @@ NKLogger::NKLogger(const NKWString& name)
 
 NKLogger::~NKLogger(void)
 {
+	AsyncLogSingleton::destroy();
+}
+
+bool NKLog::NKLogger::write(LAYOUT layout, const wchar_t * format, ...)
+{
+	if (format == nullptr) return false;
+
+	va_list argptr;
+	va_start(argptr, format);
+
+	wchar_t buffer[1024];
+	vswprintf(buffer, 1024, format, argptr);
+
+	return AsyncLogSingleton::getInstance()->write(_layout[layout], _category, buffer);
 }
 
 bool NKLogger::write(LAYOUT layout, const wchar_t * file, int line, const wchar_t * format, ...)
@@ -49,21 +63,8 @@ bool NKLogger::write(LAYOUT layout, const wchar_t * file, int line, const wchar_
 	va_list argptr;
 	va_start(argptr, format);
 
-	wchar_t buffer[MAX_LENGTH_LOG_BUFFER];
-	vswprintf(buffer, MAX_LENGTH_LOG_BUFFER, format, argptr);
+	wchar_t buffer[1024];
+	vswprintf(buffer, 1024, format, argptr);
 
 	return write(layout, L"[%s],[%d],%s", file, line, buffer);
-}
-
-bool NKLog::NKLogger::write(LAYOUT layout, const wchar_t * format, ...)
-{
-	if (format == nullptr) return false;
-
-	va_list argptr;
-	va_start(argptr, format);
-
-	wchar_t buffer[MAX_LENGTH_LOG_BUFFER];
-	vswprintf(buffer, MAX_LENGTH_LOG_BUFFER, format, argptr);
-
-	return AsyncLogSingleton::getInstance()->write(_layout[layout], _category, buffer);
 }
