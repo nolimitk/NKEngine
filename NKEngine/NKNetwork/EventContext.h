@@ -33,6 +33,8 @@ namespace NKNetwork
 
 	public:
 		EventContext(void);
+		// @nolimitk IOCP에 pointer를 넘기면 virtual table이 nullptr이 된다.
+		//virtual ~EventContext(void) {}
 	};
 
 	class AcceptContext : public EventContext
@@ -42,7 +44,8 @@ namespace NKNetwork
 
 	public:
 		char _outputBuffer[BUFFER_SIZE];
-		std::shared_ptr<AsyncSocket> _accept_socket;
+		// @nolimitk EventContext가 virtual destructor를 사용하지 못하기 때문에 shared_ptr을 쓰지 못하고 수동으로 관리해야 한다.
+		AsyncSocket* _accept_socket;
 
 	public:
 		AcceptContext(void);

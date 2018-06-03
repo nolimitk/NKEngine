@@ -173,6 +173,7 @@ NKTEST(AsyncServerSocket_Test)
 	return true;
 }
 
+/*
 class MockCallback : public ClientCallback
 {
 public:
@@ -233,8 +234,8 @@ NKTEST(AsyncServerSocket_AsyncSocket_Test)
 	class MockClientCallback : public ClientCallback
 	{
 	public:
-		void onConnected(std::shared_ptr<AsyncSocket> socket) override { _ASSERT(false); }
-		void onReceived(std::shared_ptr<AsyncSocket> socket, const Packet& packet) override
+		void onConnected(shared_ptr<AsyncSocket> socket) override { _ASSERT(false); }
+		void onReceived(shared_ptr<AsyncSocket> socket, const Packet& packet) override
 		{
 			shared_ptr<NKCore::Buffer> buffer = make_shared<NKCore::Buffer>(1024);
 			SendStream send_stream(buffer);
@@ -244,9 +245,9 @@ NKTEST(AsyncServerSocket_AsyncSocket_Test)
 
 			_onReceived = true;
 		}
-		void onSent(std::shared_ptr<AsyncSocket> socket) override { _onSent = true; }
-		void onConnectFailed(std::shared_ptr<AsyncSocket> socket) override { _ASSERT(false); }
-		void onClosed(std::shared_ptr<AsyncSocket> socket) override {}
+		void onSent(shared_ptr<AsyncSocket> socket) override { _onSent = true; }
+		void onConnectFailed(shared_ptr<AsyncSocket> socket) override { _ASSERT(false); }
+		void onClosed(shared_ptr<AsyncSocket> socket) override {}
 
 	public:
 		bool _onConnected;
@@ -348,5 +349,7 @@ NKTEST(AsyncServerSocket_AsyncSocket_Test)
 //	IOCPManager::getInstance()->close();
 //	return true;
 //}
+*/
+
 
 #endif // __NKNETWORKTEST_HEADER__

@@ -38,7 +38,7 @@ bool NKEngineLog::writeSocketError(const wchar_t* file, int line, uint32_t err, 
 	wchar_t buffer[1024];
 	vswprintf(buffer, 1024, format, argptr);
 
-	bool ret = write(LAYOUT::LAYOUT_ERROR, L"[SOCKETERROR],[%s],[%d],%u,%s,%s", file, line, err, pErrorText, buffer);
+	bool ret = write(LAYOUT::LAYOUT_ERROR, file, line, L"[SOCKETERROR],[%s],[%d],%u,%s,%s", err, pErrorText, buffer);
 	
 	if (pErrorText != nullptr)
 	{
