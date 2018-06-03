@@ -91,19 +91,12 @@ bool AsyncServerSocket::accept(void)
 	{
 		return false;
 	}
-
-	shared_ptr<AsyncSocket> accept_socket = make_shared<AsyncSocket>(socket, _client_callback);
-	if(accept_socket == nullptr )
-	{
-		NKENGINELOG_ERROR( L"failed to allocate new accept ,socket %I64u", socket);
-		return false;
-	}
-			
+				
 	DWORD dwBytes = 0;
 	AcceptContext* pAcceptContext = new AcceptContext();
 	pAcceptContext->_type = EVENTCONTEXTTYPE::ACCEPT;
 	pAcceptContext->_event_object = shared_from_this();
-	pAcceptContext->_accept_socket = accept_socket;
+	pAcceptContext->_accept_socket = new AsyncSocket(socket, _client_callback);
 	
 	// @TODO 빠른 접속을 위해 backlog 만큼의 accept를 실행한다.
 	if( AcceptEx( _socket, socket, pAcceptContext->_outputBuffer, 0, sizeof(SOCKADDR_IN)+16, sizeof(SOCKADDR_IN)+16, &dwBytes, pAcceptContext) == FALSE )
@@ -112,7 +105,7 @@ bool AsyncServerSocket::accept(void)
 		{
 			NKENGINELOG_SOCKETERROR(WSAGetLastError(), L"failed to accept,socket %I64u,accept socket %I64u", _socket, socket);
 			
-			accept_socket->close();
+			pAcceptContext->_accept_socket->close();
 			return false;
 		}
 	}
@@ -141,10 +134,13 @@ bool AsyncServerSocket::onProcess(EventContext& event_context, uint32_t transfer
 	accept_context._accept_socket->setAddress(waddress);
 	//
 
-	_server_callback->onAccepted(accept_context._accept_socket);
+	shared_ptr<AsyncSocket> accept_socket(accept_context._accept_socket);
+	accept_context._accept_socket = nullptr;
+
+	_server_callback->onAccepted(accept_socket);
 
 	// peer에서 연결을 바로 종료하면 iocp 등록이 실패할 수 있다.
-	if(accept_context._accept_socket->recv() == false )
+	if(accept_socket->recv() == false )
 	{
 		return false;
 	}
@@ -177,6 +173,9 @@ bool AsyncServerSocket::onProcessFailed(EventContext& event_context, uint32_t tr
 		NKENGINELOG_SOCKETERROR_ASSERT(lastError, L"server socket, event failed,socket %I64u,transferred %u", _socket, transferred);
 		break;
 	}
+
+	AcceptContext& accept_context = static_cast<AcceptContext&>(event_context);
+	SAFE_DELETE(accept_context._accept_socket);
 
 	// @nolimitk close를 호출하지 않고 iocp를 종료하는 등 socket이 close되어 있지 않을 수 있다.
 	closesocket(_socket);

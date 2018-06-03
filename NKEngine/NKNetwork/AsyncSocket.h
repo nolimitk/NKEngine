@@ -53,10 +53,6 @@ namespace NKNetwork
 	public:
 		AsyncSocket(SOCKET socket,const std::shared_ptr<ClientCallback>& callback);
 		virtual ~AsyncSocket(void);
-
-		// it calls shared_from_this() function internally, so it must not be created by new operator
-	private:
-		void* operator new(size_t size) {}
 	};
 }
 

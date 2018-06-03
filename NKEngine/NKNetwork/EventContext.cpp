@@ -16,6 +16,7 @@ EventContext::EventContext(void)
 
 AcceptContext::AcceptContext(void)
 	:EventContext()
+	, _accept_socket(nullptr)
 {
 	memset(_outputBuffer, 0, sizeof(_outputBuffer));
 }
