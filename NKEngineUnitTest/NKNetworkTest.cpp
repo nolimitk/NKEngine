@@ -173,7 +173,6 @@ NKTEST(AsyncServerSocket_Test)
 	return true;
 }
 
-/*
 class MockCallback : public ClientCallback
 {
 public:
@@ -349,7 +348,5 @@ NKTEST(AsyncServerSocket_AsyncSocket_Test)
 //	IOCPManager::getInstance()->close();
 //	return true;
 //}
-*/
-
 
 #endif // __NKNETWORKTEST_HEADER__

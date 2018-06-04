@@ -10,17 +10,14 @@
 class NKUnittestLog : public NKLog::NKLogger
 {
 public:
-	void turnOffConsoleLog(void);
-
-public:
 	NKUnittestLog(void);
 	virtual ~NKUnittestLog(void);
 };
 
 using NKUnittestLogSingleton = NKCore::Singleton<NKUnittestLog>;
 
-#define NKUNITTESTLOG_ERROR(fmt,...)				NKUnittestLogSingleton::getInstance()->write(NKUnittestLog::LAYOUT::LAYOUT_ERROR, __FILEW__, __LINE__, fmt, __VA_ARGS__);
-#define NKUNITTESTLOG_WARNING(fmt,...)				NKUnittestLogSingleton::getInstance()->write(NKUnittestLog::LAYOUT::LAYOUT_WARNING, __FILEW__, __LINE__, fmt, __VA_ARGS__);
-#define NKUNITTESTLOG_INFO(fmt,...)					NKUnittestLogSingleton::getInstance()->write(NKUnittestLog::LAYOUT::LAYOUT_INFO, __FILEW__, __LINE__, fmt, __VA_ARGS__);
+#define NKUNITTESTLOG_ERROR(fmt,...)				NKUnittestLogSingleton::getInstance()->write(NKUnittestLog::LAYOUT_ERROR, __FUNCTIONW__, __LINE__, fmt, __VA_ARGS__);
+#define NKUNITTESTLOG_WARNING(fmt,...)				NKUnittestLogSingleton::getInstance()->write(NKUnittestLog::LAYOUT_WARNING, __FUNCTIONW__, __LINE__, fmt, __VA_ARGS__);
+#define NKUNITTESTLOG_INFO(fmt,...)					NKUnittestLogSingleton::getInstance()->write(NKUnittestLog::LAYOUT_INFO, __FUNCTIONW__, __LINE__, fmt, __VA_ARGS__);
 
 #endif // __NKUNITTESTLOG_HEADER__

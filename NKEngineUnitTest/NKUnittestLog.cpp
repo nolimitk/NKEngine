@@ -1,15 +1,11 @@
 #include "NKUnittestLog.h"
 
 NKUnittestLog::NKUnittestLog(void)
-	: NKLogger(L"NKUNITTEST")
+	:NKLogger(NKLog::LogCategory(L"NKUNITTEST"))
 {
+	NKLog::ConsoleLoggerSingleton::getInstance()->get()->registerCategory(_category._id);
 }
 
 NKUnittestLog::~NKUnittestLog(void)
 {
-}
-
-void NKUnittestLog::turnOffConsoleLog(void)
-{
-
 }
