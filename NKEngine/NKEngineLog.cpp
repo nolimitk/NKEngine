@@ -9,9 +9,9 @@ using namespace NKLog;
 using namespace std;
 
 NKEngineLog::NKEngineLog(void)
-	:NKLogger(L"NKENGINE")
+	:NKLogger(LogCategory(L"NKENGINE"))
 {
-	
+	ConsoleLoggerSingleton::getInstance()->get()->registerCategory(_category._id);
 }
 
 NKEngineLog::~NKEngineLog(void)
@@ -38,7 +38,7 @@ bool NKEngineLog::writeSocketError(const wchar_t* file, int line, uint32_t err, 
 	wchar_t buffer[1024];
 	vswprintf(buffer, 1024, format, argptr);
 
-	bool ret = write(LAYOUT::LAYOUT_ERROR, file, line, L"[SOCKETERROR],[%s],[%d],%u,%s,%s", err, pErrorText, buffer);
+	bool ret = write(LAYOUT_ERROR, file, line, L"[SOCKETERROR],%u,%s,%s", err, pErrorText, buffer);
 	
 	if (pErrorText != nullptr)
 	{
@@ -46,4 +46,9 @@ bool NKEngineLog::writeSocketError(const wchar_t* file, int line, uint32_t err, 
 		pErrorText = nullptr;
 	}
 	return ret;
+}
+
+bool NKEngineLog::turnoffConsole(void)
+{
+	return ConsoleLoggerSingleton::getInstance()->get()->unregisterCategory(_category._id);
 }
