@@ -11,30 +11,20 @@
 using namespace NKLog;
 using namespace std;
 
-NKLogger::NKLogger(void)
-	:NKLogger(L"NKLOG")
-{
-}
+const LogLayout NKLogger::_layout[LAYOUT_MAX]{ LogLayout(L"LOG_ERROR", NKLog::LogColor::RED), LogLayout(L"LOG_WARNING", NKLog::LogColor::YELLOW), LogLayout(L"LOG_INFO", NKLog::LogColor::WHITE) };
 
-NKLogger::NKLogger(const NKWString& name)
-	: _category(LogCategory(name))
-	, _layout{ LogLayout(L"LOG_ERROR", NKLog::LogColor::RED),LogLayout(L"LOG_WARNING", NKLog::LogColor::YELLOW),LogLayout(L"LOG_INFO", NKLog::LogColor::WHITE) }
+NKLogger::NKLogger(const LogCategory& category)
+	: _category(category)
 {
-	std::unique_ptr<NKLog::ConsoleLog> console_log = make_unique<NKLog::ConsoleLog>();
-	std::unique_ptr<NKLog::DailyFileLog> daily_file_log = make_unique<NKLog::DailyFileLog>(name);
-
-	console_log->registerCategory(_category._id);
+	std::unique_ptr<NKLog::DailyFileLog> daily_file_log = make_unique<NKLog::DailyFileLog>(category._name);
 	daily_file_log->registerCategory(_category._id);
-
-	for (int i = 0; i < _countof(_layout); ++i)
+	for (int i = 0; i < _countof(NKLogger::_layout); ++i)
 	{
-		console_log->registerLayout(_layout[i]._id);
-		daily_file_log->registerLayout(_layout[i]._id);
+		daily_file_log->registerLayout(NKLogger::_layout[i]._id);
 	}
-	
-	AsyncLogSingleton::getInstance()->registerLogDevice(std::move(console_log));
+	daily_file_log->setBuilder(make_unique<BaseLogBuilder>());
+
 	AsyncLogSingleton::getInstance()->registerLogDevice(std::move(daily_file_log));
-	AsyncLogSingleton::getInstance()->setBuilder(make_unique<BaseLogBuilder>());
 }
 
 NKLogger::~NKLogger(void)
@@ -45,6 +35,7 @@ bool NKLogger::write(LAYOUT layout, const wchar_t * file, int line, const wchar_
 {
 	if (format == nullptr) return false;
 	if (file == nullptr) return false;
+	if (layout < 0 || layout >= LAYOUT_MAX) return false;
 
 	va_list argptr;
 	va_start(argptr, format);
@@ -58,6 +49,7 @@ bool NKLogger::write(LAYOUT layout, const wchar_t * file, int line, const wchar_
 bool NKLog::NKLogger::write(LAYOUT layout, const wchar_t * format, ...)
 {
 	if (format == nullptr) return false;
+	if (layout < 0 || layout >= LAYOUT_MAX) return false;
 
 	va_list argptr;
 	va_start(argptr, format);
@@ -65,5 +57,18 @@ bool NKLog::NKLogger::write(LAYOUT layout, const wchar_t * format, ...)
 	wchar_t buffer[MAX_LENGTH_LOG_BUFFER];
 	vswprintf(buffer, MAX_LENGTH_LOG_BUFFER, format, argptr);
 
-	return AsyncLogSingleton::getInstance()->write(_layout[layout], _category, buffer);
+	return AsyncLogSingleton::getInstance()->write(NKLogger::_layout[layout], _category, buffer);
+}
+
+NKLog::ConsoleLogger::ConsoleLogger(void)
+{
+	_console_log = make_shared<ConsoleLog>();
+	
+	for (int i = 0; i < _countof(NKLogger::_layout); ++i)
+	{
+		_console_log->registerLayout(NKLogger::_layout[i]._id);
+	}
+	
+	_console_log->setBuilder(make_unique<BaseLogBuilder>());
+	AsyncLogSingleton::getInstance()->registerLogDevice(_console_log);
 }

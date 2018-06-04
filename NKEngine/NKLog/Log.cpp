@@ -8,7 +8,6 @@ using namespace std;
 
 Log::Log(void)
 	:_turnon(true)
-	,_builder(make_unique<BaseLogBuilder>())
 {
 }
 
@@ -16,7 +15,7 @@ Log::~Log(void)
 {
 }
 
-bool Log::registerLogDevice(std::unique_ptr<LogDevice>&& logDevice)
+bool Log::registerLogDevice(const std::shared_ptr<LogDevice>& logDevice)
 {
 	if (logDevice == nullptr)
 	{
@@ -24,10 +23,8 @@ bool Log::registerLogDevice(std::unique_ptr<LogDevice>&& logDevice)
 		return false;
 	}
 
-	logDevice->setBuilder(nullptr);
-
 	std::lock_guard<std::mutex> _lock(__mutex_logDeviceList);
-	_logDeviceList.push_back(std::move(logDevice));
+	_logDeviceList.push_back(logDevice);
 	return true;
 }
 
@@ -36,10 +33,8 @@ bool Log::write(const LogLayout& layout, const LogCategory& category, const NKWS
 	if (log.empty() == true) return false;
 	if ( _turnon == false) return false;
 	if (emptyDeviceList() == true) return false;
-
-	NKWString build_log = (_builder != nullptr) ? _builder->publish(layout, category, log) : log;
-	
-	return writeDeviceDetails(layout, category, build_log);
+		
+	return writeDeviceDetails(layout, category, log);
 }
 
 bool Log::writeDeviceDetails(const LogLayout& layout, const LogCategory& category, const NKWString& log)
@@ -51,7 +46,7 @@ bool Log::writeDeviceDetails(const LogLayout& layout, const LogCategory& categor
 
 	for_each(_logDeviceList.begin(), _logDeviceList.end(),
 		[&layout, &category, &log]
-		(std::unique_ptr<LogDevice>& logDevice)
+		(const std::shared_ptr<LogDevice>& logDevice)
 		{
 			logDevice->write(layout, category, log);
 		}

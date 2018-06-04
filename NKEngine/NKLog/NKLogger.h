@@ -7,10 +7,11 @@
 
 #include "LogLayout.h"
 #include "LogCategory.h"
-#include "AsyncLog.h"
 
 namespace NKLog
 {
+	class ConsoleLog;
+	
 	class NKLogger
 	{
 	public:
@@ -25,22 +26,38 @@ namespace NKLog
 	public:
 		bool write(LAYOUT layout, const wchar_t* file, int line, const wchar_t* format, ...);
 
+	public:
+		static const NKLog::LogLayout _layout[LAYOUT_MAX];
+
 	protected:
 		bool write(LAYOUT layout, const wchar_t* format, ...);
-
+		
 		// @TODO it must be inifite
 	protected:
 		const static int MAX_LENGTH_LOG_BUFFER = 1024;
 
 	protected:
-		const NKLog::LogLayout _layout[LAYOUT_MAX];
 		const NKLog::LogCategory _category;
-		
+				
 	public:
-		NKLogger(void);
-		NKLogger(const NKWString& name);
+		NKLogger(const LogCategory& category);
 		virtual ~NKLogger(void);
 	};
+	
+	class ConsoleLogger
+	{
+	public:
+		std::shared_ptr<ConsoleLog> get(void) const { return _console_log; }
+
+	protected:
+		std::shared_ptr<ConsoleLog> _console_log;
+
+	public:
+		ConsoleLogger(void);
+		virtual ~ConsoleLogger(void) {}
+	};
+
+	using ConsoleLoggerSingleton = NKCore::Singleton<ConsoleLogger>;
 }
 
 #endif // __NKLOGGER_HEADER__

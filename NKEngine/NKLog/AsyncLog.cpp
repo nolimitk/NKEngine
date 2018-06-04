@@ -50,8 +50,7 @@ LogData* NKLog::AsyncLog::getLogdataQueue(void)
 
 bool NKLog::AsyncLog::write(const LogLayout & layout, const LogCategory & category, const NKWString & log)
 {
-	NKWString build_log = (_builder != nullptr) ? _builder->publish(layout, category, log) : log;
-	LogData* pLogData = new LogData(layout, category, build_log);
+	LogData* pLogData = new LogData(layout, category, log);
 	
 	write(pLogData);
 	return true;

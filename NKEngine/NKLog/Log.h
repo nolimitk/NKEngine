@@ -19,7 +19,7 @@ namespace NKLog
 	{
 		// @thread-safe
 	public:
-		bool registerLogDevice(std::unique_ptr<LogDevice>&& logDevice);
+		bool registerLogDevice(const std::shared_ptr<LogDevice>& logDevice);
 		bool write(const LogLayout& layout, const LogCategory& category, const NKWString& log);
 		void clearLogDevices(void);
 
@@ -28,7 +28,7 @@ namespace NKLog
 		bool writeDeviceDetails(const LogLayout& layout, const LogCategory& category, const NKWString& log);
 
 	protected:
-		std::list<std::unique_ptr<LogDevice>> _logDeviceList;
+		std::list<std::shared_ptr<LogDevice>> _logDeviceList;
 		mutable std::mutex __mutex_logDeviceList;
 		/// @thread-safe
 
@@ -41,19 +41,7 @@ namespace NKLog
 	protected:
 		volatile bool _turnon;
 		// @thread-safe, @wait-free
-
-		// @not-thread-safe
-	public:
-		bool setBuilder(std::unique_ptr<LogBuilder>&& builder)
-		{
-			_builder = std::move(builder);
-			return true;
-		}
-
-	protected:
-		std::unique_ptr<LogBuilder> _builder;
-		/// @not-thread-safe
-		
+				
 	public:
 		Log(void);
 		virtual ~Log(void);
