@@ -15,14 +15,14 @@ namespace NKNetwork
 	class ServerCallback
 	{
 	public:
-		virtual void onAccepted(std::shared_ptr<AsyncSocket> socket) = 0;
+		virtual void onAccepted(const std::shared_ptr<AsyncSocket>& socket) = 0;
 		virtual void onClosed(void) = 0;
 	};
 
 	class DefaultServerCallback : ServerCallback
 	{
 	public:
-		void onAccepted(std::shared_ptr<AsyncSocket> socket) override {}
+		void onAccepted(const std::shared_ptr<AsyncSocket>& socket) override {}
 		void onClosed(void) override {}
 	};
 
@@ -32,32 +32,21 @@ namespace NKNetwork
 	class ClientCallback
 	{
 	public:
-		virtual void onConnected(std::shared_ptr<AsyncSocket> socket) = 0;
-		virtual void onReceived(std::shared_ptr<AsyncSocket> socket, const Packet& packet) = 0;
-		virtual void onSent(std::shared_ptr<AsyncSocket> socket) = 0;
-		virtual void onConnectFailed(std::shared_ptr<AsyncSocket> socket) = 0;
-		virtual void onClosed(std::shared_ptr<AsyncSocket> socket) = 0;
+		virtual void onConnected(const std::shared_ptr<AsyncSocket>& socket) = 0;
+		virtual void onReceived(const std::shared_ptr<AsyncSocket>& socket, const Packet& packet) = 0;
+		virtual void onSent(const std::shared_ptr<AsyncSocket>& socket) = 0;
+		virtual void onConnectFailed(const std::shared_ptr<AsyncSocket>& socket) = 0;
+		virtual void onClosed(const std::shared_ptr<AsyncSocket>& socket) = 0;
 	};
 
 	class DefaultClientCallback : public ClientCallback
 	{
 	public:
-		void onConnected(std::shared_ptr<AsyncSocket> socket) override {}
-		void onReceived(std::shared_ptr<AsyncSocket> socket, const Packet& packet) override {}
-		void onSent(std::shared_ptr<AsyncSocket> socket) override {}
-		void onConnectFailed(std::shared_ptr<AsyncSocket> socket) override {}
-		void onClosed(std::shared_ptr<AsyncSocket> socket) override {}
-	};
-
-	class ClientNetworkEvent
-	{
-	public:
-		virtual void onConnected(AsyncSocket& connection) = 0;
-		virtual void onReceived(AsyncSocket& connection, const Packet& packet) = 0;
-		virtual void onSent(AsyncSocket& connection) = 0;
-		// if it returns false, it will be suspended to reconnect [2014/11/24/ nolimitk]
-		virtual bool onReconnect(AsyncSocket& connection) { return true; }
-		virtual void onConnectFailed(AsyncSocket& connection) = 0;
+		void onConnected(const std::shared_ptr<AsyncSocket>& socket) override {}
+		void onReceived(const std::shared_ptr<AsyncSocket>& socket, const Packet& packet) override {}
+		void onSent(const std::shared_ptr<AsyncSocket>& socket) override {}
+		void onConnectFailed(const std::shared_ptr<AsyncSocket>& socket) override {}
+		void onClosed(const std::shared_ptr<AsyncSocket>& socket) override {}
 	};
 }
 

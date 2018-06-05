@@ -99,7 +99,7 @@ void IOCPManager::close(void)
 	return;
 }
 
-bool IOCPManager::postEvent(std::shared_ptr<EventObject>& event_object, int64_t param)
+bool IOCPManager::postEvent(const std::shared_ptr<EventObject>& event_object, int64_t param)
 {
 	if (_completion_port == nullptr)
 	{

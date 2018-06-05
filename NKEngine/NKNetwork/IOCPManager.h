@@ -20,7 +20,7 @@ namespace NKNetwork
 	public:
 		bool create(void);
 		void close(void);
-		bool postEvent(std::shared_ptr<EventObject>& event_object, int64_t param);
+		bool postEvent(const std::shared_ptr<EventObject>& event_object, int64_t param);
 
 	public:
 		SOCKET openSocket(void);
