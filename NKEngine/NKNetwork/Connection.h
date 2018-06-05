@@ -2,29 +2,35 @@
 #ifndef __CONNECTION_HEADER__
 #define __CONNECTION_HEADER__
 // @nolimitk
-// 13.09.12
+// 18.06.05
 // connection
 
+/*
 #include <memory>
-#include "AsyncSocket.h"
 #include "NetworkCallbacks.h"
+*/
+#include <map>
+#include "../NKCore.h"
 
 namespace NKNetwork
 {
+	class AsyncSocket;
 	//class Session;
 	//class Service;
 
-	class Connection : public AsyncSocket
+	class Connection
 	{
+		/*
 	protected:
 		AsyncSocket::connect;
 		//AsyncSocket::getHandle;
 		AsyncSocket::setAddress;
+		*/
 		
 	public:
 		//bool connect(const HANDLE completion_port, const NKWString& address, uint16_t port);
 		//bool connect(const HANDLE completion_port, const NKString& address, uint16_t port);
-		bool reconnect(void);
+		//bool reconnect(void);
 
 	public:
 		inline NKCore::UniqueID getID(void) const { return _id; }
@@ -51,6 +57,7 @@ namespace NKNetwork
 		inline void SetSentPing(void) { _bSentPing = true; }
 		inline bool GetSentPing(void) { return _bSentPing; }*/
 
+		/*
 	protected:
 		inline void setPongTime(void) { _last_pongtime = GetTickCount64(); _sent_ping = false; }
 
@@ -61,11 +68,13 @@ namespace NKNetwork
 		virtual bool onConnectFailed(void) override;
 		virtual bool onReceived(const Packet& packet) override;
 		virtual bool onSent(void) override;
+		*/
 
 	protected:
 		NKCore::UniqueID _id;
+		std::shared_ptr<AsyncSocket> _socket;
 
-		std::unique_ptr<NetworkEvent> _network_event;
+		//std::unique_ptr<NetworkEvent> _network_event;
 		//Service *_pService;
 
 		// 상속받은 class에서 직접 접근을 할 수 없도록 막는다. [2014/11/11/ nolimitk]
@@ -75,6 +84,7 @@ namespace NKNetwork
 
 		// feature : heartbeat
 		// possible to take on/off
+		/*
 	protected:
 		bool _heart_beat;
 		ULONGLONG _last_pongtime;
@@ -85,15 +95,15 @@ namespace NKNetwork
 		NKString _address;
 		uint16_t _port;
 		bool _reconnect;
+		*/
 		
 	public:
-		Connection(std::unique_ptr<NetworkEvent>&& network_event, bool reconnect = false);
+		//Connection(std::unique_ptr<NetworkEvent>&& network_event, bool reconnect = false);
+		Connection(const std::shared_ptr<AsyncSocket>& socket);
 		virtual ~Connection(void);
-		
-		// it calls shared_from_this() function internally, so it must not be created by new operator
-	private:
-		void* operator new(size_t size) {}
 	};
+
+	using ConnectionMap = std::map<NKCore::UniqueID, Connection>;
 }
 
 #endif // __CONNECTION_HEADER__

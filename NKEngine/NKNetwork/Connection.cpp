@@ -1,16 +1,23 @@
 #include "Connection.h"
 //#include "Session.h"
 //#include "Service.h"
+/*
 #include "../NKEngineLog.h"
 #include "../NKCore.h"
 #include "IOCPManager.h"
 #include "NetworkEvent.h"
 #include "Packet.h"
 #include "SendStream.h"
+*/
 
 using namespace NKNetwork;
 using namespace std;
 
+Connection::Connection(const std::shared_ptr<AsyncSocket>& socket)
+	:_socket(socket)
+{
+}
+/*
 Connection::Connection(std::unique_ptr<NetworkEvent>&& network_event, bool reconnect)
 	: _network_event(std::move(network_event))
 	, _reconnect(reconnect)
@@ -22,6 +29,7 @@ Connection::Connection(std::unique_ptr<NetworkEvent>&& network_event, bool recon
 	, _port(0)
 {
 }
+*/
 
 Connection::~Connection(void)
 {
@@ -62,6 +70,7 @@ bool Connection::connect(const HANDLE completion_port, const NKString& address, 
 }
 */
 
+/*
 bool Connection::reconnect(void)
 {
 	if (_network_event == nullptr)
@@ -91,10 +100,10 @@ bool Connection::onClosed(void)
 
 	_network_event->onClosed(*this);
 	
-	/*if( GetService() != NULL )
+	if( GetService() != NULL )
 	{
 		GetService()->DeleteConnection( GetConnectionID() );
-	}*/
+	}
 
 	if( _reconnect == true )
 	{
@@ -202,3 +211,4 @@ bool Connection::onSent(void)
 	pClientNetworkEvent->onSent(*this);
 	return true;
 }
+*/

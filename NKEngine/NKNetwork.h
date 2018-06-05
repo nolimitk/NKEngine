@@ -16,7 +16,7 @@
 #include "NKNetwork/AsyncSocket.h"
 #include "NKNetwork/AsyncServerSocket.h"
 #include "NKNetwork/NetworkCallbacks.h"
-//#include "NKNetwork/Connection.h"
+#include "NKNetwork/Connection.h"
 
 #pragma comment(lib, "Mswsock.lib")
 
