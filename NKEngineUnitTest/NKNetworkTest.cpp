@@ -98,41 +98,93 @@ NKTEST(RecvStream_Test)
 {
 	const static int BUUFER_SIZE = 8000;
 
-	RecvStream _recv_stream(make_shared<NKCore::Buffer>(BUUFER_SIZE));
-	_ASSERT(_recv_stream.getRemainSize() == BUUFER_SIZE);
-	byte* pRawBuffer = _recv_stream.getRemainBuffer();
+	RecvStream recv_stream(make_shared<NKCore::Buffer>(BUUFER_SIZE));
+	_ASSERT(recv_stream.getRemainSize() == BUUFER_SIZE);
+	byte* pRawBuffer = recv_stream.getRemainBuffer();
 	_ASSERT(pRawBuffer != nullptr);
 
-	writeStream(_recv_stream, "abc");
+	writeStream(recv_stream, "abc");
 
 	{
-		_ASSERT(_recv_stream.update(7) == true);
-		_ASSERT(_recv_stream.getLength() >= sizeof(PROTOCOLHEAD::size_type));
-		readStream(_recv_stream);
+		_ASSERT(recv_stream.update(7) == true);
+		_ASSERT(recv_stream.getLength() >= sizeof(PROTOCOLHEAD::size_type));
+		readStream(recv_stream);
 	}
 
-	writeStream(_recv_stream, "defghij");
+	writeStream(recv_stream, "defghij");
 
 	{
-		_ASSERT(_recv_stream.update(1) == true);
-		readStream(_recv_stream);
-		_ASSERT(_recv_stream.update(1) == true);
-		readStream(_recv_stream);
-		_ASSERT(_recv_stream.update(4) == true);
-		readStream(_recv_stream);
-		_ASSERT(_recv_stream.update(5) == true);
-		readStream(_recv_stream);
+		_ASSERT(recv_stream.update(1) == true);
+		readStream(recv_stream);
+		_ASSERT(recv_stream.update(1) == true);
+		readStream(recv_stream);
+		_ASSERT(recv_stream.update(4) == true);
+		readStream(recv_stream);
+		_ASSERT(recv_stream.update(5) == true);
+		readStream(recv_stream);
 	}
 
-	writeStream(_recv_stream, "abc");
-	_ASSERT(_recv_stream.update(7) == true);
-	writeStream(_recv_stream, "defghij");
+	writeStream(recv_stream, "abc");
+	_ASSERT(recv_stream.update(7) == true);
+	writeStream(recv_stream, "defghij");
 
 	{
-		_ASSERT(_recv_stream.update(11) == true);
-		readStream(_recv_stream);
+		_ASSERT(recv_stream.update(11) == true);
+		readStream(recv_stream);
 	}
 
+	return true;
+}
+
+NKTEST(SendStream_Test)
+{
+	const static int BUUFER_SIZE = 8000;
+
+	SendStream send_stream(make_shared<NKCore::Buffer>(BUUFER_SIZE));
+	byte* pRawBuffer = send_stream.get();
+	_ASSERT(pRawBuffer != nullptr);
+	
+	int length = 0;
+	_ASSERT(send_stream.getLength() == 0);
+	_ASSERT(send_stream.write(123) == true);
+	length += sizeof(int);
+	_ASSERT(send_stream.getLength() == length);
+	_ASSERT(send_stream.write('A') == true);
+	length += sizeof(char);
+	_ASSERT(send_stream.getLength() == length);
+	_ASSERT(send_stream.write((short)123) == true);
+	length += sizeof(short);
+	_ASSERT(send_stream.getLength() == length);
+	_ASSERT(send_stream.write(0.0f) == true);
+	length += sizeof(float);
+	_ASSERT(send_stream.getLength() == length);
+	_ASSERT(send_stream.write((double)0.0f) == true);
+	length += sizeof(double);
+	_ASSERT(send_stream.getLength() == length);
+	_ASSERT(send_stream.write(L'B') == true);
+	length += sizeof(wchar_t);
+	_ASSERT(send_stream.getLength() == length);
+
+	struct Data
+	{
+		int i;
+		short s;
+		float f;
+		double d;
+		char c;
+		wchar_t w;
+	};
+
+	Data d;
+	_ASSERT(send_stream.write((byte *)&d,sizeof(d)) == true);
+	length += sizeof(d);
+	_ASSERT(send_stream.getLength() == length);
+	
+	return true;
+}
+
+NKTEST(Packet_Test)
+{
 	return true;
 }
 
