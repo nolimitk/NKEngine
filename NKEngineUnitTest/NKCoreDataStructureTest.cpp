@@ -120,17 +120,17 @@ NKTEST(TQueue_Test)
 	return true;
 }
 
-NKTEST(TLockFreeQueue_Test)
+NKTEST(TSpinLockQueue_Test)
 {
-	NKCore::TLockFreeQueue<MockNode> queue;
+	NKCore::TSpinLockQueue<MockNode> queue;
 
-	queueTest<NKCore::TLockFreeQueue<MockNode>>(queue, 1);
-	queueTest<NKCore::TLockFreeQueue<MockNode>>(queue, 2);
-	queueTest<NKCore::TLockFreeQueue<MockNode>>(queue, 3);
+	queueTest<NKCore::TSpinLockQueue<MockNode>>(queue, 1);
+	queueTest<NKCore::TSpinLockQueue<MockNode>>(queue, 2);
+	queueTest<NKCore::TSpinLockQueue<MockNode>>(queue, 3);
 
-	popQueueTest<NKCore::TLockFreeQueue<MockNode>>(queue, 1);
-	popQueueTest<NKCore::TLockFreeQueue<MockNode>>(queue, 2);
-	popQueueTest<NKCore::TLockFreeQueue<MockNode>>(queue, 3);
+	popQueueTest<NKCore::TSpinLockQueue<MockNode>>(queue, 1);
+	popQueueTest<NKCore::TSpinLockQueue<MockNode>>(queue, 2);
+	popQueueTest<NKCore::TSpinLockQueue<MockNode>>(queue, 3);
 
 	return true;
 }
@@ -435,9 +435,9 @@ NKTEST_BENCHMARK(TQueue_Benchmark)
 	}
 
 	{
-		NKUnitTest::ElapsedTime elapsed_time(L"lock-free queue");
-		NKCore::TLockFreeQueue<MockNode> queue;
-		queueTest<NKCore::TLockFreeQueue<MockNode>>(queue, 100000);
+		NKUnitTest::ElapsedTime elapsed_time(L"spin lock queue");
+		NKCore::TSpinLockQueue<MockNode> queue;
+		queueTest<NKCore::TSpinLockQueue<MockNode>>(queue, 100000);
 	}
 
 	{
@@ -451,9 +451,9 @@ NKTEST_BENCHMARK(TQueue_Benchmark)
 		NKUnitTest::thread_test(thread_count,
 			[]()
 		{
-			NKUnitTest::ElapsedTime elapsed_time(L"lock-free queue");
-			NKCore::TLockFreeQueue<MockNode> queue;
-			queueTest<NKCore::TLockFreeQueue<MockNode>>(queue, 100000);
+			NKUnitTest::ElapsedTime elapsed_time(L"spin lock queue");
+			NKCore::TSpinLockQueue<MockNode> queue;
+			queueTest<NKCore::TSpinLockQueue<MockNode>>(queue, 100000);
 		}
 		);
 	}

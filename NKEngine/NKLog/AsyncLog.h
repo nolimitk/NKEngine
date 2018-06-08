@@ -61,7 +61,7 @@ namespace NKLog
 		bool flush(void);
 
 	protected:
-		NKCore::TLockFreeQueue<LogData> _logdata_queue;
+		NKCore::TSpinLockQueue<LogData> _logdata_queue;
 
 		LogThread _log_thread;
 		std::atomic<bool> _start_thread;

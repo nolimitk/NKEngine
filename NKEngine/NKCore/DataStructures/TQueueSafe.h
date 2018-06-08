@@ -12,7 +12,6 @@
 
 namespace NKCore
 {
-	// this is lock-free guaranteed spinlock
 	class SpinLock
 	{
 	public:
@@ -121,7 +120,7 @@ namespace NKCore
 	using TLockQueue = TQueueSafe<T, std::mutex>;
 
 	template<typename T>
-	using TLockFreeQueue = TQueueSafe<T, SpinLock>;
+	using TSpinLockQueue = TQueueSafe<T, SpinLock>;
 }
 
 #endif // __TQUEUESAFE_HEADER__
