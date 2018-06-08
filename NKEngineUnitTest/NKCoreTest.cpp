@@ -151,4 +151,30 @@ NKTEST(NKString_Test)
 	return true;
 }
 
+NKTEST(NKThread_Test)
+{
+	class MockThread : public NKCore::NKThread
+	{
+	public:
+		int _v;
+
+		bool onRun(void) override
+		{
+			_v = 10;
+			return true;
+		}
+
+		MockThread(void):_v(10){}
+	};
+
+	{
+		MockThread t;
+		_ASSERT(t.create() == true);
+		_ASSERT(t.join() == true);
+		_ASSERT(t._v == 10);
+	}
+	
+	return true;
+}
+
 #endif // __NKCORETEST_HEADER__
