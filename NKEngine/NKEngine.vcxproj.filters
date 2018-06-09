@@ -150,9 +150,6 @@
     <ClInclude Include="NKUtils.h">
       <Filter>NKEngine</Filter>
     </ClInclude>
-    <ClInclude Include="NKScheduler\EventSlot.h">
-      <Filter>NKScheduler</Filter>
-    </ClInclude>
     <ClInclude Include="NKScheduler.h">
       <Filter>NKScheduler</Filter>
     </ClInclude>
@@ -170,6 +167,12 @@
     </ClInclude>
     <ClInclude Include="NKNetwork\Connection.h">
       <Filter>NKNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="NKScheduler\JobSlot.h">
+      <Filter>NKScheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\DataStructures\TWaitFreeQueue.h">
+      <Filter>NKCore\DataStructures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -263,9 +266,6 @@
     <ClCompile Include="NKUtils.cpp">
       <Filter>NKEngine</Filter>
     </ClCompile>
-    <ClCompile Include="NKScheduler\EventSlot.cpp">
-      <Filter>NKScheduler</Filter>
-    </ClCompile>
     <ClCompile Include="NKScheduler\RealTimeJob.cpp">
       <Filter>NKScheduler</Filter>
     </ClCompile>
@@ -277,6 +277,9 @@
     </ClCompile>
     <ClCompile Include="NKNetwork\Connection.cpp">
       <Filter>NKNetwork</Filter>
+    </ClCompile>
+    <ClCompile Include="NKScheduler\JobSlot.cpp">
+      <Filter>NKScheduler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

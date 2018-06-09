@@ -423,14 +423,108 @@ NKTEST(TIndexedQueue_Test)
 	return true;
 }
 
+void PushWaitFreeQueue(NKCore::TWaitFreeQueue<MockNode>& queue, int key)
+{
+	MockNode* node = new MockNode(key);
+	node->_v = 10 * (key);
+
+	queue.push(node);
+}
+
+NKTEST(TWaitFreeQueue_Test)
+{
+	NKCore::TWaitFreeQueue<MockNode> waitfree_queue;
+
+	{
+		const static int push_count = 10;
+
+		for (int i = 0; i < push_count; i++)
+		{
+			PushWaitFreeQueue(waitfree_queue, 10 + i);
+		}
+
+		int count = 0;
+		MockNode* front = waitfree_queue.popQueue();
+		MockNode* prev;
+		while (front != nullptr)
+		{
+			count++;
+			_ASSERT(front->getKey() == 10 + (count-1));
+			prev = front;
+			front = front->getNext();
+			SAFE_DELETE(prev);
+		}
+
+		for (int i = 0; i < push_count; i++)
+		{
+			PushWaitFreeQueue(waitfree_queue, 20 + i);
+		}
+
+		count = 0;
+		front = waitfree_queue.popQueue();
+
+		while (front != nullptr)
+		{
+			count++;
+			_ASSERT(front->getKey() == 20 + (count - 1));
+			prev = front;
+			front = front->getNext();
+			SAFE_DELETE(prev);
+		}
+
+		_ASSERT(count == push_count);
+	}
+	
+	/*
+	std::thread t(
+		[&waitfree_queue]()
+	{
+		for (int i = 0; i < 1000; i++)
+		{
+			PushWaitFreeQueue(waitfree_queue, 10 + i);
+			NKUNITTESTLOG_INFO(L"wait-free queue t1, %d", 10 + i);
+		}
+	}
+	);
+
+	std::thread t2(
+		[&waitfree_queue]()
+	{
+		for (int i = 0; i < 1000; i++)
+		{
+			PushWaitFreeQueue(waitfree_queue, 20 + i);
+			NKUNITTESTLOG_INFO(L"wait-free queue t3, %d", 20 + i);
+		}
+	}
+	);
+
+	t.join();
+	t2.join();
+
+	int count = 0;
+	MockNode* front = waitfree_queue.pick();
+	MockNode* prev;
+	while (front != nullptr)
+	{
+		count++;
+		prev = front;
+		front = front->getNext();
+		SAFE_DELETE(prev);
+	}
+	*/
+
+	return true;
+}
+
 NKTEST_BENCHMARK(TQueue_Benchmark)
 {
+	// @TODO new, delete가 성능에 꽤 많은 영향을 미치는듯
 	{
 		NKUnitTest::ElapsedTime elapsed_time(L"queue");
 		NKCore::TQueue<MockNode> queue;
 		queueTest<NKCore::TQueue<MockNode>>(queue, 100000);
 	}
-
+	
 	{
 		NKUnitTest::ElapsedTime elapsed_time(L"spin lock queue");
 		NKCore::TSpinLockQueue<MockNode> queue;
@@ -442,7 +536,7 @@ NKTEST_BENCHMARK(TQueue_Benchmark)
 		NKCore::TLockQueue<MockNode> queue;
 		queueTest<NKCore::TLockQueue<MockNode>>(queue, 100000);
 	}
-
+	
 	{
 		const int thread_count = 10;
 		NKUnitTest::thread_test(thread_count,

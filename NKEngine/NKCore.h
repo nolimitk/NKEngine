@@ -15,6 +15,7 @@
 #include "NKCore/DataStructures/TQueueSafe.h"
 #include "NKCore/DataStructures/TIndexedQueue.h"
 #include "NKCore/DataStructures/TSortedList.h"
+#include "NKCore/DataStructures/TWaitFreeQueue.h"
 
 #include "NKCore/NKThread.h"
 #include "NKCore/NKString.h"

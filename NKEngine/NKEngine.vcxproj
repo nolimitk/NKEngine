@@ -90,6 +90,7 @@
     <ClInclude Include="NKCore\DataStructures\TQueue.h" />
     <ClInclude Include="NKCore\DataStructures\TQueueSafe.h" />
     <ClInclude Include="NKCore\DataStructures\TSortedList.h" />
+    <ClInclude Include="NKCore\DataStructures\TWaitFreeQueue.h" />
     <ClInclude Include="NKCore\Guard.h" />
     <ClInclude Include="NKCore\NKClock.h" />
     <ClInclude Include="NKCore\NKMemory.h" />
@@ -123,7 +124,7 @@
     <ClInclude Include="NKNetwork\WinSockLib.h" />
     <ClInclude Include="NKNetwork\WorkerThread.h" />
     <ClInclude Include="NKScheduler.h" />
-    <ClInclude Include="NKScheduler\EventSlot.h" />
+    <ClInclude Include="NKScheduler\JobSlot.h" />
     <ClInclude Include="NKScheduler\RealTimeJob.h" />
     <ClInclude Include="NKScheduler\Scheduler.h" />
     <ClInclude Include="NKScheduler\SerializeContainer.h" />
@@ -160,7 +161,7 @@
     <ClCompile Include="NKNetwork\SendStream.cpp" />
     <ClCompile Include="NKNetwork\WinSockLib.cpp" />
     <ClCompile Include="NKNetwork\WorkerThread.cpp" />
-    <ClCompile Include="NKScheduler\EventSlot.cpp" />
+    <ClCompile Include="NKScheduler\JobSlot.cpp" />
     <ClCompile Include="NKScheduler\RealTimeJob.cpp" />
     <ClCompile Include="NKScheduler\Scheduler.cpp" />
     <ClCompile Include="NKScheduler\SerializeContainer.cpp" />
