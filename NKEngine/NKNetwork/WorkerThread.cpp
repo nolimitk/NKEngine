@@ -7,50 +7,6 @@
 using namespace NKNetwork;
 using namespace std;
 
-//TimerNode::TimerNode(void)
-//	:_reserved(false)
-//{
-//}
-//
-//TimerNode::~TimerNode(void)
-//{
-//}
-//
-//bool TimerNode::tryReserve(void)
-//{
-//	bool init = _reserved.exchange(true);
-//	if (init == true) return false;
-//	return true;
-//}
-//
-//bool TimerNode::releaseReserve(void)
-//{
-//	bool init = _reserved.exchange(false);
-//	if (init == false) return false;
-//	return true;
-//}
-//
-//NKTimer::NKTimer(void)
-//	:NKTimer(DEFAULT_SHORTTERM_SIZE)
-//{
-//
-//}
-//
-//NKTimer::NKTimer(int size)
-//	: _shortTermJob(size)
-//{
-//
-//}
-//
-//NKTimer::~NKTimer(void)
-//{
-//}
-//
-//bool NKTimer::onExpired(void)
-//{
-//	return true;
-//}
-
 WorkerThread::WorkerThread(const HANDLE completion_portr)
 	:_completion_port(completion_portr)
 	, _update_tick(0)

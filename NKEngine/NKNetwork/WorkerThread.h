@@ -9,42 +9,6 @@
 
 namespace NKNetwork
 {
-	//class TimerNode : public NKCore::TNode<TimerNode>
-	//{
-	//public:
-	//	bool tryReserve(void);
-	//	bool releaseReserve(void);
-
-	//protected:
-	//	// @thread-safe, @wait-free
-	//	std::atomic<bool> _reserved;
-	//	///
-
-	//public:
-	//	TimerNode(void);
-	//	virtual ~TimerNode(void);
-	//};
-
-	//class NKTimer
-	//{
-	//public:
-	//	bool insert(int index, TimerNode &node);
-
-	//public:
-	//	bool onExpired(void);
-
-	//protected:
-	//	const static int DEFAULT_SHORTTERM_SIZE = 401;
-
-	//protected:
-	//	NKCore::TIndexedQueue<TimerNode> _shortTermJob;
-
-	//public:
-	//	NKTimer(void);
-	//	NKTimer(int size);
-	//	virtual ~NKTimer(void);
-	//};
-
 	class WorkerThread : public NKCore::NKThread
 	{
 	public:
@@ -65,8 +29,6 @@ namespace NKNetwork
 		WorkerThread(const HANDLE completion_port);
 		virtual ~WorkerThread(void);
 	};
-
-	//thread_local NKTimer _timer;
 }
 
 #endif // __WORKERTHREAD_HEADER__
