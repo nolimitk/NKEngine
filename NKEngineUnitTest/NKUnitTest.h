@@ -117,6 +117,8 @@ bool NKTest_Benchmark_##testname##_flag = NKUnitTest::register_test(NKTest_Bench
 bool NKTest_Benchmark_##testname##(void)
 
 #define _TEST(expr) if( (expr) == false ){ NKUnitTest::register_result(__FILEW__,__LINE__,L ## #expr); }
+
+#define WAITFOR(owner,func) while (owner->_ ##func == false) { }
 }
 
 #endif // __NKUNITTEST_HEADER__

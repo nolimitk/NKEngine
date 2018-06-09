@@ -1,6 +1,3 @@
-#pragma once
-#ifndef __NKCOREDATASTRUCTURETEST_HEADER__
-#define __NKCOREDATASTRUCTURETEST_HEADER__
 // @nolimitk
 // 16.04.22
 // core data structure test
@@ -472,5 +469,3 @@ NKTEST_BENCHMARK(TQueue_Benchmark)
 
 	return true;
 }
-
-#endif // __NKCOREDATASTRUCTURETEST_HEADER__

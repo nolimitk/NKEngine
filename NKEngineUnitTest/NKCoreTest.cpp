@@ -1,6 +1,3 @@
-#pragma once
-#ifndef __NKCORETEST_HEADER__
-#define __NKCORETEST_HEADER__
 // @nolimitk
 // 16.04.16
 // core test
@@ -176,5 +173,3 @@ NKTEST(NKThread_Test)
 	
 	return true;
 }
-
-#endif // __NKCORETEST_HEADER__

@@ -1,7 +1,3 @@
-#pragma once
-
-#ifndef __NKNETWORKTEST_HEADER__
-#define __NKNETWORKTEST_HEADER__
 // @nolimitk
 // 16.04.25
 // network test
@@ -12,8 +8,6 @@
 
 using namespace std;
 using namespace NKNetwork;
-
-#define WAITFOR(owner,func) while (owner->_ ##func == false) { }
 
 NKTEST(WinSockLib_Test)
 {
@@ -408,5 +402,3 @@ NKTEST(Connection_Test)
 	IOCPManager::getInstance()->close();
 	return true;
 }
-
-#endif // __NKNETWORKTEST_HEADER__

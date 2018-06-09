@@ -22,7 +22,7 @@
 
 #include "NKCore/Singleton.h"
 #include "NKCore/Guard.h"
-//#include "NKCore/Buffer.h"
+#include "NKCore/Buffer.h"
 #include "NKCore/ByteStream.h"
 #include "NKCore/UniqueID.h"
 
