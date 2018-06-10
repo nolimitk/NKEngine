@@ -1,16 +1,19 @@
-#ifndef __EVENTSLOT_HEADER__
-#define __EVENTSLOT_HEADER__
+#ifndef __JOBSLOT_HEADER__
+#define __JOBSLOT_HEADER__
 // @nolimitk
-// 13.09.05
+// 18.06.09
 // event slot
 
 #include "../NKNetwork.h"
-#include <atomic>
+#include "RealTimeJob.h"
 
 namespace NKScheduler
 {
-	class EventSlot : public NKNetwork::EventObject, public NKCore::TNode<EventSlot>
+	class RealTimeJob;
+
+	class JobSlot : public NKNetwork::EventObject
 	{
+		/*
 	public:
 		void UnRegister(void);
 
@@ -29,24 +32,27 @@ namespace NKScheduler
 		inline int getSlotType(void) const { return _slotType; }
 		inline int getSlotIndex(void) const { return _slotIndex; }
 		inline uint64_t getExecuteSlotIndex(void) const { return _executeSlotIndex; }
+		*/
 
 	public:
 		virtual bool onProcess(NKNetwork::EventContext& event_context, uint32_t transferred) override;
 
 	protected:
 		/// @transaction reserved에 의해 모두 thread safe하다.
-		std::atomic<bool> _reserved;
+		//std::atomic<bool> _reserved;
 		// 1 short, 2 long , 3 instant
-		int _slotType;
-		int _slotIndex;
-		uint64_t _executeSlotIndex;
+		//int _slotType;
+		//int _slotIndex;
+		//uint64_t _executeSlotIndex;
 		///
 
+		NKCore::TWaitFreeQueue<RealTimeJob> _job_queue;
+
 	public:
-		EventSlot(void);
-		virtual ~EventSlot(void);
+		JobSlot(void);
+		virtual ~JobSlot(void);
 	};
 }
 
-#endif // __EVENTSLOT_HEADER__
+#endif // __JOBSLOT_HEADER__
 

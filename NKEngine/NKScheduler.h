@@ -5,7 +5,8 @@
 // 16.05.28
 // nk scheduler
 
-#include "NKScheduler/EventSlot.h"
+#include "NKScheduler/JobSlot.h"
+#include "NKScheduler/Scheduler.h"
 
 #endif // __NKSCHEDULER_HEADER__
 

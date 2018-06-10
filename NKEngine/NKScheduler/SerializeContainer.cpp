@@ -82,7 +82,7 @@ SerializeContainer::~SerializeContainer(void)
 //	{
 //		std::lock_guard<std::mutex> _lock(_mutexInstant);
 //		pJob->registerAsInstant( getScheduler()->GetExecutionIndex() );
-//		_instantQueue.push( pJob );
+//		_instant_queue.push( pJob );
 //		return true;
 //	}
 //	//

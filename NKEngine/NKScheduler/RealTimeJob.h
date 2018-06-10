@@ -4,14 +4,15 @@
 // 16.05.28
 // realtime-job
 
-#include "EventSlot.h"
+#include "..\NKCore.h"
 
 namespace NKScheduler
 {
-	class Serializer;
+	//class Serializer;
 
-	class RealTimeJob : public EventSlot
+	class RealTimeJob : public NKCore::TNode<RealTimeJob>
 	{
+		/*
 	public:
 		bool ReExecute(uint32_t tick);
 		bool ReExecute(void);
@@ -38,10 +39,12 @@ namespace NKScheduler
 	public:
 		inline void SetContainer(Serializer *pSerializer) { _pContainer = pSerializer; }
 		inline void SetTick(uint32_t tick) { _tick = tick; }
+		*/
 
 	public:
 		virtual bool Process(uint64_t executeIndex) = 0;
 		
+		/*
 	protected:
 		// 재등록을 위해 사용한다.
 		Serializer *_pContainer;
@@ -54,6 +57,7 @@ namespace NKScheduler
 		int _slotType;
 		int _slotIndex;
 		uint64_t _executeSlotIndex;
+		*/
 
 	public:
 		RealTimeJob(void);

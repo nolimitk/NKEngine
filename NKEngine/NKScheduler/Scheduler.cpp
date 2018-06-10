@@ -5,72 +5,50 @@
 
 using namespace NKScheduler;
 
-//bool SchedulerThread::onRun(void)
-//{
-//	getScheduler()->Execute();
-//	return true;
-//}
-
-/*
-const int64 Scheduler::SCHEDULER_TIME_UNIT = 50 * 1000;
-
-
-Scheduler* getScheduler(void)
+bool SchedulerThread::onRun(void)
 {
-	static Scheduler s_scheduler(41);
-	return &s_scheduler;
+	return Scheduler::getInstance()->execute();
 }
 
-Scheduler::Scheduler(uint size)
-	:_container(size)
-	, _sizeShortTermSlot(size)
-	, _executionIndex(0)
+//const int64_t Scheduler::SCHEDULER_TIME_UNIT = 50 * 1000;
+
+Scheduler::Scheduler(void)
+//	:_container(size)
+//	, _sizeShortTermSlot(size)
+//	, _executionIndex(0)
 {
-	_bExecute = false;
 }
 
 Scheduler::~Scheduler(void)
 {
-	if( _bExecute == true )
+	//Stop();
+	
+	//_container.Destroy();
+}
+
+bool Scheduler::start(void)
+{
+	//if( _sizeShortTermSlot == 0 ) return false;
+
+	if (_thread.create() == false)
 	{
-		Stop();
+		return false;
 	}
 
-	_container.Destroy();
-}
-
-bool Scheduler::Create(int size, bool realtime)
-{
-	if( _bExecute == true ) return false;
-
-	_realtime = realtime;
 	return true;
 }
 
-bool Scheduler::Start(void)
+bool Scheduler::execute(void)
 {
-	if( _bExecute == true ) return false;
-	if( _sizeShortTermSlot == 0 ) return false;
-
-	_bExecute = true;
-	
-	if( _thread.create() == false ) return false;
-
-	_executionIndex = 0;
-
-	return true;
-}
-
-bool Scheduler::Execute(void)
-{
+	/*
 	NKCore::NKClock clock;
 	
-	int64 nextTime = 0;
-	int64 waitTime = 0;
-	int64 currentTime = 0;
-	int64 instantTime = 0;
-	int64 executeTime = 0;
-	int64 last_tick = 0;
+	int64_t nextTime = 0;
+	int64_t waitTime = 0;
+	int64_t currentTime = 0;
+	int64_t instantTime = 0;
+	int64_t executeTime = 0;
+	int64_t last_tick = 0;
 	
 	_executionIndex = 0;
 	int rotateIndex = 0;
@@ -89,13 +67,13 @@ bool Scheduler::Execute(void)
 		// execution
 		while( pExecuteSlot != NULL )
 		{
-			//NE_DEBUGLOG( L"%I64u, scheduler execution, slot  %I64u", _executionIndex, pExecuteSlot->getExecuteSlotIndex() );
+			NE_DEBUGLOG( L"%I64u, scheduler execution, slot  %I64u", _executionIndex, pExecuteSlot->getExecuteSlotIndex() );
 
 			// @nolimitk slot을 실행중에 다시 등록할 수 있도록 초기화를 먼저 한다.
 			pNextSlot = pExecuteSlot->getNext();
 			pExecuteSlot->UnRegister();
 			pExecuteSlot->ReleaseReserve();
-			//
+			
 
 			IOCPManager::getInstance()->PostEvent( pExecuteSlot, _executionIndex );
 						
@@ -137,7 +115,7 @@ bool Scheduler::Execute(void)
 			pExecuteSlot = _container.PopInstantQueue();
 		}
 
-		//////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
 		// wait
 		nextTime += SCHEDULER_TIME_UNIT;
 		currentTime = clock.getElapsedMicroSec();
@@ -198,29 +176,33 @@ bool Scheduler::Execute(void)
 				NE_WARNINGLOG( L"%I64u, over sleep, %u, %lf", _executionIndex, executeTime, waitTime );
 			}
 		}
-		//
-		//////////////////////////////////////////////////////////////////////////////////////////////
+		
+		//////////////////////////////////////////////////////////////////////////////////////////
 
 		InterlockedIncrement(&_executionIndex);
 	};
 
 	timeEndPeriod(1);
+	*/
 
 	return true;
 }
 
-bool Scheduler::Stop(void)
+bool Scheduler::stop(void)
 {
-	_bExecute = false;
-	if( _thread.Destroy() == false ) return false;
+	if (_thread.join() == false)
+	{
+		return false;
+	}
 	return true;
 };
 
-bool Scheduler::AddSlot(EventSlot *pSlot, uint tick)
+/*
+bool Scheduler::AddSlot(EventSlot *pSlot, uint32_t tick)
 {
-	// @TODO tick의 max값을 정한다.
+	 @TODO tick의 max값을 정한다.
 	
-	// index 50~99 -> 1, 100~149 -> 2, 150->199 -> 3, 200->249 -> 4,,, 950~999 -> 19
+	 index 50~99 -> 1, 100~149 -> 2, 150->199 -> 3, 200->249 -> 4,,, 950~999 -> 19
 	int slice = (int)(tick / SCHEDULER_TIME_UNIT);
 	if( _container.Insert( slice, pSlot ) == false )
 	{
@@ -231,7 +213,7 @@ bool Scheduler::AddSlot(EventSlot *pSlot, uint tick)
 	pSlot->Ref();
 
 #if defined _SCHEDULER_DEBUG_LOG_
-	//NE_DEBUGLOG( L"%I64u, scheduler addslot, tick %u, want %u, slot %I64d", _executionIndex, tick, slice, pSlot->getSlotIndex() );
+	NE_DEBUGLOG( L"%I64u, scheduler addslot, tick %u, want %u, slot %I64d", _executionIndex, tick, slice, pSlot->getSlotIndex() );
 #endif
 
 	return true;
@@ -254,11 +236,11 @@ bool Scheduler::DeleteSlot(EventSlot *pSlot)
 	return true;
 }
 
-bool Scheduler::ResetSlot(EventSlot *pSlot, uint tick)
+bool Scheduler::ResetSlot(EventSlot *pSlot, uint32_t tick)
 {
-	// @TODO tick의 max값을 정한다.
+	 @TODO tick의 max값을 정한다.
 	
-	// index 50~99 -> 1, 100~149 -> 2, 150->199 -> 3, 200->249 -> 4
+	 index 50~99 -> 1, 100~149 -> 2, 150->199 -> 3, 200->249 -> 4
 	int slice = (int)(tick / SCHEDULER_TIME_UNIT);
 
 	NE_DEBUGLOG( L"%I64u, scheduler remove and insert, tick %u, want %d, slot %d, %d, %I64u",

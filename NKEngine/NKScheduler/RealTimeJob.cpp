@@ -5,12 +5,12 @@
 using namespace NKScheduler;
 
 RealTimeJob::RealTimeJob(void)
-	:_reserved(0)
-	,_slotType(0)
-	,_slotIndex(-1)
-	,_executeSlotIndex(0)
-	,_pContainer(nullptr)
-	,_tick(0)
+//	:_reserved(0)
+//	,_slotType(0)
+//	,_slotIndex(-1)
+//	,_executeSlotIndex(0)
+//	,_pContainer(nullptr)
+//	,_tick(0)
 {
 }
 
@@ -18,6 +18,7 @@ RealTimeJob::~RealTimeJob(void)
 {
 }
 
+/*
 bool RealTimeJob::ReExecute(uint32_t tick)
 {
 	//return _pContainer->AddTimeJob(this,tick);
@@ -57,3 +58,4 @@ void RealTimeJob::ReleaseReserve(void)
 		NKENGINELOG_ERROR( L"realtimejob, release reserve, it would be bug." );
 	}
 }
+*/

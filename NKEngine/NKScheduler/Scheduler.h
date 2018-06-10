@@ -1,3 +1,4 @@
+#pragma once
 #ifndef __SCHEDULER_HEADER__
 #define __SCHEDULER_HEADER__
 // @nolimitk
@@ -5,7 +6,7 @@
 // scheduler
 
 #include "../NKCore.h"
-#include "EventSlot.h"
+#include "JobSlot.h"
 //#include "ScheduleContainer.h"
 
 namespace NKScheduler
@@ -23,48 +24,51 @@ namespace NKScheduler
 	class SchedulerThread : public NKCore::NKThread
 	{
 	public:
-		virtual bool onRun(void) override;
+		bool onRun(void) override;
 
 	public:
 		SchedulerThread(void) {}
 		virtual ~SchedulerThread(void) {}
 	};
 
-	//class Scheduler// : public NKCore::Singleton<Scheduler>
-	//{
-	//public:
-	//	bool Create(int size = DEFAULT_SHORTTERMSLOT_SIZE, bool realtime = true);
-	//	bool Start(void);
-	//	bool Execute(void);
-	//	bool Stop(void);
+	class Scheduler : public NKCore::Singleton<Scheduler>
+	{
+	public:
+		bool start(void);		
+		bool stop(void);
 
-	//public:
-	//	bool AddSlot(EventSlot *pSlot, uint tick);
-	//	bool DeleteSlot(EventSlot *pSlot);
-	//	bool ResetSlot(EventSlot *pSlot, uint tick);
-	//	uint64 GetExecutionIndex(void) { return _executionIndex; }
+		/*
+	public:
+		bool AddSlot(EventSlot *pSlot, uint32_t tick);
+		bool DeleteSlot(EventSlot *pSlot);
+		bool ResetSlot(EventSlot *pSlot, uint32_t tick);
+		uint64_t GetExecutionIndex(void) { return _executionIndex; }
 
-	//protected:
-	//	static const int DEFAULT_SHORTTERMSLOT_SIZE = 31;
-	//	static const int64 SCHEDULER_TIME_UNIT;
+	protected:
+		static const int DEFAULT_SHORTTERMSLOT_SIZE = 31;
+		static const int64_t SCHEDULER_TIME_UNIT;
+		//ScheduleContainer _container;
+		int _sizeShortTermSlot;
+		bool _realtime;
+		*/
 
+	protected:
+		NKCore::TIndexedQueue<RealTimeJob> _shortterm_queue;
+		
+		/// scheduler thread
+	protected:
+		bool execute(void);
 
-	//protected:
-	//	bool _bExecute;
-	//	SchedulerThread _thread;
+	protected:
+		SchedulerThread _thread;
 
-	//	//ScheduleContainer _container;
-	//	volatile uint64 _executionIndex;
+		friend SchedulerThread;
+		///
 
-	//	int _sizeShortTermSlot;
-	//	bool _realtime;
-
-	//public:
-	//	Scheduler(uint size);
-	//	virtual ~Scheduler(void);
-	//};
-
-	//Scheduler* getScheduler(void);
+	public:
+		Scheduler(void);
+		virtual ~Scheduler(void);
+	};
 }
 
 #endif // __SCHEDULER_HEADER__

@@ -5,12 +5,10 @@
 // serialize container( sorted list + indexed queue + instant execution queue )
 
 #include "../NKCore.h"
-//#include "RealTimeJob.h"
+#include "RealTimeJob.h"
 
 namespace NKScheduler
 {
-	
-
 	class SerializeContainer
 	{
 	//public:
@@ -32,9 +30,9 @@ namespace NKScheduler
 
 	//	uint _sizeShortTermSlot;
 
-	//	NKCore::TQueue<RealTimeJob> _instantQueue;
-	//	std::mutex _mutexInstant;
-
+	//protected:
+	//	NKCore::TSpinLockQueue<RealTimeJob> _instant_queue;
+		
 	public:
 		//SerializeContainer(uint size);
 		SerializeContainer(void);
