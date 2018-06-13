@@ -127,7 +127,7 @@
     <ClInclude Include="NKScheduler\JobSlot.h" />
     <ClInclude Include="NKScheduler\RealTimeJob.h" />
     <ClInclude Include="NKScheduler\Scheduler.h" />
-    <ClInclude Include="NKScheduler\SerializeContainer.h" />
+    <ClInclude Include="NKScheduler\Serializer.h" />
     <ClInclude Include="NKUtils.h" />
     <ClInclude Include="StringCommander.h" />
   </ItemGroup>
@@ -164,7 +164,7 @@
     <ClCompile Include="NKScheduler\JobSlot.cpp" />
     <ClCompile Include="NKScheduler\RealTimeJob.cpp" />
     <ClCompile Include="NKScheduler\Scheduler.cpp" />
-    <ClCompile Include="NKScheduler\SerializeContainer.cpp" />
+    <ClCompile Include="NKScheduler\Serializer.cpp" />
     <ClCompile Include="NKUtils.cpp" />
     <ClCompile Include="StringCommander.cpp" />
   </ItemGroup>

@@ -6,25 +6,44 @@
 // scheduler
 
 #include "../NKCore.h"
-#include "JobSlot.h"
+//#include "JobSlot.h"
 //#include "ScheduleContainer.h"
 
 namespace NKScheduler
 {
-	class SchedulerClock : public NKCore::Singleton<SchedulerClock>
+	class Serializer;
+
+	class SchedulerClock
 	{
+	public:
+		inline int64_t getElapsedMicroSec(void) const { return tick.getElapsedMicroSec(); }
+		inline void sleep(int64_t wait_time) { tick.sleepAccurate(wait_time); }
 	protected:
-		volatile uint64_t _executionIndex;
+		NKCore::NKClock tick;
+			
+		///
+	public:
+		inline uint64_t executionIndex(void) const { return _execution_index; }
+		inline void increaseIndex(void) { _execution_index++; }
+
+	protected:
+		volatile uint64_t _execution_index;
+		///
 
 	public:
-		SchedulerClock(void):_executionIndex(0){}
+		SchedulerClock(void):_execution_index(0){}
 		virtual ~SchedulerClock(void) {}
 	};
 
 	class SchedulerThread : public NKCore::NKThread
 	{
 	public:
+		bool onStart(void) override;
 		bool onRun(void) override;
+		bool onEnd(void) override;
+
+	protected:
+		NKCore::NKClock _clock;
 
 	public:
 		SchedulerThread(void) {}
@@ -37,9 +56,11 @@ namespace NKScheduler
 		bool start(void);		
 		bool stop(void);
 
+	public:
+		bool addSerializer(const std::shared_ptr<Serializer>& serializer, uint32_t tick);
+
 		/*
 	public:
-		bool AddSlot(EventSlot *pSlot, uint32_t tick);
 		bool DeleteSlot(EventSlot *pSlot);
 		bool ResetSlot(EventSlot *pSlot, uint32_t tick);
 		uint64_t GetExecutionIndex(void) { return _executionIndex; }
@@ -51,9 +72,15 @@ namespace NKScheduler
 		int _sizeShortTermSlot;
 		bool _realtime;
 		*/
+		
+		/// slot
+	protected:
+		static const int RECOMMAND_SHORTTERMJOB_SIZE = 40;
+		static const int SCHEDULER_TIME_UNIT = 50;
 
 	protected:
-		NKCore::TIndexedQueue<RealTimeJob> _shortterm_queue;
+		NKCore::TWaitFreeQueue<Serializer> _shortterm_slot[RECOMMAND_SHORTTERMJOB_SIZE];
+		//
 		
 		/// scheduler thread
 	protected:

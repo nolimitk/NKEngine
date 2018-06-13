@@ -8,6 +8,7 @@
 #include <WinSock2.h>
 #include <Windows.h>
 #include "NKCore/NKMemory.h"
+#include "NKCore/ReferenceCountObject.h"
 
 // data structures
 #include "NKCore/DataStructures/TNode.h"

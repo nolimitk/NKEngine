@@ -156,9 +156,6 @@
     <ClInclude Include="NKScheduler\RealTimeJob.h">
       <Filter>NKScheduler</Filter>
     </ClInclude>
-    <ClInclude Include="NKScheduler\SerializeContainer.h">
-      <Filter>NKScheduler</Filter>
-    </ClInclude>
     <ClInclude Include="NKScheduler\Scheduler.h">
       <Filter>NKScheduler</Filter>
     </ClInclude>
@@ -173,6 +170,9 @@
     </ClInclude>
     <ClInclude Include="NKCore\DataStructures\TWaitFreeQueue.h">
       <Filter>NKCore\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="NKScheduler\Serializer.h">
+      <Filter>NKScheduler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -269,9 +269,6 @@
     <ClCompile Include="NKScheduler\RealTimeJob.cpp">
       <Filter>NKScheduler</Filter>
     </ClCompile>
-    <ClCompile Include="NKScheduler\SerializeContainer.cpp">
-      <Filter>NKScheduler</Filter>
-    </ClCompile>
     <ClCompile Include="NKScheduler\Scheduler.cpp">
       <Filter>NKScheduler</Filter>
     </ClCompile>
@@ -279,6 +276,9 @@
       <Filter>NKNetwork</Filter>
     </ClCompile>
     <ClCompile Include="NKScheduler\JobSlot.cpp">
+      <Filter>NKScheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="NKScheduler\Serializer.cpp">
       <Filter>NKScheduler</Filter>
     </ClCompile>
   </ItemGroup>

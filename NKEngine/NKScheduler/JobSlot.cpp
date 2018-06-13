@@ -42,23 +42,3 @@ void EventSlot::ReleaseReserve(void)
 	}
 }
 */
-
-bool JobSlot::onProcess(NKNetwork::EventContext& event_context, uint32_t transferred)
-{
-	_ASSERT(event_context._type == NKNetwork::EVENTCONTEXTTYPE::SCHEDULER );
-
-	NKNetwork::SchedulerContext& scheduler_context = static_cast<NKNetwork::SchedulerContext&>(event_context);
-	NKENGINELOG_INFO( L"slot executed, %I64u", scheduler_context._param );
-
-	// @TODO execution index를 비교해서 지연 체크?
-
-	// @TODO job slot당 job의 count와 실행시간을 monitoring한다.
-	RealTimeJob* pJob = _job_queue.popQueue();
-
-	while (pJob != nullptr)
-	{
-		pJob->Process(scheduler_context._param);
-	}
-	
-	return true;
-}

@@ -1,6 +1,6 @@
 #include "RealTimeJob.h"
 //#include "Serializer.h"
-#include "../NKEngineLog.h"
+//#include "../NKEngineLog.h"
 
 using namespace NKScheduler;
 

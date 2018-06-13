@@ -1,3 +1,4 @@
+#pragma once
 #ifndef __JOBSLOT_HEADER__
 #define __JOBSLOT_HEADER__
 // @nolimitk
@@ -9,8 +10,6 @@
 
 namespace NKScheduler
 {
-	class RealTimeJob;
-
 	class JobSlot : public NKNetwork::EventObject
 	{
 		/*
@@ -46,6 +45,10 @@ namespace NKScheduler
 		//uint64_t _executeSlotIndex;
 		///
 
+
+	protected:
+		bool push(const std::shared_ptr<RealTimeJob>& job) { _job_queue.push(job); }
+	protected:
 		NKCore::TWaitFreeQueue<RealTimeJob> _job_queue;
 
 	public:

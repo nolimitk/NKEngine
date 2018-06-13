@@ -1,3 +1,4 @@
+#pragma once
 #ifndef __REALTIMEJOB_HEADER__
 #define __REALTIMEJOB_HEADER__
 // @nolimitk
@@ -10,7 +11,7 @@ namespace NKScheduler
 {
 	//class Serializer;
 
-	class RealTimeJob : public NKCore::TNode<RealTimeJob>
+	class RealTimeJob : public NKCore::TNode2<RealTimeJob>
 	{
 		/*
 	public:
@@ -42,7 +43,7 @@ namespace NKScheduler
 		*/
 
 	public:
-		virtual bool Process(uint64_t executeIndex) = 0;
+		virtual bool onExecute(uint64_t execute_index) = 0;
 		
 		/*
 	protected:
@@ -63,6 +64,8 @@ namespace NKScheduler
 		RealTimeJob(void);
 		virtual ~RealTimeJob(void);
 	};
+
+	using RealTimeJobSP = std::shared_ptr<RealTimeJob>;
 }
 
 #endif // __REALTIMEJOB_HEADER__
