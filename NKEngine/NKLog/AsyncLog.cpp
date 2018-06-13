@@ -8,22 +8,19 @@ const std::chrono::milliseconds LogThread::DEFAULT_GAP_LOGWRITE(250);
 
 bool LogThread::onRun(void)
 {
-	LogData* pLogData = AsyncLogSingleton::getInstance()->getLogdataQueue();
-	LogData *pDelete = nullptr;
-
-	if (pLogData == nullptr)
+	LogDataSP log_data = AsyncLogSingleton::getInstance()->popLogdataQueue();
+	
+	if (log_data == false)
 	{
 		this_thread::sleep_for(DEFAULT_GAP_LOGWRITE);
 		return true;
 	}
 
-	while (pLogData != nullptr)
+	while (log_data != nullptr)
 	{
-		AsyncLogSingleton::getInstance()->writeDeviceDetails(pLogData->_log_layout, pLogData->_log_category, pLogData->_log);
+		AsyncLogSingleton::getInstance()->writeDeviceDetails(log_data->_log_layout, log_data->_log_category, log_data->_log);
 
-		pDelete = pLogData;
-		pLogData = pLogData->getNext();
-		SAFE_DELETE(pDelete);
+		log_data = log_data->getNext();
 	}
 
 	this_thread::yield();
@@ -43,24 +40,24 @@ AsyncLog::~AsyncLog(void)
 	flush();
 }
 
-LogData* NKLog::AsyncLog::getLogdataQueue(void)
+LogDataSP NKLog::AsyncLog::popLogdataQueue(void)
 {
 	return _logdata_queue.popQueue();
 }
 
 bool NKLog::AsyncLog::write(const LogLayout & layout, const LogCategory & category, const NKWString & log)
 {
-	LogData* pLogData = new LogData(layout, category, log);
+	LogDataSP log_data = make_shared<LogData>(layout, category, log);
 	
-	write(pLogData);
+	write(log_data);
 	return true;
 }
 
-bool NKLog::AsyncLog::write(LogData* pLogData)
+bool NKLog::AsyncLog::write(const LogDataSP& log_data)
 {
-	if (pLogData == nullptr) return false;
+	if (log_data == false) return false;
 
-	_logdata_queue.push(pLogData);
+	_logdata_queue.push(log_data);
 
 	bool expected = false;
 	bool ret = _start_thread.compare_exchange_strong(expected, true);

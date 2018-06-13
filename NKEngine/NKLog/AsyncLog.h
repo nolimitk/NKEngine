@@ -15,7 +15,7 @@
 
 namespace NKLog
 {
-	class LogData : public NKCore::TNode<LogData>
+	class LogData : public NKCore::TNode2<LogData>
 	{
 	public:
 		const LogLayout _log_layout;
@@ -31,6 +31,8 @@ namespace NKLog
 		}
 		virtual ~LogData(void) {}
 	};
+
+	using LogDataSP = std::shared_ptr<LogData>;
 
 	// log thread must be independent system.
 	class LogThread : public NKCore::NKThread
@@ -56,8 +58,8 @@ namespace NKLog
 		///
 		
 	protected:
-		LogData* getLogdataQueue(void);
-		bool write(LogData* pLogData);
+		LogDataSP popLogdataQueue(void);
+		bool write(const LogDataSP& pLogData);
 		bool flush(void);
 
 	protected:
