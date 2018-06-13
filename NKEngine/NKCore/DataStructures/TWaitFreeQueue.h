@@ -9,18 +9,35 @@
 
 namespace NKCore
 {
-	// T must be derived from TNode
-	template<typename T>
+	template<class T>
+	class TNode2
+	{
+	public:
+		inline void setNext(const std::shared_ptr<T>& node) { _next = node; }
+		inline std::shared_ptr<T> getNext(void) const { return _next; }
+
+	protected:
+		std::shared_ptr<T> _next;
+
+	public:
+		TNode2(void)
+			: _next(nullptr)
+		{
+		}
+
+		virtual ~TNode2(void) {}
+	};
+
+	template<class T>
 	class TWaitFreeQueue
 	{
 	public:
-		bool push(T* node);
-		// @not-thread-safe
-		T* popQueue(void);
+		bool push(const std::shared_ptr<T>& node);
+		std::shared_ptr<T> popQueue(void);
 
 	protected:
-		T * _head;
-		std::atomic<T*> _tail;
+		std::shared_ptr<T> _head;
+		std::shared_ptr<T> _tail;
 
 	public:
 		TWaitFreeQueue(void)
@@ -34,11 +51,11 @@ namespace NKCore
 	};
 
 	template<typename T>
-	inline bool TWaitFreeQueue<T>::push(T * node)
+	inline bool TWaitFreeQueue<T>::push(const std::shared_ptr<T>& node)
 	{
 		if (node == nullptr) return false;
-
-		T* pos = _tail.exchange(node);
+				
+		std::shared_ptr<T> pos = std::atomic_exchange(&_tail, node);
 
 		if (pos == nullptr)
 		{
@@ -51,12 +68,12 @@ namespace NKCore
 		return true;
 	}
 	template<typename T>
-	inline T * TWaitFreeQueue<T>::popQueue(void)
+	inline std::shared_ptr<T> TWaitFreeQueue<T>::popQueue(void)
 	{
-		T* pos = _tail.exchange(nullptr);
+		std::shared_ptr<T> pos = std::atomic_exchange(&_tail, std::shared_ptr<T>(nullptr));
 		if (pos == nullptr)
 		{
-			return nullptr;
+			return pos; // return nullptr;
 		}
 		return _head;
 	}
