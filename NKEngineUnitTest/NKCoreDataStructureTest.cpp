@@ -24,6 +24,12 @@ public:
 	}
 };
 
+class MockNode2 : public NKCore::TNode2<MockNode2>
+{
+public:
+	int _v;
+};
+
 typedef std::vector<std::unique_ptr<MockNode>> MockNodeVector;
 
 template<typename Q>
@@ -423,9 +429,9 @@ NKTEST(TIndexedQueue_Test)
 	return true;
 }
 
-void PushWaitFreeQueue(NKCore::TWaitFreeQueue<MockNode>& queue, int key)
+void PushWaitFreeQueue(NKCore::TWaitFreeQueue<MockNode2>& queue, int key)
 {
-	MockNode* node = new MockNode(key);
+	std::shared_ptr<MockNode2> node = std::make_shared<MockNode2>();
 	node->_v = 10 * (key);
 
 	queue.push(node);
@@ -433,31 +439,30 @@ void PushWaitFreeQueue(NKCore::TWaitFreeQueue<MockNode>& queue, int key)
 
 NKTEST(TWaitFreeQueue_Test)
 {
-	NKCore::TWaitFreeQueue<MockNode> waitfree_queue;
+	NKCore::TWaitFreeQueue<MockNode2> waitfree_queue;
 
 	{
 		const static int push_count = 10;
 
 		for (int i = 0; i < push_count; i++)
 		{
-			PushWaitFreeQueue(waitfree_queue, 10 + i);
+			PushWaitFreeQueue(waitfree_queue, i);
 		}
 
 		int count = 0;
-		MockNode* front = waitfree_queue.popQueue();
-		MockNode* prev;
+		std::shared_ptr<MockNode2> front = waitfree_queue.popQueue();
+		std::shared_ptr<MockNode2> prev;
 		while (front != nullptr)
 		{
 			count++;
-			_ASSERT(front->getKey() == 10 + (count-1));
+			_ASSERT(front->_v == 10 + (count-1));
 			prev = front;
 			front = front->getNext();
-			SAFE_DELETE(prev);
 		}
 
 		for (int i = 0; i < push_count; i++)
 		{
-			PushWaitFreeQueue(waitfree_queue, 20 + i);
+			PushWaitFreeQueue(waitfree_queue, i+20);
 		}
 
 		count = 0;
@@ -466,10 +471,9 @@ NKTEST(TWaitFreeQueue_Test)
 		while (front != nullptr)
 		{
 			count++;
-			_ASSERT(front->getKey() == 20 + (count - 1));
+			_ASSERT(front->_v == 20 + (count-1));
 			prev = front;
 			front = front->getNext();
-			SAFE_DELETE(prev);
 		}
 
 		_ASSERT(count == push_count);
