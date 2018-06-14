@@ -2,6 +2,7 @@
 //#include <crtdbg.h>
 #include "../NKEngineLog.h"
 #include "RealTimeJob.h"
+#include "Scheduler.h"
 
 using namespace NKScheduler;
 
@@ -18,12 +19,9 @@ Serializer::~Serializer(void)
 
 bool Serializer::addJob(const RealTimeJobSP& job, uint32_t tick)
 {
-	if (job == nullptr)
-	{
-		_ASSERT(0);
-		return false;
-	}
+	if (job == nullptr){ _ASSERT(0); return false;}
 	// @TODO tick의 max값을 정한다.
+	if (tick == 0) { _ASSERT(0); return false; }
 
 	// index 50~99 -> 0, 100~149 -> 1, 150->199 -> 2, 200->249 -> 3,,, 950~999 -> 18
 	int slice = (int)((tick / SCHEDULER_TIME_UNIT) - 1);
@@ -38,9 +36,6 @@ bool Serializer::addJob(const RealTimeJobSP& job, uint32_t tick)
 	NKENGINELOG_INFO( L"[SERIALIZER],add job, tick %u, slice %d, slot %I64u", tick, slice, pJob->getExecuteSlotIndex() );
 #endif
 
-	// scheduler slice에 넣어둔다... 이미 넣어두었으면 또 넣을 필요가 없는데...
-	// 그냥 serializer queue에 넣어두고 loop에서 처리해도 되지 않나?
-	//RegisterScheduler(tick);
 	return true;
 }
 
@@ -258,10 +253,6 @@ bool Serializer::onProcess(NKNetwork::EventContext& event_context, uint32_t tran
 	NKENGINELOG_INFO(L"slot executed, %I64u", scheduler_context._param);
 
 	execute(scheduler_context._param);
-
-	//SAFE_DELETE(pEventContext);
-
-	//Unref();
-	
+		
 	return true;
 }

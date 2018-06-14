@@ -6,14 +6,15 @@
 // serializer
 
 #include "../NKCore.h"
-#include "JobSlot.h"
+#include "../NKNetwork.h"
+#include "RealTimeJob.h"
 
 namespace NKScheduler
 {
 	class Serializer : public NKNetwork::EventObject, public NKCore::TNode2<Serializer>
 	{
 	public:
-		bool addJob(const RealTimeJobSP& job, uint32_t tick);
+		bool addJob(const RealTimeJobSP& job, uint32_t tick = SCHEDULER_TIME_UNIT);
 
 		/*
 	public:

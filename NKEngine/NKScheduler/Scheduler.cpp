@@ -62,7 +62,9 @@ bool Scheduler::stop(void)
 
 bool Scheduler::addSerializer(const std::shared_ptr<Serializer>& serializer, uint32_t tick)
 {
+	if (serializer == nullptr) { _ASSERT(0); return false; }
 	// @TODO tick의 max값을 정한다.
+	if (tick == 0) { _ASSERT(0); return false; }
 
 	// index 50~99 -> 0, 100~149 -> 1, 150->199 -> 2, 200->249 -> 3, , , 950~999 -> 18
 	int slice = (int)((tick / SCHEDULER_TIME_UNIT) - 1);

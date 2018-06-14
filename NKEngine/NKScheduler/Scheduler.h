@@ -57,7 +57,7 @@ namespace NKScheduler
 		bool stop(void);
 
 	public:
-		bool addSerializer(const std::shared_ptr<Serializer>& serializer, uint32_t tick);
+		bool addSerializer(const std::shared_ptr<Serializer>& serializer, uint32_t tick = SCHEDULER_TIME_UNIT);
 
 		/*
 	public:

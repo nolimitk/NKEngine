@@ -40,8 +40,55 @@ NKTEST(EventSlot_Test)
 
 NKTEST(Scheduler_Test)
 {
+	{
+		class MockNode2 : public NKCore::TNode2<MockNode2>
+		{
+		public:
+			int _v;
+
+		public:
+			MockNode2(void) :_v(0) {}
+			virtual ~MockNode2(void) { _v = 11; }
+		};
+		std::shared_ptr<MockNode2> node = make_shared<MockNode2>();
+		std::shared_ptr<MockNode2> next_node = make_shared<MockNode2>();
+		NKCore::TWaitFreeQueue<MockNode2> queue;
+
+		queue.push(node);
+		queue.push(next_node);
+	}
+
+
 	_ASSERT(NKNetwork::IOCPManager::getInstance()->create() == true);
 	_ASSERT(NKScheduler::Scheduler::getInstance()->start() == true);
+
+	class MockJob : public NKScheduler::RealTimeJob
+	{
+	public:
+		bool _onExecute;
+
+	public:
+		virtual bool onExecute(uint64_t execute_index)
+		{
+			_onExecute = true;
+			return true;
+		}
+
+		MockJob(void) :_onExecute(false) {}
+	};
+
+	{
+		NKScheduler::SerializerSP serializer = std::make_shared<NKScheduler::Serializer>();
+		_ASSERT(serializer);
+		shared_ptr<MockJob> job = std::make_shared<MockJob>();
+		_ASSERT(job);
+
+		_ASSERT(serializer->addJob(job) == true);
+		_ASSERT(NKScheduler::Scheduler::getInstance()->addSerializer(serializer, 50) == true);
+
+		WAITFOR(job, onExecute);
+	}
+
 	_ASSERT(NKScheduler::Scheduler::getInstance()->stop() == true);
 
 	NKScheduler::Scheduler::getInstance()->destroy();
