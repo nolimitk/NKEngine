@@ -455,7 +455,7 @@ NKTEST(TWaitFreeQueue_Test)
 		while (front != nullptr)
 		{
 			count++;
-			_ASSERT(front->_v == 10 + (count-1));
+			_ASSERT(front->_v == 10 * (count-1));
 			prev = front;
 			front = front->getNext();
 		}
@@ -471,7 +471,7 @@ NKTEST(TWaitFreeQueue_Test)
 		while (front != nullptr)
 		{
 			count++;
-			_ASSERT(front->_v == 20 + (count-1));
+			_ASSERT(front->_v == 10 * (20+count-1));
 			prev = front;
 			front = front->getNext();
 		}
