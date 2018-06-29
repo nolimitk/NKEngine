@@ -4,6 +4,9 @@
 
 #include "NKEngine.h"
 #include "NKUnittest.h"
+#include <chrono>
+
+using namespace std;
 
 NKTEST(Buffer_ByteStream_Test)
 {
@@ -32,16 +35,25 @@ NKTEST(Buffer_ByteStream_Test)
 
 NKTEST(NKClock_Test)
 {
-	NKCore::NKClock clock;
-	clock.sleepAccurate(1000);
 	{
-		int64_t sleep_tick = clock.getElapsedMicroSec();
-		_TEST(sleep_tick > 0 && sleep_tick < 2000);
+		NKCore::NKClock clock;
+		clock.sleepAccurate(1000us);
+		{
+			std::chrono::microseconds sleep_tick = clock.getElapsedTime();
+			_TEST(sleep_tick > 0us && sleep_tick < 2000us);
+		}
+		clock.sleepAccurate(20000us);
+		{
+			std::chrono::microseconds sleep_tick = clock.getElapsedTime();
+			_TEST(sleep_tick > 20000us && sleep_tick < 22000us);
+		}
 	}
-	clock.sleepAccurate(20*1000);
 	{
-		int64_t sleep_tick = clock.getElapsedMicroSec();
-		_TEST(sleep_tick > 20*1000 && sleep_tick < 22*1000);
+		NKCore::NKClock clock;
+		clock.sleepAccurate(50ms);
+
+		std::chrono::microseconds sleep_tick = clock.getElapsedTime();
+		_TEST(sleep_tick > 49000us && sleep_tick < 51000us);
 	}
 
 	return true;

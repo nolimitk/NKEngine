@@ -8,6 +8,6 @@ NKUnitTest::ElapsedTime::ElapsedTime(NKWString&& name)
 
 NKUnitTest::ElapsedTime::~ElapsedTime(void)
 {
-	uint64_t elapsed_tick = _clock.getElapsedMicroSec();
-	NKUNITTESTLOG_INFO(L"%s, elapsed time, %tu us", _name.c_str(), elapsed_tick);
+	std::chrono::microseconds elapsed_tick = _clock.getElapsedTime();
+	NKUNITTESTLOG_INFO(L"%s, elapsed time, %I64d us", _name.c_str(), elapsed_tick.count());
 }

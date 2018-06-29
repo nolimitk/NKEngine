@@ -84,7 +84,7 @@ NKTEST(Scheduler_Test)
 		_ASSERT(job);
 
 		_ASSERT(serializer->addJob(job) == true);
-		_ASSERT(NKScheduler::Scheduler::getInstance()->addSerializer(serializer, 50) == true);
+		_ASSERT(NKScheduler::Scheduler::getInstance()->addSerializer(serializer, 50ms) == true);
 
 		WAITFOR(job, onExecute);
 	}
