@@ -16,8 +16,8 @@ namespace NKScheduler
 	class SchedulerClock
 	{
 	public:
-		inline int64_t getElapsedMicroSec(void) const { return tick.getElapsedMicroSec(); }
-		inline void sleep(int64_t wait_time) { tick.sleepAccurate(wait_time); }
+		inline std::chrono::microseconds getElapsedTime(void) const { return tick.getElapsedTime(); }
+		inline void sleep(std::chrono::milliseconds wait_time) { tick.sleepAccurate(wait_time); }
 	protected:
 		NKCore::NKClock tick;
 			
@@ -57,7 +57,7 @@ namespace NKScheduler
 		bool stop(void);
 
 	public:
-		bool addSerializer(const std::shared_ptr<Serializer>& serializer, uint32_t tick = SCHEDULER_TIME_UNIT);
+		bool addSerializer(const std::shared_ptr<Serializer>& serializer, const std::chrono::milliseconds& interval = std::chrono::duration_cast<std::chrono::milliseconds>(SCHEDULER_TIME_UNIT));
 
 		/*
 	public:
@@ -72,11 +72,14 @@ namespace NKScheduler
 		int _sizeShortTermSlot;
 		bool _realtime;
 		*/
+
+	protected:
+		SchedulerClock _clock;
 		
 		/// slot
 	protected:
 		static const int RECOMMAND_SHORTTERMJOB_SIZE = 40;
-		static const int SCHEDULER_TIME_UNIT = 50;
+		static const std::chrono::microseconds SCHEDULER_TIME_UNIT;
 
 	protected:
 		NKCore::TWaitFreeQueue<Serializer> _shortterm_slot[RECOMMAND_SHORTTERMJOB_SIZE];

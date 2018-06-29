@@ -7,6 +7,8 @@
 using namespace NKNetwork;
 using namespace std;
 
+const std::chrono::microseconds WorkerThread::UPDATE_UNIT = 50000us;
+
 WorkerThread::WorkerThread(const HANDLE completion_portr)
 	:_completion_port(completion_portr)
 	, _update_tick(0)
@@ -19,7 +21,7 @@ WorkerThread::~WorkerThread(void)
 
 bool WorkerThread::onStart(void)
 {
-	_update_tick = _clock.getElapsedMicroSec();
+	_update_tick = _clock.getElapsedTime();
 	NKENGINELOG_INFO( L"[WORKERTHREAD],%u,started", getThreadID() );
 	return true;
 }
@@ -27,19 +29,19 @@ bool WorkerThread::onStart(void)
 bool WorkerThread::onRun(void)
 {
 	// event OnUpdate
-	uint64_t current_tick = _clock.getElapsedMicroSec();
-	int64_t update_elapsed_time = current_tick - _update_tick;
+	std::chrono::microseconds current_tick = _clock.getElapsedTime();
+	std::chrono::microseconds update_elapsed_time = current_tick - _update_tick;
 	DWORD sleep_gap = 0;
 	
-	if (update_elapsed_time >= 0)
+	if (update_elapsed_time >= 0us)
 	{
-		onUpdate(current_tick);
+		onUpdate(current_tick.count());
 		_update_tick = current_tick + UPDATE_UNIT;
-		sleep_gap = UPDATE_UNIT / 1000;
+		sleep_gap = static_cast<DWORD>((UPDATE_UNIT / 1000).count());
 	}
 	else
 	{
-		sleep_gap = static_cast<DWORD>((_update_tick - current_tick) / 1000);
+		sleep_gap = static_cast<DWORD>((_update_tick - current_tick).count() / 1000);
 		//NKENGINELOG_INFO(L"[WORKERTHREAD],%u,idle,sleep %d, %llu - %llu", getThreadID(), sleep_gap, _update_tick, current_tick);
 	}
 	///

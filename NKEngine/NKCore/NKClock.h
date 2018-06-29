@@ -15,16 +15,17 @@ namespace NKCore
 	class NKClock
 	{
 	public:
-		int64_t getElapsedMicroSec(void) const
+		inline std::chrono::microseconds getElapsedTime(void) const
 		{
-			return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - _start_tick).count();
+			return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - _start_tick);
 		}
 
-		void sleepAccurate(int64_t wait_time_us);
+		void sleepAccurate(const std::chrono::microseconds& wait_time);
+		inline void sleepAccurate(const std::chrono::milliseconds& wait_time) { sleepAccurate(std::chrono::microseconds(wait_time)); }
 
 	protected:
-		static const int64_t DEFAULT_ACCURACY_VALUE;
-		static const int64_t ERROR_RANGE_VALUE;
+		static const std::chrono::microseconds DEFAULT_ACCURACY_VALUE;
+		static const std::chrono::microseconds ERROR_RANGE_VALUE;
 		std::chrono::time_point<std::chrono::high_resolution_clock> _start_tick;
 
 	public:

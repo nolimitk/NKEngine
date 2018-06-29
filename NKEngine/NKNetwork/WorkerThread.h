@@ -12,7 +12,7 @@ namespace NKNetwork
 	class WorkerThread : public NKCore::NKThread
 	{
 	public:
-		const static int UPDATE_UNIT = 50 * 1000; // 50ms
+		const static std::chrono::microseconds UPDATE_UNIT;
 
 	public:
 		virtual bool onStart(void) override;
@@ -23,7 +23,7 @@ namespace NKNetwork
 	protected:
 		const HANDLE _completion_port;
 		NKCore::NKClock _clock;
-		uint64_t _update_tick;
+		std::chrono::microseconds _update_tick;
 		
 	public:
 		WorkerThread(const HANDLE completion_port);
