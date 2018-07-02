@@ -38,7 +38,7 @@ void EventSlot::ReleaseReserve(void)
 	if (init == false)
 	{
 		NKENGINELOG_ERROR( L"event slot, release reserve, it would be bug." );
-		_ASSERT(0);
+		_ASSERT(false);
 	}
 }
 */

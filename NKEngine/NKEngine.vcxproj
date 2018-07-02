@@ -127,6 +127,8 @@
     <ClInclude Include="NKScheduler\JobSlot.h" />
     <ClInclude Include="NKScheduler\RealTimeJob.h" />
     <ClInclude Include="NKScheduler\Scheduler.h" />
+    <ClInclude Include="NKScheduler\SchedulerConstants.h" />
+    <ClInclude Include="NKScheduler\SchedulerInterface.h" />
     <ClInclude Include="NKScheduler\Serializer.h" />
     <ClInclude Include="NKUtils.h" />
     <ClInclude Include="StringCommander.h" />

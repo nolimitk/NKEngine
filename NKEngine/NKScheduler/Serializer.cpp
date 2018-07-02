@@ -1,34 +1,28 @@
 #include "Serializer.h"
-//#include <crtdbg.h>
 #include "../NKEngineLog.h"
 #include "RealTimeJob.h"
-#include "Scheduler.h"
 
 using namespace NKScheduler;
 
 Serializer::Serializer(void)
-//	:_lastReservedTick(0)
-//	, _container(RECOMMAND_SHORTTERMJOB_SIZE)
+	:_reserved(false)
+	,_reserved_execution_index(0)
 {
 }
 
 Serializer::~Serializer(void)
 {
-//	_container.Destroy();
 }
 
-bool Serializer::addJob(const RealTimeJobSP& job, uint32_t tick)
+bool Serializer::addJob(const RealTimeJobSP& job, uint64_t reserve_execution_index)
 {
-	if (job == nullptr){ _ASSERT(0); return false;}
-	// @TODO tick의 max값을 정한다.
-	if (tick == 0) { _ASSERT(0); return false; }
+	if (job == nullptr){ _ASSERT(false); return false;}
+	
+	uint32_t round_slice = reserve_execution_index % DEFAULT_JOBSLOT_SHORTTERM_SIZE;
 
-	// index 50~99 -> 0, 100~149 -> 1, 150->199 -> 2, 200->249 -> 3,,, 950~999 -> 18
-	int slice = (int)((tick / SCHEDULER_TIME_UNIT) - 1);
-
-	if (_shortterm_slot[slice].push(job) == false)
+	if (_shortterm_slot[round_slice].push(job) == false)
 	{
-		NKENGINELOG_ERROR(L"[SERIALIZER], failed to push the job into queue,tick %u, slice %d", tick, slice);
+		//NKENGINELOG_ERROR(L"[SERIALIZER], failed to push the job into queue,tick %u, slice %d", tick, slice);
 		return false;
 	}
 	
@@ -39,99 +33,7 @@ bool Serializer::addJob(const RealTimeJobSP& job, uint32_t tick)
 	return true;
 }
 
-/*
-
-
-bool Serializer::DeleteTimeJob(RealTimeJob *pJob)
-{
-	NE_DEBUGLOG( L"serializer delete slot, type %d, slot %d, executeslot %I64u", pJob->getSlotType(), pJob->getSlotIndex(), pJob->getExecuteSlotIndex() );
-
-	if( _container.Remove( pJob ) == false )
-	{
-		NKENGINELOG_ERROR( L"serializer delete slot failed, type %d, slot %d, executeslot %I64u", pJob->getSlotType(), pJob->getSlotIndex(), pJob->getExecuteSlotIndex() );
-		return false;
-	}
-
-	pJob->SetContainer(nullptr);
-	pJob->SetTick(0);
-	pJob->Unref();
-
-	// @TODO 해당 slot에 job이 없고 현재 등록된 tick일 경우 취소해야 한다.
-	// @TODO 취소하지 않을 경우 허투로 시리얼라이저가 한번 실행될 수 있다.
-
-	return true;
-}
-
-bool Serializer::ResetTimeJob(RealTimeJob *pJob, uint tick)
-{
-	// @TODO tick의 max값을 정한다.
-	if( tick == 0 ) tick = 1;
-	
-	// index 50~99 -> 1, 100~149 -> 2, 150->199 -> 3, 200->249 -> 4
-	int slice = (int)(tick / SCHEDULER_TIME_UNIT);
-
-	NE_DEBUGLOG( L"serializer remove and insert, tick %u, want %d, type %d, slot %d, executeslot %I64u",
-		tick, slice, pJob->getSlotIndex(), pJob->getSlotType(), pJob->getSlotIndex(), pJob->getExecuteSlotIndex() );
-
-	if( _container.RemoveAndInsert( slice, pJob ) == false )
-	{
-		NKENGINELOG_ERROR( L"serializer resetjob failed, tick %u, want %d", tick, slice );
-		return false;
-	}
-
-	if( GetReserved() == false )
-	{
-		// 등록이 안되어 있으면 버그다.
-		NKENGINELOG_ERROR( L"serializer resetjob error, tick %u, want %d", tick, slice );
-	}
-	else
-	{
-		if( tick < _lastReservedTick )
-		{
-			_lastReservedTick = tick;
-			if( getScheduler()->ResetSlot( this, tick ) == true )
-			{
-				// execution index to start serializer
-				_lastExecutionIndex = _executeSlotIndex;
-				return true;
-			}
-
-			return false;
-		}
-
-		return true;
-	}
-
-	return false;
-}
-
-bool Serializer::RegisterScheduler(uint tick)
-{
-	bool result = false;
-	if( TryReserve() == true )
-	{
-		_lastReservedTick = tick;
-		result = getScheduler()->AddSlot( this, tick );
-	}
-	else
-	{
-		if( tick < _lastReservedTick )
-		{
-			_lastReservedTick = tick;
-			result = getScheduler()->ResetSlot( this, tick );
-		}
-	}
-
-	if( result == true )
-	{		
-		// execution index to start serializer
-		_lastExecutionIndex = _executeSlotIndex;
-	}
-	return true;
-}
-*/
-
-bool Serializer::execute(uint64_t execute_index)
+bool Serializer::execute(uint64_t execution_index)
 {
 #if defined _SCHEDULER_DEBUG_LOG_
 	//NE_DEBUGLOG( L"serializer executed, %I64u", execute_index );
@@ -143,9 +45,9 @@ bool Serializer::execute(uint64_t execute_index)
 
 	//_lastReservedTick = (uint32_t)(-1);
 
-	int64_t rotateIndex = execute_index % RECOMMAND_SHORTTERMJOB_SIZE;
+	int64_t round_slice = execution_index % DEFAULT_JOBSLOT_SHORTTERM_SIZE;
 
-	RealTimeJobSP job = _shortterm_slot[rotateIndex].popQueue();
+	RealTimeJobSP job = _shortterm_slot[round_slice].popQueue();
 	RealTimeJobSP next_job = nullptr;
 	
 	/// execution
@@ -153,13 +55,12 @@ bool Serializer::execute(uint64_t execute_index)
 	{
 		// @nolimitk job을 실행중에 다시 등록할 수 있도록 초기화를 먼저 한다.
 		next_job = job->getNext();
-#if defined _SCHEDULER_DEBUG_LOG_
-		//NE_DEBUGLOG( L"job executed, job %I64u, last %I64u, execute %I64u", pJob->getExecuteSlotIndex(), _lastExecutionIndex, execute_index  );
-#endif
+		
 		//job->UnRegister();
 		//job->ReleaseReserve();
 
-		job->onExecute(execute_index);
+		job->onExecute(execution_index);
+		NKENGINELOG_INFO(L"[SCHEDULER],%I64u,job executed,slot %I64u", execution_index, round_slice);
 
 		job = next_job;
 	}
@@ -250,7 +151,7 @@ bool Serializer::onProcess(NKNetwork::EventContext& event_context, uint32_t tran
 	_ASSERT(event_context._type == NKNetwork::EVENTCONTEXTTYPE::SCHEDULER);
 
 	NKNetwork::SchedulerContext& scheduler_context = static_cast<NKNetwork::SchedulerContext&>(event_context);
-	NKENGINELOG_INFO(L"slot executed, %I64u", scheduler_context._param);
+	NKENGINELOG_INFO(L"[SCHEDULER],slot executed, %I64u", scheduler_context._param);
 
 	execute(scheduler_context._param);
 		

@@ -10,6 +10,9 @@
 
 namespace NKScheduler
 {
+	// @nolimitk 50ms * 40, 20초, 20초 이하의 job 실행이 빈번할것으로 예상, 상황에 맡게 조정가능
+	static const int JOBSLOT_SHORTTERM_SIZE = 400;
+
 	class JobSlot : public NKNetwork::EventObject
 	{
 		/*
@@ -45,12 +48,8 @@ namespace NKScheduler
 		//uint64_t _executeSlotIndex;
 		///
 
-
-	protected:
-		bool push(const std::shared_ptr<RealTimeJob>& job) { _job_queue.push(job); }
-	protected:
-		NKCore::TWaitFreeQueue<RealTimeJob> _job_queue;
-
+		NKCore::TWaitFreeQueue<RealTimeJob> _shortterm_slot[JOBSLOT_SHORTTERM_SIZE];
+		
 	public:
 		JobSlot(void);
 		virtual ~JobSlot(void);

@@ -5,8 +5,7 @@
 // 16.05.28
 // nk scheduler
 
-#include "NKScheduler/Serializer.h"
-#include "NKScheduler/Scheduler.h"
+#include "NKScheduler/SchedulerInterface.h"
 
 #endif // __NKSCHEDULER_HEADER__
 

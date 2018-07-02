@@ -6,13 +6,11 @@
 // scheduler
 
 #include "../NKCore.h"
-//#include "JobSlot.h"
-//#include "ScheduleContainer.h"
+#include "SchedulerConstants.h"
+#include "Serializer.h"
 
 namespace NKScheduler
 {
-	class Serializer;
-
 	class SchedulerClock
 	{
 	public:
@@ -57,33 +55,22 @@ namespace NKScheduler
 		bool stop(void);
 
 	public:
-		bool addSerializer(const std::shared_ptr<Serializer>& serializer, const std::chrono::milliseconds& interval = std::chrono::duration_cast<std::chrono::milliseconds>(SCHEDULER_TIME_UNIT));
-
-		/*
-	public:
-		bool DeleteSlot(EventSlot *pSlot);
-		bool ResetSlot(EventSlot *pSlot, uint32_t tick);
-		uint64_t GetExecutionIndex(void) { return _executionIndex; }
-
-	protected:
-		static const int DEFAULT_SHORTTERMSLOT_SIZE = 31;
-		static const int64_t SCHEDULER_TIME_UNIT;
-		//ScheduleContainer _container;
-		int _sizeShortTermSlot;
-		bool _realtime;
-		*/
+		bool addSerializer(const SerializerSP& serializer, uint64_t reserve_execution_index);
 
 	protected:
 		SchedulerClock _clock;
+
+	public:
+		uint64_t convertToExecutionIndex(const std::chrono::milliseconds& interval);
 		
 		/// slot
 	protected:
-		static const int RECOMMAND_SHORTTERMJOB_SIZE = 40;
-		static const std::chrono::microseconds SCHEDULER_TIME_UNIT;
+		static const std::chrono::microseconds SCHEDULER_INTERVAL_MARGIN;
+		static const std::chrono::microseconds SCHEDULER_INTERVAL_UNIT;
 
 	protected:
-		NKCore::TWaitFreeQueue<Serializer> _shortterm_slot[RECOMMAND_SHORTTERMJOB_SIZE];
-		//
+		NKCore::TWaitFreeQueue<Serializer> _shortterm_slot[DEFAULT_JOBSLOT_SHORTTERM_SIZE];
+		///
 		
 		/// scheduler thread
 	protected:

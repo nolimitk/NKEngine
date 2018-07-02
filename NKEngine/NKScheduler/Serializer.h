@@ -6,6 +6,7 @@
 // serializer
 
 #include "../NKCore.h"
+#include "SchedulerConstants.h"
 #include "../NKNetwork.h"
 #include "RealTimeJob.h"
 
@@ -14,34 +15,29 @@ namespace NKScheduler
 	class Serializer : public NKNetwork::EventObject, public NKCore::TNode2<Serializer>
 	{
 	public:
-		bool addJob(const RealTimeJobSP& job, uint32_t tick = SCHEDULER_TIME_UNIT);
-
-		/*
+		bool addJob(const RealTimeJobSP& job, uint64_t reserve_execution_index);
+		
 	public:
-		bool DeleteTimeJob(RealTimeJob *pJob);
-		bool ResetTimeJob(RealTimeJob *pJob, uint tick);
+		std::atomic<bool> _reserved;
+		std::atomic<uint64_t> _reserved_execution_index;
 
 	public:
-		bool RegisterScheduler(uint tick);
-				
-	protected:
-		// @TODO lock을 쓰지 않는 방법을 연구해 본다.
-		// @TODO Serializer가 하나의 thread에서만 실행이 된다고 보장이 되면 lock을 걸지 않아도 된다.
-		// @TODO Serializer에 job을 추가하는 thread도 하나가 되어야 한다.
-		SerializeContainer _container;
-		volatile uint _lastReservedTick;
-		uint64 _lastExecutionIndex;
-		*/
+		bool canReserve(uint64_t reserve_execution_index) const { if (_reserved == true && _reserved_execution_index >= reserve_execution_index) { return false; } return true; }
+		void setReserve(uint64_t reserve_execution_index) { _reserved = true; _reserved_execution_index = reserve_execution_index; }
+		void setReserveFalse(void) { _reserved = false; }
 
 	protected:
-		static const int RECOMMAND_SHORTTERMJOB_SIZE = 40;
 		static const int SCHEDULER_TIME_UNIT = 50;
+		// index 50~99 -> 0, 100~149 -> 1, 150->199 -> 2, 200->249 -> 3,,, 950~999 -> 18
+		int convertToExecuteIndex(int tick) { return (tick / SCHEDULER_TIME_UNIT) - 1; }
+		
+		/// short-term job slot
+	protected:
+		NKCore::TWaitFreeQueue<RealTimeJob> _shortterm_slot[DEFAULT_JOBSLOT_SHORTTERM_SIZE];
+		///
 
 	protected:
-		NKCore::TWaitFreeQueue<RealTimeJob> _shortterm_slot[RECOMMAND_SHORTTERMJOB_SIZE];
-
-	protected:
-		bool execute(uint64_t execute_index);
+		bool execute(uint64_t execution_index);
 
 	public:
 		virtual bool onProcess(NKNetwork::EventContext& event_context, uint32_t transferred) override;

@@ -22,7 +22,8 @@ bool NKScheduler::SchedulerThread::onEnd(void)
 	return true;
 }
 
-const std::chrono::microseconds Scheduler::SCHEDULER_TIME_UNIT = 50000us;
+const std::chrono::microseconds Scheduler::SCHEDULER_INTERVAL_MARGIN = 500us;
+const std::chrono::microseconds Scheduler::SCHEDULER_INTERVAL_UNIT = 50ms;
 
 Scheduler::Scheduler(void)
 //	:_container(size)
@@ -59,54 +60,75 @@ bool Scheduler::stop(void)
 	return true;
 };
 
-bool Scheduler::addSerializer(const std::shared_ptr<Serializer>& serializer, const std::chrono::milliseconds& interval)
+uint64_t Scheduler::convertToExecutionIndex(const std::chrono::milliseconds& interval)
 {
-	if (serializer == nullptr) { _ASSERT(0); return false; }
-	// @TODO tick의 max값을 정한다.
-	if (interval == 0ms) { _ASSERT(0); return false; }
-
-	// index 50~99 -> 0, 100~149 -> 1, 150->199 -> 2, 200->249 -> 3, , , 950~999 -> 18
-	int slice = static_cast<int>((interval.count() / 50) - 1);
-	uint64_t execution_index = _clock.executionIndex();
-	uint64_t rotateIndex = execution_index % RECOMMAND_SHORTTERMJOB_SIZE;
-	uint64_t add_index = (rotateIndex + slice) % RECOMMAND_SHORTTERMJOB_SIZE;
-
-	if (_shortterm_slot[add_index].push(serializer) == false)
+	// @TODO interval의 max값을 정한다.
+	// index 0~49 -> 0, 50~99 -> 0, 100~149 -> 1, 150->199 -> 2, 200->249 -> 3,,, 950~999 -> 4
+	if (interval < 50ms) return 0;
+	int64_t slice = (interval / SCHEDULER_INTERVAL_UNIT) - 1;
+	if (slice < 0 || slice >= DEFAULT_JOBSLOT_SHORTTERM_SIZE)
 	{
-		NKENGINELOG_ERROR(L"[SCHEDULER], %I64u, scheduler addslot failed, tick %I64u, want %d, index %I64u", execution_index, interval.count(), slice, add_index);
+		_ASSERT(false);
 		return false;
 	}
 
-	NKENGINELOG_INFO(L"[SCHEDULER],0,add serializer, tick %u, slot %d", interval.count(), slice);
+	uint64_t execution_index = _clock.executionIndex();
+	return execution_index + slice;
+}
+
+bool Scheduler::addSerializer(const SerializerSP& serializer, uint64_t reserve_execution_index)
+{
+	if (serializer == nullptr) { _ASSERT(false); return false; }
+	if (serializer->canReserve(reserve_execution_index) == false)
+	{
+		return false;
+	}
+
+	uint32_t round_slice = reserve_execution_index % DEFAULT_JOBSLOT_SHORTTERM_SIZE;
+
+	if (_shortterm_slot[round_slice].push(serializer) == false)
+	{
+		//NKENGINELOG_ERROR(L"[SCHEDULER], %I64u, scheduler addslot failed, tick %I64u, want %d, index %I64u", execution_index, interval.count(), slice, round_slice);
+		return false;
+	}
+
+	serializer->setReserve(reserve_execution_index);
+
+	//NKENGINELOG_INFO(L"[SCHEDULER],0,add serializer, tick %u, slot %d", interval.count(), slice);
 
 	return true;
 }
 
 bool Scheduler::execute(void)
 {
-	// update execution index
+	/// update execution index
 	uint64_t execution_index = _clock.executionIndex();
 	_clock.increaseIndex();
 	///
 
-	// pop queue
-	uint64_t rotateIndex = execution_index % RECOMMAND_SHORTTERMJOB_SIZE;
-	SerializerSP job = _shortterm_slot[rotateIndex].popQueue();
-	SerializerSP next_job = nullptr;
-	
-	// execution
-	while(job != nullptr )
 	{
-		NKENGINELOG_INFO(L"[SCHEDULER],%I64u,execution, slot %I64u", execution_index, rotateIndex);
+		/// pop queue
+		uint64_t round_slice = execution_index % DEFAULT_JOBSLOT_SHORTTERM_SIZE;
+		SerializerSP job = _shortterm_slot[round_slice].popQueue();
+		SerializerSP next_job = nullptr;
+		///
 
-		// @nolimitk slot을 실행중에 다시 등록할 수 있도록 초기화를 먼저 한다.
-		next_job = job->getNext();
-		//pExecuteSlot->UnRegister();
-		//pExecuteSlot->ReleaseReserve();
-			
-		NKNetwork::IOCPManager::getInstance()->postEvent(job, execution_index);
-						
-		job = next_job;
+		/// execution
+		while (job != nullptr)
+		{
+			NKENGINELOG_INFO(L"[SCHEDULER],%I64u,execution,slot %I64u", execution_index, round_slice);
+
+			// @nolimitk slot을 실행중에 다시 등록할 수 있도록 초기화를 먼저 한다.
+			next_job = job->getNext();
+			//pExecuteSlot->UnRegister();
+			//pExecuteSlot->ReleaseReserve();
+
+			job->setReserveFalse();
+			NKNetwork::IOCPManager::getInstance()->postEvent(job, execution_index);
+
+			job = next_job;
+		}
+		///
 	}
 		
 	// instant execution
@@ -156,7 +178,7 @@ bool Scheduler::execute(void)
 
 	//int64_t instantTime = 0;
 
-	next_tick += SCHEDULER_TIME_UNIT;
+	next_tick += SCHEDULER_INTERVAL_UNIT;
 	// Slot처리에 시간이 너무 오래 걸린 경우이다.
 	if(current_tick > next_tick)
 	{			
@@ -168,22 +190,21 @@ bool Scheduler::execute(void)
 	else
 	{
 		wait_time = std::chrono::duration_cast<std::chrono::milliseconds>(next_tick - current_tick);
-		if(wait_time > SCHEDULER_TIME_UNIT )
+		if(wait_time > SCHEDULER_INTERVAL_UNIT)
 		{
 			// realtime이 아닐 경우에는 정밀한 실행시간을 보장하지 않는다. [2014/12/10/ nolimitk]
 			//if( true == _realtime )
 			{
 				// @nolimitk waitTime이 SCHEDULER_TIME_UNIT 보다 큰 경우는 일어나서는 안된다.
 				//NE_ERRORLOG( L"scheduler accuracy is not match, next %lf, current %lf, wait %lf, tick %I64u", nextTime, currentTime, waitTime, _executionIndex );
-				next_tick = current_tick + SCHEDULER_TIME_UNIT;
-				wait_time = std::chrono::duration_cast<std::chrono::milliseconds>(SCHEDULER_TIME_UNIT);
+				next_tick = current_tick + SCHEDULER_INTERVAL_UNIT;
+				wait_time = std::chrono::duration_cast<std::chrono::milliseconds>(SCHEDULER_INTERVAL_UNIT);
 			}
 		}
 	}
 
 	if(wait_time > 0ms)
 	{
-		NKENGINELOG_INFO(L"[SCHEDULER],%I64u,wait, time %I64d", execution_index, wait_time);
 		//if( true == _realtime )
 		{
 			// @nolimitk 정밀도가 높은 sleep, slot이 없어도 cpu를 점유하게 된다.
@@ -203,18 +224,18 @@ bool Scheduler::execute(void)
 		std::chrono::microseconds execution_time = _clock.getElapsedTime() - last_tick;
 		last_tick = _clock.getElapsedTime();
 		// 49.4 미만(48.4미만으로 변경)
-		if(execution_time < SCHEDULER_TIME_UNIT-500us )
+		if (execution_time < SCHEDULER_INTERVAL_UNIT - SCHEDULER_INTERVAL_MARGIN)
 		{
-			NKENGINELOG_INFO( L"[SCHEDULER],%I64u, not enough sleep, %I64u, %I64u", execution_index, execution_time, wait_time);
+			NKENGINELOG_INFO(L"[SCHEDULER],%I64u,not enough sleep,execution %I64u us,wait %I64u ms", execution_index, execution_time, wait_time);
 		}
 		// 50.5 이상(51.5이상으로 변경)
-		else if(execution_time > SCHEDULER_TIME_UNIT+500us )
+		else if (execution_time > SCHEDULER_INTERVAL_UNIT + SCHEDULER_INTERVAL_MARGIN)
 		{
-			//NE_WARNINGLOG( L"%I64u, over sleep, %u, %lf", _executionIndex, executeTime, waitTime );
+			NKENGINELOG_INFO(L"[SCHEDULER],%I64u,over sleep,execution %I64u us,wait %I64u ms", execution_index, execution_time, wait_time);
 		}
 		else
 		{
-			NKENGINELOG_INFO(L"[SCHEDULER],%I64u, execution time, %I64u, %I64u", execution_index, execution_time, wait_time);
+			NKENGINELOG_INFO(L"[SCHEDULER],%I64u,execution time,execution %I64u us,wait %I64u ms", execution_index, execution_time, wait_time);
 		}
 	}
 		
