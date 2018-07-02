@@ -34,7 +34,7 @@ namespace NKLog
 		
 		// @TODO it must be inifite
 	protected:
-		const static int MAX_LENGTH_LOG_BUFFER = 1024;
+		static const int MAX_LENGTH_LOG_BUFFER = 1024;
 
 	protected:
 		const NKLog::LogCategory _category;

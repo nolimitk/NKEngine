@@ -19,7 +19,7 @@ bool Log::registerLogDevice(const std::shared_ptr<LogDevice>& logDevice)
 {
 	if (logDevice == nullptr)
 	{
-		_ASSERT(0);
+		_ASSERT(false);
 		return false;
 	}
 
