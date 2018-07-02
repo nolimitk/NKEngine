@@ -90,7 +90,7 @@ void readStream(RecvStream& stream)
 
 NKTEST(RecvStream_Test)
 {
-	const static int BUUFER_SIZE = 8000;
+	static const int BUUFER_SIZE = 8000;
 
 	RecvStream recv_stream(make_shared<NKCore::Buffer>(BUUFER_SIZE));
 	_ASSERT(recv_stream.getRemainSize() == BUUFER_SIZE);
@@ -132,7 +132,7 @@ NKTEST(RecvStream_Test)
 
 NKTEST(SendStream_Test)
 {
-	const static int BUUFER_SIZE = 8000;
+	static const int BUUFER_SIZE = 8000;
 
 	SendStream send_stream(make_shared<NKCore::Buffer>(BUUFER_SIZE));
 	byte* pRawBuffer = send_stream.get();
@@ -204,7 +204,7 @@ NKTEST(AsyncServerSocket_Test)
 	};
 	
 	// Server
-	const static USHORT TEST_PORT = 10000;
+	static const USHORT TEST_PORT = 10000;
 	shared_ptr<MockServerCallback> server_callback = make_shared<MockServerCallback>();
 	shared_ptr<AsyncServerSocket> server_socket = make_shared<AsyncServerSocket>(server_callback, make_shared<DefaultClientCallback>());
 	_ASSERT(server_socket);
@@ -319,7 +319,7 @@ NKTEST(AsyncServerSocket_AsyncSocket_Test)
 	};
 
 	// Server
-	const static USHORT TEST_PORT = 10000;
+	static const USHORT TEST_PORT = 10000;
 	shared_ptr<MockServerCallback> server_callback = make_shared<MockServerCallback>();
 	shared_ptr<MockClientCallback> client_callback = make_shared<MockClientCallback>();
 	shared_ptr<AsyncServerSocket> server_socket = make_shared<AsyncServerSocket>(server_callback, client_callback);
@@ -371,7 +371,7 @@ NKTEST(Connection_Test)
 
 //
 //
-//	const static int TEST_PORT = 10000;
+//	static const int TEST_PORT = 10000;
 //		
 //	shared_ptr<AsyncServerSocket> spServerSocket = make_shared<AsyncServerSocket>(completionPort);
 //	_ASSERT(spServerSocket);

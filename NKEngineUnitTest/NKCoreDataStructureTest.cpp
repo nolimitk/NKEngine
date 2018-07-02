@@ -442,7 +442,7 @@ NKTEST(TWaitFreeQueue_Test)
 	NKCore::TWaitFreeQueue<MockNode2> waitfree_queue;
 
 	{
-		const static int push_count = 10;
+		static const int push_count = 10;
 
 		for (int i = 0; i < push_count; i++)
 		{

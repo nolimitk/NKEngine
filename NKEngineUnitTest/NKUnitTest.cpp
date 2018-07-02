@@ -36,7 +36,7 @@ bool NKUnitTest::NKUnitTestFramework::run(bool benchmark_execute)
 	if (_unit_queue.run(benchmark_execute) == false)
 	{
 		NKUNITTESTLOG_INFO(L"nkunittest failed to run");
-		_ASSERT(0);
+		_ASSERT(false);
 		return false;
 	}
 

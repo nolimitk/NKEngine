@@ -83,8 +83,21 @@ NKTEST(Scheduler_Test)
 		shared_ptr<MockJob> job = std::make_shared<MockJob>();
 		_ASSERT(job);
 
-		_ASSERT(serializer->addJob(job) == true);
-		_ASSERT(NKScheduler::Scheduler::getInstance()->addSerializer(serializer, 50ms) == true);
+		uint64_t reserve_execution_index = NKScheduler::Scheduler::getInstance()->convertToExecutionIndex(50ms);
+		_ASSERT(serializer->addJob(job, reserve_execution_index) == true);
+		_ASSERT(NKScheduler::Scheduler::getInstance()->addSerializer(serializer, reserve_execution_index) == true);
+
+		WAITFOR(job, onExecute);
+	}
+
+	{
+		NKScheduler::SerializerSP serializer = std::make_shared<NKScheduler::Serializer>();
+		_ASSERT(serializer);
+		shared_ptr<MockJob> job = std::make_shared<MockJob>();
+		_ASSERT(job);
+
+		_ASSERT(NKScheduler::addJob(job, serializer, 50ms) == true);
+		_ASSERT(NKScheduler::addJob(job, serializer, 50ms) == true);
 
 		WAITFOR(job, onExecute);
 	}
