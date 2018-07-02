@@ -6,7 +6,7 @@
 // clock
 // wraps std::high_resolution_clock
 
-#include <stdint.h>
+#include <cstdint>
 #include <chrono>
 
 namespace NKCore

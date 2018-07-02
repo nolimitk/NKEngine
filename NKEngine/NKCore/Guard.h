@@ -7,8 +7,8 @@
 
 namespace NKCore
 {
-	const static int MAX_DEPTH = 10;
-	const static int MAX_FUNCTION_NAME_LENGTH = 1024;
+	static const int MAX_DEPTH = 10;
+	static const int MAX_FUNCTION_NAME_LENGTH = 1024;
 	extern __declspec(thread) wchar_t g_customCallstack[MAX_DEPTH][MAX_FUNCTION_NAME_LENGTH];
 	extern __declspec(thread) int g_indexCallstack;
 

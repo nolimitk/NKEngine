@@ -5,7 +5,7 @@
 // 16.05.10
 // template node
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace NKCore
 {

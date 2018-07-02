@@ -50,7 +50,7 @@ namespace NKCore
 		}
 	};
 
-	template<typename T>
+	template<class T>
 	inline bool TWaitFreeQueue<T>::push(const std::shared_ptr<T>& node)
 	{
 		if (node == nullptr) return false;
@@ -67,7 +67,7 @@ namespace NKCore
 		}
 		return true;
 	}
-	template<typename T>
+	template<class T>
 	inline std::shared_ptr<T> TWaitFreeQueue<T>::popQueue(void)
 	{
 		std::shared_ptr<T> pos = std::atomic_exchange(&_tail, std::shared_ptr<T>(nullptr));
