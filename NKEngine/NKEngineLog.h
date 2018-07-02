@@ -25,7 +25,7 @@ using NKEngineLogSingleton = NKCore::Singleton<NKEngineLog>;
 #define NKENGINELOG_INFO(fmt,...)				NKEngineLogSingleton::getInstance()->write(NKEngineLog::LAYOUT_INFO, __FUNCTIONW__, __LINE__, fmt, __VA_ARGS__);
 #define NKENGINELOG_SOCKETERROR(err,fmt,...)	NKEngineLogSingleton::getInstance()->writeSocketError(__FUNCTIONW__, __LINE__, err, fmt, __VA_ARGS__);
 
-#define NKENGINELOG_ERROR_ASSERT(fmt,...)				NKEngineLogSingleton::getInstance()->write(NKEngineLog::LAYOUT_ERROR, __FUNCTIONW__, __LINE__, fmt, __VA_ARGS__); _ASSERT(0);
-#define NKENGINELOG_SOCKETERROR_ASSERT(err,fmt,...) NKEngineLogSingleton::getInstance()->writeSocketError(__FUNCTIONW__, __LINE__, err, fmt, __VA_ARGS__); _ASSERT(0);
+#define NKENGINELOG_ERROR_ASSERT(fmt,...)				NKEngineLogSingleton::getInstance()->write(NKEngineLog::LAYOUT_ERROR, __FUNCTIONW__, __LINE__, fmt, __VA_ARGS__); _ASSERT(false);
+#define NKENGINELOG_SOCKETERROR_ASSERT(err,fmt,...) NKEngineLogSingleton::getInstance()->writeSocketError(__FUNCTIONW__, __LINE__, err, fmt, __VA_ARGS__); _ASSERT(false);
 
 #endif // __NKENGINELOG_HEADER__

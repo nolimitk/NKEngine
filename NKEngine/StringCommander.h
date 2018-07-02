@@ -13,8 +13,8 @@ namespace NKEngine
 	class StringCommander
 	{
 	public:
-		const static int MAX_PARAMETERS = 10;
-		const static int MAX_LENGTH_LONGPARAMETER = 1024;
+		static const int MAX_PARAMETERS = 10;
+		static const int MAX_LENGTH_LONGPARAMETER = 1024;
 
 		enum PARAMTYPE
 		{
