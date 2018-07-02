@@ -5,7 +5,7 @@
 // 15.07.07
 // protocol
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace NKNetwork
 {

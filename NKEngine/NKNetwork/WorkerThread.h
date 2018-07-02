@@ -12,7 +12,7 @@ namespace NKNetwork
 	class WorkerThread : public NKCore::NKThread
 	{
 	public:
-		const static std::chrono::microseconds UPDATE_UNIT;
+		static const std::chrono::microseconds UPDATE_UNIT;
 
 	public:
 		virtual bool onStart(void) override;

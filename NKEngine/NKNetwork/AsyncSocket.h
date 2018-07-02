@@ -42,7 +42,7 @@ namespace NKNetwork
 		virtual bool onProcessFailed(EventContext& event_context, uint32_t transferred) override;
 		
 	protected:
-		const static int BUFFER_LENGTH_8K = 8000; // tbb small object size
+		static const int BUFFER_LENGTH_8K = 8000; // tbb small object size
 
 	protected:
 		SOCKET _socket;

@@ -76,7 +76,7 @@ bool Connection::reconnect(void)
 	if (_network_event == nullptr)
 	{
 		NKENGINELOG_ERROR(L"failed to reconnect,network event is null,connection %I64u, %S:%d", _id, _address, _port);
-		_ASSERT(0);
+		_ASSERT(false);
 		return false;
 	}
 
@@ -94,7 +94,7 @@ bool Connection::onClosed(void)
 	if (_network_event == nullptr)
 	{
 		NKENGINELOG_ERROR(L"network event is null,connection %I64u", _id);
-		_ASSERT(0);
+		_ASSERT(false);
 		return false;
 	}
 
@@ -118,7 +118,7 @@ bool Connection::onConnected(void)
 	if (_network_event == nullptr)
 	{
 		NKENGINELOG_ERROR(L"network event is null,connection %I64u", _id);
-		_ASSERT(0);
+		_ASSERT(false);
 		return false;
 	}
 
@@ -132,7 +132,7 @@ bool Connection::onConnectFailed(void)
 	if (_network_event == nullptr)
 	{
 		NKENGINELOG_ERROR(L"network event is null,connection %I64u", _id);
-		_ASSERT(0);
+		_ASSERT(false);
 		return false;
 	}
 
@@ -189,7 +189,7 @@ bool Connection::onReceived(const Packet& packet)
 	if (_network_event == nullptr)
 	{
 		NKENGINELOG_ERROR(L"network event is null,connection %I64u", _id);
-		_ASSERT(0);
+		_ASSERT(false);
 		return false;
 	}
 
@@ -203,7 +203,7 @@ bool Connection::onSent(void)
 	if (_network_event == nullptr)
 	{
 		NKENGINELOG_ERROR(L"network event is null,connection %I64u", _id);
-		_ASSERT(0);
+		_ASSERT(false);
 		return false;
 	}
 

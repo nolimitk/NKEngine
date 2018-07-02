@@ -40,7 +40,7 @@ namespace NKNetwork
 	class AcceptContext : public EventContext
 	{
 	public:
-		const static int BUFFER_SIZE = (sizeof(SOCKADDR_IN) + 16) * 2;
+		static const int BUFFER_SIZE = (sizeof(SOCKADDR_IN) + 16) * 2;
 
 	public:
 		char _outputBuffer[BUFFER_SIZE];

@@ -27,7 +27,7 @@ namespace NKNetwork
 		bool accept(void);
 
 	protected:
-		const static int BACKLOG_DEFAULT = 1024;
+		static const int BACKLOG_DEFAULT = 1024;
 
 	protected:
 		SOCKET _socket;

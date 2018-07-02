@@ -258,7 +258,7 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 						if (packet.read(_recv_stream) == false)
 						{
 							NKENGINELOG_INFO(L"packet read failed,socket %I64u,length %d, %d/%d", _socket, _recv_stream.getLength(), length, transferred);
-							_ASSERT(0);
+							_ASSERT(false);
 							disconnect();
 							return false;
 						}
