@@ -223,7 +223,7 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 			if( transferred == 0 )
 			{
 				close();
-				_callback->onClosed(dynamic_pointer_cast<AsyncSocket>(shared_from_this()));
+				_callback->onClosed(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
 			}
 			else
 			{
@@ -263,7 +263,7 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 							return false;
 						}
 
-						_callback->onReceived(dynamic_pointer_cast<AsyncSocket>(shared_from_this()), packet);
+						_callback->onReceived(dynamic_pointer_cast<AsyncSocket>(event_context._event_object), packet);
 
 						if(_recv_stream.getLength() != 0 )
 						{
@@ -286,7 +286,7 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 		{
 			NKENGINELOG_INFO( L"send completed,socket %I64u,length %d", _socket, transferred );
 
-			_callback->onSent(dynamic_pointer_cast<AsyncSocket>(shared_from_this()));
+			_callback->onSent(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
 
 		}
 		break;
@@ -294,7 +294,7 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 		{
 			setsockopt( _socket, SOL_SOCKET, SO_UPDATE_CONNECT_CONTEXT, NULL, 0 );
 
-			_callback->onConnected(dynamic_pointer_cast<AsyncSocket>(shared_from_this()));
+			_callback->onConnected(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
 
 			recv();
 			
@@ -334,7 +334,8 @@ bool AsyncSocket::onProcessFailed(EventContext& event_context, uint32_t transfer
 			{
 				close();
 			}
-			_callback->onClosed(dynamic_pointer_cast<AsyncSocket>(shared_from_this()));
+
+			_callback->onClosed(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
 		}
 		break;
 	case EVENTCONTEXTTYPE::SEND:
@@ -358,7 +359,7 @@ bool AsyncSocket::onProcessFailed(EventContext& event_context, uint32_t transfer
 			}
 
 			close();
-			_callback->onConnectFailed(dynamic_pointer_cast<AsyncSocket>(shared_from_this()));
+			_callback->onConnectFailed(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
 		}
 		break;
 	default:
