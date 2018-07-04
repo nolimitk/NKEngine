@@ -13,10 +13,21 @@
 using namespace NKNetwork;
 using namespace std;
 
+Connection::Connection(void)
+{
+}
+
 Connection::Connection(const std::shared_ptr<AsyncSocket>& socket)
 	:_socket(socket)
 {
 }
+
+Connection::Connection(std::shared_ptr<AsyncSocket>&& socket)
+	: _socket(move(socket))
+{
+}
+
+
 /*
 Connection::Connection(std::unique_ptr<NetworkEvent>&& network_event, bool reconnect)
 	: _network_event(std::move(network_event))

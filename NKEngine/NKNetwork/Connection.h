@@ -11,10 +11,10 @@
 */
 #include <map>
 #include "../NKCore.h"
+#include "AsyncSocket.h"
 
 namespace NKNetwork
 {
-	class AsyncSocket;
 	//class Session;
 	//class Service;
 
@@ -99,7 +99,9 @@ namespace NKNetwork
 		
 	public:
 		//Connection(std::unique_ptr<NetworkEvent>&& network_event, bool reconnect = false);
+		Connection(void);
 		Connection(const std::shared_ptr<AsyncSocket>& socket);
+		Connection(std::shared_ptr<AsyncSocket>&& socket);
 		virtual ~Connection(void);
 	};
 

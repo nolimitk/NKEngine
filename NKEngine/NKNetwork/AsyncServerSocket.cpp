@@ -3,6 +3,7 @@
 #include <Ws2tcpip.h>
 #include "../NKEngineLog.h"
 #include "AsyncSocket.h"
+#include "Connection.h"
 #include "IOCPManager.h"
 #include "EventContext.h"
 #include "NetworkCallbacks.h"
@@ -134,16 +135,16 @@ bool AsyncServerSocket::onProcess(EventContext& event_context, uint32_t transfer
 	accept_context._accept_socket->setAddress(waddress);
 	//
 
-	shared_ptr<AsyncSocket> accept_socket(accept_context._accept_socket);
-	accept_context._accept_socket = nullptr;
+	shared_ptr<Connection> connection = make_shared<Connection>((shared_ptr<AsyncSocket>(accept_context._accept_socket)));
 
-	_server_callback->onAccepted(accept_socket);
+	_server_callback->onAccepted(connection);
 
 	// peer에서 연결을 바로 종료하면 iocp 등록이 실패할 수 있다.
-	if(accept_socket->recv() == false )
+	if(accept_context._accept_socket->recv() == false )
 	{
 		return false;
 	}
+	accept_context._accept_socket = nullptr;
 	
 	// ready to accept next socket
 	if( accept() == false )
