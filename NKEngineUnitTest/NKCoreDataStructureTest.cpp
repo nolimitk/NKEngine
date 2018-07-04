@@ -30,6 +30,12 @@ public:
 	int _v;
 };
 
+class MockNode3
+{
+public:
+	int _v;
+};
+
 typedef std::vector<std::unique_ptr<MockNode>> MockNodeVector;
 
 template<typename Q>
@@ -477,6 +483,37 @@ NKTEST(TWaitFreeQueue_Test)
 		}
 
 		_ASSERT(count == push_count);
+	}
+
+	// push twice same node
+	{
+		/*
+		std::shared_ptr<MockNode2> node = std::make_shared<MockNode2>();
+		node->_v = 100;
+
+		_ASSERT(waitfree_queue.push(node) == true);
+		_ASSERT(waitfree_queue.push(node) == true);
+		
+		_ASSERT(node->getNext() != node);
+		*/
+	}
+
+	{
+		NKCore::TWaitFreeQueue2<int> waitfree_queue;
+
+		int v = 100;
+
+		_ASSERT(waitfree_queue.push(v) == true);
+		_ASSERT(waitfree_queue.push(v) == true);
+	}
+	{
+		NKCore::TWaitFreeQueue2<std::shared_ptr<MockNode3>> waitfree_queue;
+
+		std::shared_ptr<MockNode3> node = std::make_shared<MockNode3>();
+		node->_v = 200;
+		
+		_ASSERT(waitfree_queue.push(node) == true);
+		_ASSERT(waitfree_queue.push(node) == true);
 	}
 	
 	/*
