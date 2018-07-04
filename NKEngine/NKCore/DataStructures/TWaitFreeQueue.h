@@ -10,6 +10,90 @@
 namespace NKCore
 {
 	template<class T>
+	class TNode3
+	{
+	private:
+		using iterator_type = std::shared_ptr<TNode3<T>>;
+
+	public:
+		inline void setNext(const iterator_type& node) { _next = node; }
+		inline iterator_type getNext(void) const { return _next; }
+		inline T getValue(void) const { return _value; }
+
+	protected:
+		T _value;
+		iterator_type _next;
+		
+	public:
+		TNode3(void)
+			: _next(nullptr)
+		{
+		}
+
+		TNode3(const T& value)
+			: _value(value)
+			, _next(nullptr)
+		{
+		}
+
+		virtual ~TNode3(void) {}
+	};
+
+	template<class T>
+	class TWaitFreeQueue2
+	{
+	public:
+		using iterator_type = std::shared_ptr<TNode3<T>>;
+
+	public:
+		bool push(const T& node);
+		iterator_type popQueue(void);
+
+	protected:
+		iterator_type _head;
+		iterator_type _tail;
+
+	public:
+		TWaitFreeQueue2(void)
+			:_head(nullptr), _tail(nullptr)
+		{
+
+		}
+		virtual ~TWaitFreeQueue2(void)
+		{
+		}
+	};
+	
+	template<class T>
+	inline bool TWaitFreeQueue2<T>::push(const T& value)
+	{
+		iterator_type node = std::make_shared<TNode3<T>>(value);
+
+		iterator_type pos = std::atomic_exchange(&_tail, node);
+
+		if (pos == nullptr)
+		{
+			_head = node;
+		}
+		else
+		{
+			pos->setNext(node);
+		}
+		return true;
+	}
+
+	template<class T>
+	inline typename TWaitFreeQueue2<T>::iterator_type TWaitFreeQueue2<T>::popQueue(void)
+	{
+		iterator_type pos = std::atomic_exchange(&_tail, iterator_type(nullptr));
+		if (pos == nullptr)
+		{
+			return nullptr;
+		}
+		return _head;
+	}
+
+	template<class T>
 	class TNode2
 	{
 	public:
@@ -20,8 +104,12 @@ namespace NKCore
 		std::shared_ptr<T> _next;
 
 	public:
+		std::atomic<bool> _inserted;
+
+	public:
 		TNode2(void)
 			: _next(nullptr)
+			, _inserted(false)
 		{
 		}
 
@@ -33,6 +121,7 @@ namespace NKCore
 	{
 	public:
 		bool push(const std::shared_ptr<T>& node);
+		bool pushBack(const std::shared_ptr<T>& node);
 		std::shared_ptr<T> popQueue(void);
 
 	protected:
@@ -54,7 +143,7 @@ namespace NKCore
 	inline bool TWaitFreeQueue<T>::push(const std::shared_ptr<T>& node)
 	{
 		if (node == nullptr) return false;
-				
+						
 		std::shared_ptr<T> pos = std::atomic_exchange(&_tail, node);
 
 		if (pos == nullptr)
@@ -67,6 +156,7 @@ namespace NKCore
 		}
 		return true;
 	}
+
 	template<class T>
 	inline std::shared_ptr<T> TWaitFreeQueue<T>::popQueue(void)
 	{
