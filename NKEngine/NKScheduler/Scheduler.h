@@ -69,7 +69,7 @@ namespace NKScheduler
 		static const std::chrono::microseconds SCHEDULER_INTERVAL_UNIT;
 
 	protected:
-		NKCore::TWaitFreeQueue<Serializer> _shortterm_slot[DEFAULT_JOBSLOT_SHORTTERM_SIZE];
+		NKCore::TWaitFreeQueue2<SerializerSP> _shortterm_slot[DEFAULT_JOBSLOT_SHORTTERM_SIZE];
 		///
 		
 		/// scheduler thread

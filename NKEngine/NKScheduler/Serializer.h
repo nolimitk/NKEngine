@@ -12,7 +12,7 @@
 
 namespace NKScheduler
 {
-	class Serializer : public NKNetwork::EventObject, public NKCore::TNode2<Serializer>
+	class Serializer : public NKNetwork::EventObject
 	{
 	public:
 		bool addJob(const RealTimeJobSP& job, uint64_t reserve_execution_index);
@@ -33,7 +33,7 @@ namespace NKScheduler
 		
 		/// short-term job slot
 	protected:
-		NKCore::TWaitFreeQueue<RealTimeJob> _shortterm_slot[DEFAULT_JOBSLOT_SHORTTERM_SIZE];
+		NKCore::TWaitFreeQueue2<RealTimeJobSP> _shortterm_slot[DEFAULT_JOBSLOT_SHORTTERM_SIZE];
 		///
 
 	protected:

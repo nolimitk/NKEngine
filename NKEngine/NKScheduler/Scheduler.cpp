@@ -109,24 +109,24 @@ bool Scheduler::execute(void)
 	{
 		/// pop queue
 		uint64_t round_slice = execution_index % DEFAULT_JOBSLOT_SHORTTERM_SIZE;
-		SerializerSP job = _shortterm_slot[round_slice].popQueue();
-		SerializerSP next_job = nullptr;
+		NKCore::TWaitFreeQueue2<SerializerSP>::iterator_type node = _shortterm_slot[round_slice].popQueue();
+		NKCore::TWaitFreeQueue2<SerializerSP>::iterator_type next_node = nullptr;
 		///
 
 		/// execution
-		while (job != nullptr)
+		while (node != nullptr)
 		{
 			NKENGINELOG_INFO(L"[SCHEDULER],%I64u,execution,slot %I64u", execution_index, round_slice);
 
 			// @nolimitk slot을 실행중에 다시 등록할 수 있도록 초기화를 먼저 한다.
-			next_job = job->getNext();
+			next_node = node->getNext();
 			//pExecuteSlot->UnRegister();
 			//pExecuteSlot->ReleaseReserve();
 
-			job->setReserveFalse();
-			NKNetwork::IOCPManager::getInstance()->postEvent(job, execution_index);
+			//job->setReserveFalse();
+			NKNetwork::IOCPManager::getInstance()->postEvent(node->getValue(), execution_index);
 
-			job = next_job;
+			node = next_node;
 		}
 		///
 	}
@@ -184,7 +184,7 @@ bool Scheduler::execute(void)
 	{			
 		// @TODO 처리한 Slot에 대한 정보를 남겨야 한다.
 #ifndef _DEBUG
-		NE_WARNINGLOG( L"scheduler lack, next %lf, current %lf, wait %lf, tick %I64u", nextTime, currentTime, waitTime, _executionIndex );
+		//NE_WARNINGLOG( L"scheduler lack, next %lf, current %lf, wait %lf, tick %I64u", nextTime, currentTime, waitTime, _executionIndex );
 #endif
 	}
 	else

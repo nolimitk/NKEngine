@@ -11,7 +11,7 @@ namespace NKScheduler
 {
 	//class Serializer;
 
-	class RealTimeJob : public NKCore::TNode2<RealTimeJob>
+	class RealTimeJob
 	{
 		/*
 	public:

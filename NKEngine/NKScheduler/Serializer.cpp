@@ -17,6 +17,7 @@ Serializer::~Serializer(void)
 bool Serializer::addJob(const RealTimeJobSP& job, uint64_t reserve_execution_index)
 {
 	if (job == nullptr){ _ASSERT(false); return false;}
+	//if (job->getNext() != nullptr) { _ASSERT(false); return false; }
 	
 	uint32_t round_slice = reserve_execution_index % DEFAULT_JOBSLOT_SHORTTERM_SIZE;
 
@@ -47,22 +48,23 @@ bool Serializer::execute(uint64_t execution_index)
 
 	int64_t round_slice = execution_index % DEFAULT_JOBSLOT_SHORTTERM_SIZE;
 
-	RealTimeJobSP job = _shortterm_slot[round_slice].popQueue();
-	RealTimeJobSP next_job = nullptr;
+	NKCore::TWaitFreeQueue2<RealTimeJobSP>::iterator_type node = _shortterm_slot[round_slice].popQueue();
+	//std::shared_ptr<NKCore::TNode3<RealTimeJobSP>> job = _shortterm_slot[round_slice].popQueue();
+	NKCore::TWaitFreeQueue2<RealTimeJobSP>::iterator_type next_node = nullptr;
 	
 	/// execution
-	while (job != nullptr)
+	while (node != nullptr)
 	{
 		// @nolimitk job을 실행중에 다시 등록할 수 있도록 초기화를 먼저 한다.
-		next_job = job->getNext();
+		next_node = node->getNext();
 		
 		//job->UnRegister();
 		//job->ReleaseReserve();
 
-		job->onExecute(execution_index);
+		node->getValue()->onExecute(execution_index);
 		NKENGINELOG_INFO(L"[SCHEDULER],%I64u,job executed,slot %I64u", execution_index, round_slice);
 
-		job = next_job;
+		node = next_node;
 	}
 	///
 
