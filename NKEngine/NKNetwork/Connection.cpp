@@ -2,31 +2,12 @@
 //#include "Session.h"
 //#include "Service.h"
 /*
-#include "../NKEngineLog.h"
-#include "../NKCore.h"
-#include "IOCPManager.h"
-#include "NetworkEvent.h"
 #include "Packet.h"
 #include "SendStream.h"
 */
 
 using namespace NKNetwork;
 using namespace std;
-
-Connection::Connection(void)
-{
-}
-
-Connection::Connection(const std::shared_ptr<AsyncSocket>& socket)
-	:_socket(socket)
-{
-}
-
-Connection::Connection(std::shared_ptr<AsyncSocket>&& socket)
-	: _socket(move(socket))
-{
-}
-
 
 /*
 Connection::Connection(std::unique_ptr<NetworkEvent>&& network_event, bool reconnect)
@@ -41,11 +22,6 @@ Connection::Connection(std::unique_ptr<NetworkEvent>&& network_event, bool recon
 {
 }
 */
-
-Connection::~Connection(void)
-{
-}
-
 /*
 bool Connection::connect(const HANDLE completion_port, const NKWString& address, uint16_t port)
 {

@@ -37,6 +37,9 @@ namespace NKNetwork
 		inline void setAddress(const NKWString& address) { _address = address; }
 		inline NKWString getAddress(void) const { return _address; }
 
+	public:
+		inline NKCore::UniqueID getID(void) const { return _id; }
+
 	protected:
 		virtual bool onProcess(EventContext& event_context, uint32_t transferred) override;
 		virtual bool onProcessFailed(EventContext& event_context, uint32_t transferred) override;
@@ -49,6 +52,7 @@ namespace NKNetwork
 		NKWString _address;
 		RecvStream _recv_stream;
 		std::shared_ptr<ClientCallback> _callback;
+		NKCore::UniqueID _id;
 		
 	public:
 		AsyncSocket(SOCKET socket,const std::shared_ptr<ClientCallback>& callback);

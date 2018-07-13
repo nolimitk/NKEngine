@@ -190,7 +190,7 @@ NKTEST(AsyncServerSocket_Test)
 	
 	class MockServerCallback : public ServerCallback
 	{
-		void onAccepted(const shared_ptr<Connection>& socket) override
+		void onAccepted(const shared_ptr<AsyncSocket>& socket) override
 		{
 		}
 		void onClosed(void) override
@@ -304,7 +304,7 @@ NKTEST(AsyncServerSocket_AsyncSocket_Test)
 
 	class MockServerCallback : public ServerCallback
 	{
-		void onAccepted(const shared_ptr<Connection>& socket) override
+		void onAccepted(const shared_ptr<AsyncSocket>& socket) override
 		{
 			_ASSERT(socket->getAddress().compare(L"127.0.0.1") == 0);
 		}
@@ -367,7 +367,7 @@ NKTEST(Connection_Test)
 	shared_ptr<AsyncSocket> client_socket = make_shared<AsyncSocket>(socket, client_callback);
 	_ASSERT(client_socket);
 
-	Connection conn(client_socket);
+	//Connection conn(client_socket);
 
 //
 //

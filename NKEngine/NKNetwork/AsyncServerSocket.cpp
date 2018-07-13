@@ -134,10 +134,9 @@ bool AsyncServerSocket::onProcess(EventContext& event_context, uint32_t transfer
 
 	accept_context._accept_socket->setAddress(waddress);
 	//
-
-	shared_ptr<Connection> connection = make_shared<Connection>((shared_ptr<AsyncSocket>(accept_context._accept_socket)));
-
-	_server_callback->onAccepted(connection);
+	
+	shared_ptr<AsyncSocket> accept_socket(accept_context._accept_socket);
+	_server_callback->onAccepted(accept_socket);
 
 	// peer에서 연결을 바로 종료하면 iocp 등록이 실패할 수 있다.
 	if(accept_context._accept_socket->recv() == false )

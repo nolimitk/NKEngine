@@ -5,10 +5,6 @@
 // 18.06.05
 // connection
 
-/*
-#include <memory>
-#include "NetworkCallbacks.h"
-*/
 #include <map>
 #include "../NKCore.h"
 #include "AsyncSocket.h"
@@ -72,7 +68,6 @@ namespace NKNetwork
 
 	protected:
 		NKCore::UniqueID _id;
-		std::shared_ptr<AsyncSocket> _socket;
 
 		//std::unique_ptr<NetworkEvent> _network_event;
 		//Service *_pService;
@@ -98,10 +93,7 @@ namespace NKNetwork
 		*/
 		
 	public:
-		//Connection(std::unique_ptr<NetworkEvent>&& network_event, bool reconnect = false);
 		Connection(void);
-		Connection(const std::shared_ptr<AsyncSocket>& socket);
-		Connection(std::shared_ptr<AsyncSocket>&& socket);
 		virtual ~Connection(void);
 	};
 

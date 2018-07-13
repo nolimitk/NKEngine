@@ -10,20 +10,19 @@
 namespace NKNetwork
 {
 	class AsyncSocket;
-	class Connection;
 
 	// interface
 	class ServerCallback
 	{
 	public:
-		virtual void onAccepted(const std::shared_ptr<Connection>& socket) = 0;
+		virtual void onAccepted(const std::shared_ptr<AsyncSocket>& socket) = 0;
 		virtual void onClosed(void) = 0;
 	};
 
 	class DefaultServerCallback : ServerCallback
 	{
 	public:
-		void onAccepted(const std::shared_ptr<Connection>& socket) override {}
+		void onAccepted(const std::shared_ptr<AsyncSocket>& socket) override {}
 		void onClosed(void) override {}
 	};
 
