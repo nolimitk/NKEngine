@@ -9,6 +9,9 @@
 
 class NKUnittestLog : public NKLog::NKLogger
 {
+protected:
+	NKLog::ConsoleLogger _console_logger;
+
 public:
 	NKUnittestLog(void);
 	virtual ~NKUnittestLog(void);
