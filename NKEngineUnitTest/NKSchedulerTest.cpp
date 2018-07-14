@@ -11,8 +11,6 @@ using namespace std;
 /*
 NKTEST(EventSlot_Test)
 {
-	_ASSERT(NKNetwork::IOCPManager::getInstance()->create() == true);
-
 	class MockSlot : public NKScheduler::JobSlot
 	{
 	public:
@@ -31,8 +29,6 @@ NKTEST(EventSlot_Test)
 
 	_ASSERT(NKNetwork::IOCPManager::getInstance()->postEvent(dynamic_pointer_cast<NKNetwork::EventObject>(test_event), 0) == true);
 	WAITFOR(test_event, onProcess);
-
-	NKNetwork::IOCPManager::getInstance()->close();
 
 	return true;
 }
@@ -57,11 +53,7 @@ NKTEST(Scheduler_Test)
 		queue.push(node);
 		queue.push(next_node);
 	}
-
-
-	_ASSERT(NKNetwork::IOCPManager::getInstance()->create() == true);
-	_ASSERT(NKScheduler::Scheduler::getInstance()->start() == true);
-
+	
 	class MockJob : public NKScheduler::RealTimeJob
 	{
 	public:
@@ -101,11 +93,6 @@ NKTEST(Scheduler_Test)
 
 		WAITFOR(job, onExecute);
 	}
-
-	_ASSERT(NKScheduler::Scheduler::getInstance()->stop() == true);
-
-	NKScheduler::Scheduler::getInstance()->destroy();
-	NKNetwork::IOCPManager::getInstance()->close();
 
 	return true;
 }
