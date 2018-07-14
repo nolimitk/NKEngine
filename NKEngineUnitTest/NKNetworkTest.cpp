@@ -20,8 +20,6 @@ NKTEST(WinSockLib_Test)
 
 NKTEST(IOCPManager_Test)
 {
-	_ASSERT(IOCPManager::getInstance()->create() == true);
-
 	class MockEvent : public EventObject
 	{
 		bool onProcess(EventContext& event_context, uint32_t transferred) override
@@ -43,8 +41,6 @@ NKTEST(IOCPManager_Test)
 
 	// for worker thread update event test, it remains log.
 	//this_thread::sleep_for(500ms);
-
-	IOCPManager::getInstance()->close();
 
 	return true;
 }
@@ -185,8 +181,6 @@ NKTEST(Packet_Test)
 NKTEST(AsyncServerSocket_Test)
 {
 	setlocale(LC_ALL, "korean");
-
-	_ASSERT(IOCPManager::getInstance()->create() == true);
 	
 	class MockServerCallback : public ServerCallback
 	{
@@ -213,8 +207,6 @@ NKTEST(AsyncServerSocket_Test)
 	_ASSERT(server_socket->close() == true);
 	
 	WAITFOR(server_callback, onClosed);
-
-	IOCPManager::getInstance()->close();
 
 	return true;
 }
@@ -248,8 +240,6 @@ public:
 
 NKTEST(AsyncSocket_Test)
 {
-	_ASSERT(IOCPManager::getInstance()->create() == true);
-
 	SOCKET socket = IOCPManager::getInstance()->openSocket();
 	_ASSERT(socket != INVALID_SOCKET);
 
@@ -266,16 +256,12 @@ NKTEST(AsyncSocket_Test)
 
 	// there will be 2 errors
 	// receiving error and force close
-	
-	IOCPManager::getInstance()->close();
 
 	return true;
 }
 
 NKTEST(AsyncServerSocket_AsyncSocket_Test)
 {
-	_ASSERT(IOCPManager::getInstance()->create() == true);
-
 	class MockClientCallback : public ClientCallback
 	{
 	public:
@@ -351,54 +337,17 @@ NKTEST(AsyncServerSocket_AsyncSocket_Test)
 
 	Sleep(500);
 
-	IOCPManager::getInstance()->close();
-
 	return true;
 }
 
-NKTEST(Connection_Test)
+NKTEST(Service_Test)
 {
-	_ASSERT(IOCPManager::getInstance()->create() == true);
+	const static uint16_t PORT = 10000;
+	NKNetwork::Service service(PORT);
 
-	SOCKET socket = IOCPManager::getInstance()->openSocket();
-	_ASSERT(socket != INVALID_SOCKET);
+	_ASSERT(service.start() == true);
+	
+	service.close();
 
-	shared_ptr<MockCallback> client_callback = make_shared<MockCallback>();
-	shared_ptr<AsyncSocket> client_socket = make_shared<AsyncSocket>(socket, client_callback);
-	_ASSERT(client_socket);
-
-	//Connection conn(client_socket);
-
-//
-//
-//	static const int TEST_PORT = 10000;
-//		
-//	shared_ptr<AsyncServerSocket> spServerSocket = make_shared<AsyncServerSocket>(completionPort);
-//	_ASSERT(spServerSocket);
-//	
-//	_ASSERT(spServerSocket->open(TEST_PORT) == true);
-//
-//	shared_ptr<AsyncSocket> spClientSocket = make_shared<AsyncSocket>();
-//	_ASSERT(spClientSocket->open(completionPort) == true);
-//	_ASSERT(spClientSocket->connect("localhost", TEST_PORT) == true);
-//
-//	Sleep(100);
-//
-//	_ASSERT(spClientSocket->disconnect() == true);
-//
-//	Sleep(100);
-//
-//	_ASSERT(spClientSocket->connect("localhost", TEST_PORT) == true);
-//
-//	Sleep(100);
-//
-//	_ASSERT(spClientSocket->close() == true);
-//
-//	// @TODO 비동기는 unittest를 어떻게 해야 하는가?
-//
-//	// @TODO server socket을 닫을때 iocp와의 연결을 종료처리 해야한다.
-//	_ASSERT(spServerSocket->close() == true);
-//
-	IOCPManager::getInstance()->close();
 	return true;
 }
