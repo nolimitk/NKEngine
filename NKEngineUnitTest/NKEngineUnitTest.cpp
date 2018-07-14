@@ -1,11 +1,14 @@
 #include "NKEngineUnitTest.h"
 #include "NKUnitTest.h"
+#include "NKEngineLog.h"
 
 #include <iostream>
 
 int main()
 {
 	NKEngine::StartEngine();
+
+	NKEngineLogSingleton::getInstance()->turnoffConsoleLogInfo();
 
 	//NKUnitTest::getInstance().run(true);
 	NKUnitTest::getInstance().run(false);
