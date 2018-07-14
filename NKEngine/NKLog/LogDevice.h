@@ -13,7 +13,7 @@ namespace NKLog
 	class LogBuilder;
 	class LogCategory;
 
-	class LogDevice : public NKCore::TNode<LogDevice>
+	class LogDevice
 	{
 		// @thread-safe, @lock
 	protected:

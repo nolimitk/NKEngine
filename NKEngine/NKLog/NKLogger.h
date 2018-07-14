@@ -10,8 +10,6 @@
 
 namespace NKLog
 {
-	class ConsoleLog;
-	
 	class NKLogger
 	{
 	public:
@@ -44,6 +42,8 @@ namespace NKLog
 		virtual ~NKLogger(void);
 	};
 	
+	class ConsoleLog;
+
 	class ConsoleLogger
 	{
 	public:
@@ -56,8 +56,6 @@ namespace NKLog
 		ConsoleLogger(void);
 		virtual ~ConsoleLogger(void) {}
 	};
-
-	using ConsoleLoggerSingleton = NKCore::Singleton<ConsoleLogger>;
 }
 
 #endif // __NKLOGGER_HEADER__
