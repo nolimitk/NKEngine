@@ -12,6 +12,10 @@ class NKEngineLog : public NKLog::NKLogger
 public:
 	bool writeSocketError(const wchar_t* file, int line, uint32_t err, const wchar_t* format, ...);
 	bool turnoffConsole(void);
+	bool turnoffConsoleLogInfo(void);
+
+protected:
+	NKLog::ConsoleLogger _console_logger;
 			
 public:
 	NKEngineLog(void);

@@ -11,7 +11,7 @@ using namespace std;
 NKEngineLog::NKEngineLog(void)
 	:NKLogger(LogCategory(L"NKENGINE"))
 {
-	ConsoleLoggerSingleton::getInstance()->get()->registerCategory(_category._id);
+	_console_logger.get()->registerCategory(_category._id);
 }
 
 NKEngineLog::~NKEngineLog(void)
@@ -50,5 +50,10 @@ bool NKEngineLog::writeSocketError(const wchar_t* file, int line, uint32_t err, 
 
 bool NKEngineLog::turnoffConsole(void)
 {
-	return ConsoleLoggerSingleton::getInstance()->get()->unregisterCategory(_category._id);
+	return _console_logger.get()->unregisterCategory(_category._id);
+}
+
+bool NKEngineLog::turnoffConsoleLogInfo(void)
+{
+	return _console_logger.get()->unregisterLayout(NKLogger::_layout[LAYOUT_INFO]._id);
 }
