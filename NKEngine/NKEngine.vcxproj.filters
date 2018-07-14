@@ -180,6 +180,9 @@
     <ClInclude Include="NKScheduler\SchedulerInterface.h">
       <Filter>NKScheduler</Filter>
     </ClInclude>
+    <ClInclude Include="NKNetwork\Service.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NKCore\NKString.cpp">
@@ -286,6 +289,9 @@
     </ClCompile>
     <ClCompile Include="NKScheduler\Serializer.cpp">
       <Filter>NKScheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="NKNetwork\Service.cpp">
+      <Filter>NKNetwork</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

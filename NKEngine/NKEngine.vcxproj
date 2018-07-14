@@ -121,6 +121,7 @@
     <ClInclude Include="NKNetwork\Protocol.h" />
     <ClInclude Include="NKNetwork\RecvStream.h" />
     <ClInclude Include="NKNetwork\SendStream.h" />
+    <ClInclude Include="NKNetwork\Service.h" />
     <ClInclude Include="NKNetwork\WinSockLib.h" />
     <ClInclude Include="NKNetwork\WorkerThread.h" />
     <ClInclude Include="NKScheduler.h" />
@@ -161,6 +162,7 @@
     <ClCompile Include="NKNetwork\Packet.cpp" />
     <ClCompile Include="NKNetwork\RecvStream.cpp" />
     <ClCompile Include="NKNetwork\SendStream.cpp" />
+    <ClCompile Include="NKNetwork\Service.cpp" />
     <ClCompile Include="NKNetwork\WinSockLib.cpp" />
     <ClCompile Include="NKNetwork\WorkerThread.cpp" />
     <ClCompile Include="NKScheduler\JobSlot.cpp" />
