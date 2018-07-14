@@ -49,7 +49,6 @@ bool Serializer::execute(uint64_t execution_index)
 	int64_t round_slice = execution_index % DEFAULT_JOBSLOT_SHORTTERM_SIZE;
 
 	NKCore::TWaitFreeQueue2<RealTimeJobSP>::iterator_type node = _shortterm_slot[round_slice].popQueue();
-	//std::shared_ptr<NKCore::TNode3<RealTimeJobSP>> job = _shortterm_slot[round_slice].popQueue();
 	NKCore::TWaitFreeQueue2<RealTimeJobSP>::iterator_type next_node = nullptr;
 	
 	/// execution

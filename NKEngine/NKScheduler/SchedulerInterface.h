@@ -13,6 +13,8 @@ namespace NKScheduler
 {
 	inline bool addJob(const RealTimeJobSP& job, const SerializerSP& serializer, const std::chrono::milliseconds& interval)
 	{
+		if (serializer == nullptr) { _ASSERT(false); return false; }
+
 		uint64_t reserve_execution_index = NKScheduler::Scheduler::getInstance()->convertToExecutionIndex(interval);
 		
 		if (serializer->addJob(job, reserve_execution_index) == false)
