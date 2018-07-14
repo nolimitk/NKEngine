@@ -10,40 +10,41 @@
 namespace NKCore
 {
 	template<class T>
-	class TNode3
-	{
-	private:
-		using iterator_type = std::shared_ptr<TNode3<T>>;
-
-	public:
-		inline void setNext(const iterator_type& node) { _next = node; }
-		inline iterator_type getNext(void) const { return _next; }
-		inline T getValue(void) const { return _value; }
-
-	protected:
-		T _value;
-		iterator_type _next;
-		
-	public:
-		TNode3(void)
-			: _next(nullptr)
-		{
-		}
-
-		TNode3(const T& value)
-			: _value(value)
-			, _next(nullptr)
-		{
-		}
-
-		virtual ~TNode3(void) {}
-	};
-
-	template<class T>
 	class TWaitFreeQueue2
 	{
+	protected:
+		template<class T>
+		class TNode
+		{
+		private:
+			using iterator_type = std::shared_ptr<TNode<T>>;
+
+		public:
+			inline void setNext(const iterator_type& node) { _next = node; }
+			inline iterator_type getNext(void) const { return _next; }
+			inline T getValue(void) const { return _value; }
+
+		protected:
+			T _value;
+			iterator_type _next;
+
+		public:
+			TNode(void)
+				: _next(nullptr)
+			{
+			}
+
+			TNode(const T& value)
+				: _value(value)
+				, _next(nullptr)
+			{
+			}
+
+			virtual ~TNode(void) {}
+		};
+
 	public:
-		using iterator_type = std::shared_ptr<TNode3<T>>;
+		using iterator_type = std::shared_ptr<TNode<T>>;
 
 	public:
 		bool push(const T& node);
@@ -67,7 +68,7 @@ namespace NKCore
 	template<class T>
 	inline bool TWaitFreeQueue2<T>::push(const T& value)
 	{
-		iterator_type node = std::make_shared<TNode3<T>>(value);
+		iterator_type node = std::make_shared<TNode<T>>(value);
 
 		iterator_type pos = std::atomic_exchange(&_tail, node);
 
