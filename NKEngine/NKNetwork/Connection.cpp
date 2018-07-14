@@ -6,9 +6,6 @@
 #include "SendStream.h"
 */
 
-using namespace NKNetwork;
-using namespace std;
-
 /*
 Connection::Connection(std::unique_ptr<NetworkEvent>&& network_event, bool reconnect)
 	: _network_event(std::move(network_event))
@@ -100,20 +97,6 @@ bool Connection::onClosed(void)
 	return true;
 }
 
-bool Connection::onConnected(void)
-{
-	if (_network_event == nullptr)
-	{
-		NKENGINELOG_ERROR(L"network event is null,connection %I64u", _id);
-		_ASSERT(false);
-		return false;
-	}
-
-	ClientNetworkEvent *pClientNetworkEvent = dynamic_cast<ClientNetworkEvent*>(_network_event.get());
-	pClientNetworkEvent->onConnected(*this);
-	return true;
-}
-
 bool Connection::onConnectFailed(void)
 {
 	if (_network_event == nullptr)
@@ -182,20 +165,6 @@ bool Connection::onReceived(const Packet& packet)
 
 	ClientNetworkEvent *pClientNetworkEvent = dynamic_cast<ClientNetworkEvent*>(_network_event.get());
 	pClientNetworkEvent->onReceived(*this, packet);
-	return true;
-}
-
-bool Connection::onSent(void)
-{
-	if (_network_event == nullptr)
-	{
-		NKENGINELOG_ERROR(L"network event is null,connection %I64u", _id);
-		_ASSERT(false);
-		return false;
-	}
-
-	ClientNetworkEvent *pClientNetworkEvent = dynamic_cast<ClientNetworkEvent*>(_network_event.get());
-	pClientNetworkEvent->onSent(*this);
 	return true;
 }
 */

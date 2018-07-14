@@ -5,33 +5,19 @@
 // 18.06.05
 // connection
 
-#include <map>
-#include "../NKCore.h"
-#include "AsyncSocket.h"
-
 namespace NKNetwork
 {
 	//class Session;
 	//class Service;
 
 	class Connection
-	{
-		/*
-	protected:
-		AsyncSocket::connect;
-		//AsyncSocket::getHandle;
-		AsyncSocket::setAddress;
-		*/
-		
+	{		
 	public:
 		//bool connect(const HANDLE completion_port, const NKWString& address, uint16_t port);
 		//bool connect(const HANDLE completion_port, const NKString& address, uint16_t port);
 		//bool reconnect(void);
 
 	public:
-		inline NKCore::UniqueID getID(void) const { return _id; }
-		/*inline std::shared_ptr<NetworkEvent> getNetworkEvent(void) const { return _network_event; }
-		inline void setNetworkEvent(const std::shared_ptr<NetworkEvent>& network_event) { _network_event = network_event; }*/
 		/*inline void set(Service *pService, const std::shared_ptr<NetworkEvent>& network_event)
 		{
 			_pService = pService; _network_event = network_event;
@@ -56,20 +42,9 @@ namespace NKNetwork
 		/*
 	protected:
 		inline void setPongTime(void) { _last_pongtime = GetTickCount64(); _sent_ping = false; }
-
-		// network event
-	public:
-		virtual bool onClosed(void) override;
-		virtual bool onConnected(void) override;
-		virtual bool onConnectFailed(void) override;
-		virtual bool onReceived(const Packet& packet) override;
-		virtual bool onSent(void) override;
 		*/
 
 	protected:
-		NKCore::UniqueID _id;
-
-		//std::unique_ptr<NetworkEvent> _network_event;
 		//Service *_pService;
 
 		// 상속받은 class에서 직접 접근을 할 수 없도록 막는다. [2014/11/11/ nolimitk]
@@ -96,8 +71,6 @@ namespace NKNetwork
 		Connection(void);
 		virtual ~Connection(void);
 	};
-
-	using ConnectionMap = std::map<NKCore::UniqueID, Connection>;
 }
 
 #endif // __CONNECTION_HEADER__
