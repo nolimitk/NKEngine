@@ -3,19 +3,19 @@
 #include <Ws2tcpip.h>
 #include "../NKEngineLog.h"
 #include "AsyncSocket.h"
-#include "Connection.h"
 #include "IOCPManager.h"
 #include "EventContext.h"
 #include "NetworkCallbacks.h"
+#include <algorithm>
 
 using namespace NKNetwork;
 using namespace std;
 
 AsyncServerSocket::AsyncServerSocket(const std::shared_ptr<ServerCallback>& server_callback, const std::shared_ptr<ClientCallback>& client_callback)
 	:_socket(INVALID_SOCKET)
-	, _server_callback(server_callback)
 	, _client_callback(client_callback)
 {
+	registerServerCallback(server_callback);
 }
 
 AsyncServerSocket::~AsyncServerSocket(void)
@@ -114,6 +114,11 @@ bool AsyncServerSocket::accept(void)
 	return true;
 }
 
+void NKNetwork::AsyncServerSocket::registerServerCallback(const std::shared_ptr<ServerCallback>& server_callback)
+{
+	_server_callback_list.push_back(server_callback);
+}
+
 bool AsyncServerSocket::onProcess(EventContext& event_context, uint32_t transferred)
 {
 	_ASSERT(event_context._type == EVENTCONTEXTTYPE::ACCEPT );
@@ -136,7 +141,12 @@ bool AsyncServerSocket::onProcess(EventContext& event_context, uint32_t transfer
 	//
 	
 	shared_ptr<AsyncSocket> accept_socket(accept_context._accept_socket);
-	_server_callback->onAccepted(accept_socket);
+	for_each(_server_callback_list.begin(), _server_callback_list.end(),
+		[&accept_socket](auto iter)
+	{
+		iter->onAccepted(accept_socket);
+	}
+	);
 
 	// peer에서 연결을 바로 종료하면 iocp 등록이 실패할 수 있다.
 	if(accept_context._accept_socket->recv() == false )
@@ -166,7 +176,12 @@ bool AsyncServerSocket::onProcessFailed(EventContext& event_context, uint32_t tr
 		// @TODO iocp와 associated된 accept socket을 종료하는 다른 방법이 있나?
 	case ERROR_OPERATION_ABORTED:
 		NKENGINELOG_INFO(L"server socket, terminated,socket %I64u", _socket);
-		_server_callback->onClosed();
+		for_each(_server_callback_list.begin(), _server_callback_list.end(),
+			[](auto iter)
+		{
+			iter->onClosed();
+		}
+		);
 		break;
 	default:
 		// @nolimitk server socket은 직접 close를 호출하지 않으면 종료될 일이 없다... 이런 경우를 찾아야 한다.
