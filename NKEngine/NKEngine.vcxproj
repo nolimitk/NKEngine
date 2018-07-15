@@ -117,6 +117,7 @@
     <ClInclude Include="NKNetwork\EventContext.h" />
     <ClInclude Include="NKNetwork\IOCPManager.h" />
     <ClInclude Include="NKNetwork\NetworkCallbacks.h" />
+    <ClInclude Include="NKNetwork\NKNetworkConstants.h" />
     <ClInclude Include="NKNetwork\Packet.h" />
     <ClInclude Include="NKNetwork\Protocol.h" />
     <ClInclude Include="NKNetwork\RecvStream.h" />

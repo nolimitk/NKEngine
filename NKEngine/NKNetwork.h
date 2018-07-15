@@ -12,6 +12,7 @@
 #include "NKNetwork/SendStream.h"
 #include "NKNetwork/AsyncSocket.h"
 #include "NKNetwork/AsyncServerSocket.h"
+#include "NKNetwork/NKNetworkConstants.h"
 #include "NKNetwork/NetworkCallbacks.h"
 #include "NKNetwork/Service.h"
 

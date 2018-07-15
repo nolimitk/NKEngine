@@ -183,6 +183,9 @@
     <ClInclude Include="NKNetwork\Service.h">
       <Filter>NKNetwork</Filter>
     </ClInclude>
+    <ClInclude Include="NKNetwork\NKNetworkConstants.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NKCore\NKString.cpp">

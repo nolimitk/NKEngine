@@ -214,7 +214,7 @@ NKTEST(AsyncServerSocket_Test)
 class MockCallback : public ClientCallback
 {
 public:
-	void onConnected(const std::shared_ptr<AsyncSocket>& socket) override
+	void onConnected(const ConnectionSP& socket) override
 	{
 		shared_ptr<NKCore::Buffer> buffer = make_shared<NKCore::Buffer>(1024);
 		SendStream send_stream(buffer);
@@ -224,10 +224,10 @@ public:
 
 		_onConnected = true;
 	}
-	void onReceived(const std::shared_ptr<AsyncSocket>& socket, const Packet& packet) override{ _onReceived = true; }
-	void onSent(const std::shared_ptr<AsyncSocket>& socket) override { _onSent = true; }
-	void onConnectFailed(const std::shared_ptr<AsyncSocket>& socket) override { _ASSERT(false); }
-	void onClosed(const std::shared_ptr<AsyncSocket>& socket) override { _onClosed = true;  }
+	void onReceived(const ConnectionSP& socket, const Packet& packet) override{ _onReceived = true; }
+	void onSent(const ConnectionSP& socket) override { _onSent = true; }
+	void onConnectFailed(const ConnectionSP& socket) override { _ASSERT(false); }
+	void onClosed(const ConnectionSP& socket) override { _onClosed = true;  }
 
 public:
 	bool _onConnected;
