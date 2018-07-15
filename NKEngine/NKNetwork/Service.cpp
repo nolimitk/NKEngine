@@ -3,11 +3,17 @@
 #include "AsyncSocket.h"
 #include "../NKEngineLog.h"
 
-bool NKNetwork::Service::start(void)
+NKNetwork::Service::Service(uint16_t port)
+	:_port(port)
 {
 	std::shared_ptr<ServiceServerCallback> server_callback = std::make_shared<ServiceServerCallback>(*this);
 	std::shared_ptr<ServiceClientCallback> client_callback = std::make_shared<ServiceClientCallback>(*this);
 	_server_socket = std::make_shared<NKNetwork::AsyncServerSocket>(server_callback, client_callback);
+}
+
+bool NKNetwork::Service::start(void)
+{
+	if (_server_socket == nullptr) { _ASSERT(false);  return false; }
 
 	if (_server_socket->open(_port) == false)
 	{
@@ -18,9 +24,20 @@ bool NKNetwork::Service::start(void)
 	return true;
 }
 
-void NKNetwork::Service::close(void)
+bool NKNetwork::Service::close(void)
 {
+	if (_server_socket == nullptr) { _ASSERT(false);  return false; }
+
 	_server_socket->close();
+	return true;
+}
+
+bool NKNetwork::Service::registerServerCallback(const std::shared_ptr<ServerCallback>& callback)
+{
+	if (_server_socket == nullptr) { _ASSERT(false);  return false; }
+
+	_server_socket->registerServerCallback(callback);
+	return true;
 }
 
 bool NKNetwork::Service::insertConnection(const ConnectionSP& connection)
@@ -30,7 +47,7 @@ bool NKNetwork::Service::insertConnection(const ConnectionSP& connection)
 	return ret.second;
 }
 
-bool NKNetwork::Service::eraseConnection(const NKCore::UniqueID& id)
+bool NKNetwork::Service::eraseConnection(const ConnectionID& id)
 {
 	std::lock_guard<std::mutex> _lock(__mutex_connection_map);
 	auto count_erased = _connection_map.erase(id);

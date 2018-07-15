@@ -8,23 +8,21 @@
 #include <unordered_map>
 #include <memory>
 #include <mutex>
-#include "NetworkCallbacks.h"
 #include "../NKCore.h"
+#include "NetworkCallbacks.h"
+#include "NKNetworkConstants.h"
 
 namespace NKNetwork
 {
-	class AsyncSocket;
 	class AsyncServerSocket;
 	class ServiceServerCallback;
 	class ServiceClientCallback;
-
-	using ConnectionSP = std::shared_ptr<AsyncSocket>;
 
 	class Service
 	{
 	public:
 		bool start(void);
-		void close(void);
+		bool close(void);
 		bool registerServerCallback(const std::shared_ptr<ServerCallback>& callback);
 
 	protected:
@@ -33,11 +31,11 @@ namespace NKNetwork
 
 		/// connection map
 	protected:
-		using ConnectionMap = std::unordered_map<int64_t, ConnectionSP>;
+		using ConnectionMap = std::unordered_map<ConnectionID, ConnectionSP>;
 		
 	public:
 		bool insertConnection(const ConnectionSP& connection);
-		bool eraseConnection(const NKCore::UniqueID& id);
+		bool eraseConnection(const ConnectionID& id);
 		size_t getConnectionCount(void) const;
 
 	protected:
@@ -46,10 +44,7 @@ namespace NKNetwork
 		///
 
 	public:
-		Service(uint16_t port)
-			:_port(port)
-		{
-		}
+		Service(uint16_t port);
 	};
 
 	class ServiceServerCallback : public ServerCallback
