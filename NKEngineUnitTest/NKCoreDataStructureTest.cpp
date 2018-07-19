@@ -288,15 +288,13 @@ void sortedListEraseTest(NKCore::TSortedList<T>& sorted_list, int count)
 	std::random_shuffle(list.begin(), list.end());
 
 	// erase
-	for_each(list.begin(), list.end(),
-		[&sorted_list](std::unique_ptr<MockNode>& mock)
-		{
-			_ASSERT(mock != nullptr);
-			MockNode* pMock = mock.get();
-			_ASSERT(pMock != nullptr);
-			_ASSERT(sorted_list.erase(pMock) == true);
-		}
-	);
+	for (const std::unique_ptr<MockNode>& mock : list)
+	{
+		_ASSERT(mock != nullptr);
+		MockNode* pMock = mock.get();
+		_ASSERT(pMock != nullptr);
+		_ASSERT(sorted_list.erase(pMock) == true);
+	}
 }
 
 NKTEST(TSortedList_Test)
@@ -409,15 +407,13 @@ void indexedQueueEraseTest(int size_index, int node_count)
 	// erase
 	for (int i = 0; i < size_index; ++i)
 	{
-		for_each(_list_array[i].begin(), _list_array[i].end(),
-			[&indexed_queue,&i](std::unique_ptr<MockNode>& mock)
-			{
-				_ASSERT(mock != nullptr);
-				MockNode* pMock = mock.get();
-				_ASSERT(pMock != nullptr);
-				_ASSERT(indexed_queue.erase(i,pMock) == true);
-			}
-		);
+		for (const std::unique_ptr<MockNode>& mock : _list_array[i])
+		{
+			_ASSERT(mock != nullptr);
+			MockNode* pMock = mock.get();
+			_ASSERT(pMock != nullptr);
+			_ASSERT(indexed_queue.erase(i, pMock) == true);
+		}
 	}
 }
 

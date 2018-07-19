@@ -84,7 +84,7 @@ void IOCPManager::close(void)
 	do
 	{
 		// post stop until all worker threads are joined.
-		for (auto iter = _worker_thread_vector.begin(); iter != _worker_thread_vector.end(); iter++)
+		for (auto&& iter : _worker_thread_vector)
 		{
 			postStop();
 		}
@@ -175,9 +175,9 @@ bool NKNetwork::IOCPManager::postStop(void)
 
 bool NKNetwork::IOCPManager::allWorkerThreadsJoinable(void)
 {
-	for (auto iter = _worker_thread_vector.begin(); iter != _worker_thread_vector.end(); iter++)
+	for (auto&& iter : _worker_thread_vector)
 	{
-		if (iter->get()->join(DEFAULT_GAP_WORKERTHREAD_TIMEOUT) == false)
+		if (iter->join(DEFAULT_GAP_WORKERTHREAD_TIMEOUT) == false)
 		{
 			return false;
 		}

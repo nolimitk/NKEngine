@@ -44,13 +44,10 @@ bool Log::writeDeviceDetails(const LogLayout& layout, const LogCategory& categor
 
 	std::lock_guard<std::mutex> _lock(__mutex_logDeviceList);
 
-	for_each(_logDeviceList.begin(), _logDeviceList.end(),
-		[&layout, &category, &log]
-		(const std::shared_ptr<LogDevice>& logDevice)
-		{
-			logDevice->write(layout, category, log);
-		}
-	);
+	for (const std::shared_ptr<LogDevice>& iter : _logDeviceList)
+	{
+		iter->write(layout, category, log);
+	}
 
 	return true;
 }

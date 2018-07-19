@@ -47,9 +47,10 @@ void NKClock::sleepAccurate(const std::chrono::microseconds& wait_time)
 	} while (sleep_gap < wait_time - ERROR_RANGE_VALUE);
 
 #if defined _NKCLOCK_DEBUG_
-	for_each(_list_sleepgap.begin(), _list_sleepgap.end(), [&wait_time_us](int64_t tick) {
+	for( const int64_t& tick : _list_sleepgap)
+	{
 		NKENGINELOG_INFO(L"tick %d, %d", tick, wait_time_us);
-	});
+	}
 	NKENGINELOG_INFO(L"loop count %d", _list_sleepgap.size());
 #endif
 }

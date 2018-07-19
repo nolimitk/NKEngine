@@ -18,10 +18,12 @@ NKLogger::NKLogger(const LogCategory& category)
 {
 	std::unique_ptr<NKLog::DailyFileLog> daily_file_log = make_unique<NKLog::DailyFileLog>(category._name);
 	daily_file_log->registerCategory(_category._id);
-	for (int i = 0; i < _countof(NKLogger::_layout); ++i)
+
+	for (const LogLayout& layout : NKLogger::_layout)
 	{
-		daily_file_log->registerLayout(NKLogger::_layout[i]._id);
+		daily_file_log->registerLayout(layout._id);
 	}
+
 	daily_file_log->setBuilder(make_unique<BaseLogBuilder>());
 
 	AsyncLogSingleton::getInstance()->registerLogDevice(std::move(daily_file_log));
@@ -64,11 +66,11 @@ NKLog::ConsoleLogger::ConsoleLogger(void)
 {
 	_console_log = make_shared<ConsoleLog>();
 	
-	for (int i = 0; i < _countof(NKLogger::_layout); ++i)
+	for (const LogLayout& layout : NKLogger::_layout)
 	{
-		_console_log->registerLayout(NKLogger::_layout[i]._id);
+		_console_log->registerLayout(layout._id);
 	}
-	
+		
 	_console_log->setBuilder(make_unique<BaseLogBuilder>());
 	AsyncLogSingleton::getInstance()->registerLogDevice(_console_log);
 }
