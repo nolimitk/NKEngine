@@ -65,7 +65,7 @@ NKNetwork::ServiceServerCallback::ServiceServerCallback(Service& service)
 {
 }
 
-void NKNetwork::ServiceServerCallback::onAccepted(const ConnectionSP& connection)
+void NKNetwork::ServiceServerCallback::onAccepted(ConnectionSP& connection)
 {
 	if (_service.insertConnection(connection) == true)
 	{

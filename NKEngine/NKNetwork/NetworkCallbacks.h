@@ -14,14 +14,14 @@ namespace NKNetwork
 	class ServerCallback
 	{
 	public:
-		virtual void onAccepted(const ConnectionSP& socket) = 0;
+		virtual void onAccepted(ConnectionSP& socket) = 0;
 		virtual void onClosed(void) = 0;
 	};
 
 	class DefaultServerCallback : ServerCallback
 	{
 	public:
-		void onAccepted(const ConnectionSP& socket) override {}
+		void onAccepted(ConnectionSP& socket) override {}
 		void onClosed(void) override {}
 	};
 

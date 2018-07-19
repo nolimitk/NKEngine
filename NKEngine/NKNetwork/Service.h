@@ -49,7 +49,7 @@ namespace NKNetwork
 
 	class ServiceServerCallback : public ServerCallback
 	{
-		void onAccepted(const ConnectionSP& connection) override;
+		void onAccepted(ConnectionSP& connection) override;
 		void onClosed(void) override {}
 
 	protected:
