@@ -6,7 +6,7 @@
 // network callbacks
 
 #include <memory>
-#include "NKNetworkConstants.h"
+#include "NetworkConstants.h"
 
 namespace NKNetwork
 {

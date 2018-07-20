@@ -183,7 +183,10 @@
     <ClInclude Include="NKNetwork\Service.h">
       <Filter>NKNetwork</Filter>
     </ClInclude>
-    <ClInclude Include="NKNetwork\NKNetworkConstants.h">
+    <ClInclude Include="NKNetwork\NetworkConstants.h">
+      <Filter>NKNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="NKNetwork\NetworkInterface.h">
       <Filter>NKNetwork</Filter>
     </ClInclude>
   </ItemGroup>

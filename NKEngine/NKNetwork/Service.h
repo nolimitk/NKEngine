@@ -10,7 +10,7 @@
 #include <mutex>
 #include "../NKCore.h"
 #include "NetworkCallbacks.h"
-#include "NKNetworkConstants.h"
+#include "NetworkConstants.h"
 
 namespace NKNetwork
 {
@@ -30,6 +30,7 @@ namespace NKNetwork
 		std::shared_ptr<AsyncServerSocket> _server_socket;
 
 		/// connection map
+		// @TODO 전역 lock을 제거하자. 그러기 위해선 적합한 자료구조를 다시 고민해본다.
 	protected:
 		using ConnectionMap = std::unordered_map<ConnectionID, ConnectionSP>;
 		

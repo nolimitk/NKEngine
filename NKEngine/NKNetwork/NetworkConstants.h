@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __NKNETWORK_CONSTANTS_HEADER__
-#define __NKNETWORK_CONSTANTS_HEADER__
+#ifndef __NETWORK_CONSTANTS_HEADER__
+#define __NETWORK_CONSTANTS_HEADER__
 // @nolimitk
 // 18.07.15
 // network constants
@@ -14,4 +14,4 @@ namespace NKNetwork
 	using ConnectionID = uint64_t;
 }
 
-#endif // __NKNETWORK_CONSTANTS_HEADER__
+#endif // __NETWORK_CONSTANTS_HEADER__
