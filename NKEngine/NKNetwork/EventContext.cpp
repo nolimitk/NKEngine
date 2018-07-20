@@ -1,6 +1,5 @@
 #include "EventContext.h"
 #include "RecvStream.h"
-#include "SendStream.h"
 
 using namespace NKNetwork;
 
@@ -46,8 +45,8 @@ NKNetwork::ReceiveContext::ReceiveContext(const RecvStream & stream)
 	_wsabuf.len = (ULONG)stream.getRemainSize();
 }
 
-NKNetwork::SendContext::SendContext(const SendStream & stream)
+NKNetwork::SendContext::SendContext(byte * buffer, uint32_t size)
 {
-	_wsabuf.buf = (CHAR*)stream.get();
-	_wsabuf.len = (ULONG)stream.getLength();
+	_wsabuf.buf = (char*)buffer;
+	_wsabuf.len = size;
 }

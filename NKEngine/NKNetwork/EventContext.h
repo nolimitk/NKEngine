@@ -12,7 +12,6 @@ namespace NKNetwork
 	class AsyncSocket;
 	class EventObject;
 	class RecvStream;
-	class SendStream;
 
 	enum class EVENTCONTEXTTYPE : int
 	{
@@ -90,7 +89,7 @@ namespace NKNetwork
 	class SendContext : public WSABUFContext
 	{
 	public:
-		SendContext(const SendStream& stream);
+		SendContext(byte* buffer, uint32_t size);
 	};
 }
 

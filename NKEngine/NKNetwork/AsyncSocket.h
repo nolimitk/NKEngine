@@ -21,6 +21,7 @@ namespace NKNetwork
 		bool connect(const NKString& address, USHORT port);
 		bool disconnect(void);
 		bool send(const SendStream& stream);
+		bool send(byte* buffer, uint32_t size);
 
 	public:
 		// @TODO it would be protected. disconnect 통지가 오면 AsyncServerSocket에서 사용하는 함수 
