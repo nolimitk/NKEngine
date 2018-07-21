@@ -168,49 +168,34 @@ bool AsyncSocket::recv(void)
 bool AsyncSocket::send(const SendStream& stream)
 {
 	__GUARD__;
-			
-	if (stream.getLength() == 0 || stream.getLength() >= UINT32_MAX)
+
+	if ( _socket == INVALID_SOCKET )
 	{
-		NKENGINELOG_ERROR( L"length of send stream is wrong,socket %I64u,size %I64u", _socket, stream.getLength());
+		NKENGINELOG_ERROR( L"socket handle is invalid" );
+		return false;
+	}
+		
+	if (stream.getLength() == 0)
+	{
+		NKENGINELOG_ERROR( L"send stream is empty, %I64u", _socket );
 		return false;
 	}
 
-	return send(stream.get(), (uint32_t)stream.getLength());
-
-	__UNGUARD__;
-}
-
-bool NKNetwork::AsyncSocket::send(byte * buffer, uint32_t size)
-{
-	__GUARD__;
-
-	if (buffer == nullptr || size == 0)
-	{
-		NKENGINELOG_ERROR_ASSERT(L"buffer is null or size is zero,socket %I64u,size %I64u", _socket, size);
-		return false;
-	}
-
-	if (_socket == INVALID_SOCKET)
-	{
-		NKENGINELOG_ERROR(L"socket handle is invalid");
-		return false;
-	}
-
-	SendContext* pSendContext = new SendContext(buffer, size);
+	SendContext* pSendContext = new SendContext(stream);
 	pSendContext->_type = EVENTCONTEXTTYPE::SEND;
 	pSendContext->_event_object = shared_from_this();
 #if defined _NETWORK_SEND_DEBUG_LOG_
-	NKENGINELOG_INFO(L"send,socket %I64u, buffer %p", _socket, pSendContext);
+	NKENGINELOG_INFO( L"send,socket %I64u, buffer %p", _socket, pSendContext);
 #endif
-	NKENGINELOG_INFO(L"send,socket %I64u, length %u", _socket, size);
-
+	NKENGINELOG_INFO( L"send,socket %I64u, length %u", _socket, stream.getLength() );
+	
 	int ret = 0;
 	DWORD sentBytes = 0;
-
-	ret = WSASend(_socket, pSendContext->get(), 1, (LPDWORD)&sentBytes, 0, pSendContext, NULL);
-	if (ret == SOCKET_ERROR)
+		
+	ret = WSASend( _socket, pSendContext->get(), 1, (LPDWORD)&sentBytes, 0, pSendContext, NULL );
+	if( ret == SOCKET_ERROR )
 	{
-		if (WSAGetLastError() != WSA_IO_PENDING)
+		if( WSAGetLastError() != WSA_IO_PENDING )
 		{
 			NKENGINELOG_SOCKETERROR(WSAGetLastError(), L"failed to send,socket %I64u", _socket);
 
