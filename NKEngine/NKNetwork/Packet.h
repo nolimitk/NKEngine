@@ -48,7 +48,7 @@ namespace NKNetwork
 
 		// for receive
 	public:
-		bool read(RecvStream& stream);
+		bool set(RecvStream& stream);
 				
 	protected:
 		// @nolimitk 구조체 접근을 위한 interface
@@ -62,8 +62,6 @@ namespace NKNetwork
 		//Packet(NKCore::Buffer&& buffer);
 		//Packet(Packet &param);
 		virtual ~Packet(void);
-
-		friend class AsyncSocket;
 	};
 
 	//template<typename T>

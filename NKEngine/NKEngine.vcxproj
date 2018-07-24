@@ -112,7 +112,6 @@
     <ClInclude Include="NKNetwork.h" />
     <ClInclude Include="NKNetwork\AsyncServerSocket.h" />
     <ClInclude Include="NKNetwork\AsyncSocket.h" />
-    <ClInclude Include="NKNetwork\Connection.h" />
     <ClInclude Include="NKNetwork\Event.h" />
     <ClInclude Include="NKNetwork\EventContext.h" />
     <ClInclude Include="NKNetwork\IOCPManager.h" />
@@ -157,7 +156,6 @@
     <ClCompile Include="NKLog\NKLogger.cpp" />
     <ClCompile Include="NKNetwork\AsyncServerSocket.cpp" />
     <ClCompile Include="NKNetwork\AsyncSocket.cpp" />
-    <ClCompile Include="NKNetwork\Connection.cpp" />
     <ClCompile Include="NKNetwork\Event.cpp" />
     <ClCompile Include="NKNetwork\EventContext.cpp" />
     <ClCompile Include="NKNetwork\IOCPManager.cpp" />

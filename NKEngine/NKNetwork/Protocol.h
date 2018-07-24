@@ -12,9 +12,10 @@ namespace NKNetwork
 	struct PROTOCOLHEAD
 	{
 		typedef uint16_t size_type;
-		typedef uint16_t command_type;
+		//typedef uint16_t command_type;
 
 		size_type _size;
+		/*
 		union
 		{
 			struct
@@ -25,8 +26,9 @@ namespace NKNetwork
 			};
 			uint16_t _command;
 		};
+		*/
 	};
-
+/*
 	enum class PROTOCOLSYSTEM : uint16_t
 	{
 		SYSTEM,
@@ -43,7 +45,7 @@ namespace NKNetwork
 	{
 		NOTHING,
 		PINGPONG,
-	};
+	};*/
 }
 
 #endif // __PROTOCOL_HEADER__

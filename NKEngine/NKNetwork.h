@@ -10,6 +10,7 @@
 #include "NKNetwork/Packet.h"
 #include "NKNetwork/RecvStream.h"
 #include "NKNetwork/SendStream.h"
+#include "NKNetwork/Protocol.h"
 #include "NKNetwork/AsyncSocket.h"
 #include "NKNetwork/AsyncServerSocket.h"
 #include "NKNetwork/NetworkConstants.h"

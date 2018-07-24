@@ -51,10 +51,10 @@ void writeStream(RecvStream& stream, const NKString& str)
 	byte* pRawBuffer = stream.getRemainBuffer();
 	WSABUF* pWSABuf = pRecvContext->get();
 	_ASSERT(pWSABuf->buf != nullptr);
-	PROTOCOLHEAD::command_type command = 0;
+//	PROTOCOLHEAD::command_type command = 0;
 	PROTOCOLHEAD::size_type size = (PROTOCOLHEAD::size_type)(sizeof(PROTOCOLHEAD) + str.length());
 	memcpy(pWSABuf->buf, &size, sizeof(size));
-	memcpy(pWSABuf->buf + sizeof(size), &command, sizeof(command));
+//	memcpy(pWSABuf->buf + sizeof(size), &command, sizeof(command));
 	memcpy(pWSABuf->buf + sizeof(PROTOCOLHEAD), str.c_str(), str.length());
 
 	for (int i = 0; i < str.length(); ++i)
@@ -86,10 +86,10 @@ void readStream(RecvStream& stream)
 
 NKTEST(RecvStream_Test)
 {
-	static const int BUUFER_SIZE = 8000;
+	static const int BUFFER_SIZE = 8000;
 
-	RecvStream recv_stream(make_shared<NKCore::Buffer>(BUUFER_SIZE));
-	_ASSERT(recv_stream.getRemainSize() == BUUFER_SIZE);
+	RecvStream recv_stream(make_shared<NKCore::Buffer>(BUFFER_SIZE));
+	_ASSERT(recv_stream.getRemainSize() == BUFFER_SIZE);
 	byte* pRawBuffer = recv_stream.getRemainBuffer();
 	_ASSERT(pRawBuffer != nullptr);
 
@@ -281,8 +281,8 @@ public:
 class MockClientCallback : public ClientCallback
 {
 public:
-	void onConnected(const shared_ptr<AsyncSocket>& socket) override { _onConnected = true; }
-	void onReceived(const shared_ptr<AsyncSocket>& socket, const Packet& packet) override
+	void onConnected(const ConnectionSP& socket) override { _onConnected = true; }
+	void onReceived(const ConnectionSP& socket, const RecvStream& packet) override
 	{
 		shared_ptr<NKCore::Buffer> buffer = make_shared<NKCore::Buffer>(1024);
 		SendStream send_stream(buffer);
@@ -292,9 +292,9 @@ public:
 
 		_onReceived = true;
 	}
-	void onSent(const shared_ptr<AsyncSocket>& socket) override { _onSent = true; }
-	void onConnectFailed(const shared_ptr<AsyncSocket>& socket) override { _ASSERT(false); }
-	void onClosed(const shared_ptr<AsyncSocket>& socket) override {}
+	void onSent(const ConnectionSP& socket) override { _onSent = true; }
+	void onConnectFailed(const ConnectionSP& socket) override { _ASSERT(false); }
+	void onClosed(const ConnectionSP& socket) override {}
 
 public:
 	bool _onConnected;
