@@ -64,7 +64,7 @@ namespace NKNetwork
 	{
 		void onConnected(const ConnectionSP& connection) override {}
 		void onConnectFailed(const ConnectionSP& connection) override {}
-		void onReceived(const ConnectionSP& connection, const RecvStream& packet) override {}
+		void onReceived(const ConnectionSP& connection, const Packet& packet) override {}
 		void onSent(const ConnectionSP& connection) override {}
 
 		void onClosed(const ConnectionSP& connection) override;

@@ -30,9 +30,9 @@ namespace NKNetwork
 	protected:
 		//bool set(uint16_t command, uint16_t dataSize);
 
-		// for read protobuf
+		// for read by external library
 	public:
-		//inline byte *getData(void) { if (getDataSize() == 0) { return nullptr; } else { return _pProtocolData; } }
+		inline byte *getData(void) const { if (getDataSize() == 0) { return nullptr; } else { return _pProtocolData; } }
 
 		// for read
 	public:
@@ -40,10 +40,10 @@ namespace NKNetwork
 		T *getData(void);*/
 
 	public:
-		inline bool isSystem(void) const { if (_pHeader != nullptr) { return (_pHeader->_system == (uint16_t)(PROTOCOLSYSTEM::SYSTEM)); } return false; }
-		inline PROTOCOLSIDE getSide(void) const { if (_pHeader != nullptr) { return (PROTOCOLSIDE)_pHeader->_side; } return PROTOCOLSIDE::REQ; }
+		//inline bool isSystem(void) const { if (_pHeader != nullptr) { return (_pHeader->_system == (uint16_t)(PROTOCOLSYSTEM::SYSTEM)); } return false; }
+		//inline PROTOCOLSIDE getSide(void) const { if (_pHeader != nullptr) { return (PROTOCOLSIDE)_pHeader->_side; } return PROTOCOLSIDE::REQ; }
 		inline PROTOCOLHEAD::size_type getDataSize(void) const { if (_pHeader != nullptr) { return _pHeader->_size - sizeof(PROTOCOLHEAD); } return 0; }
-		inline uint16_t getCommandID(void) const { if (_pHeader != nullptr) { return _pHeader->_commandid; } return 0; }
+		//inline uint16_t getCommandID(void) const { if (_pHeader != nullptr) { return _pHeader->_commandid; } return 0; }
 		/*inline PACKETHEAD *getHeader(void) { return _pHeader; }*/
 
 		// for receive

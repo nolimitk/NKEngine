@@ -74,7 +74,7 @@ void readStream(RecvStream& stream)
 		if (length <= stream.getLength())
 		{
 			Packet packet;
-			_ASSERT(packet.read(stream) == true);
+			_ASSERT(packet.set(stream) == true);
 		}
 		else
 		{
@@ -282,7 +282,7 @@ class MockClientCallback : public ClientCallback
 {
 public:
 	void onConnected(const ConnectionSP& socket) override { _onConnected = true; }
-	void onReceived(const ConnectionSP& socket, const RecvStream& packet) override
+	void onReceived(const ConnectionSP& socket, const Packet& packet) override
 	{
 		shared_ptr<NKCore::Buffer> buffer = make_shared<NKCore::Buffer>(1024);
 		SendStream send_stream(buffer);

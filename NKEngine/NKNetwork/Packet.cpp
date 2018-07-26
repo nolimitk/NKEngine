@@ -83,7 +83,7 @@ Packet::~Packet(void)
 //	return true;
 //}
 
-bool NKNetwork::Packet::read(RecvStream & stream)
+bool NKNetwork::Packet::set(RecvStream & stream)
 {
 	if (stream.read((byte**)&_pHeader, sizeof(PROTOCOLHEAD)) == false) return false;
 	if (getDataSize() > 0)
