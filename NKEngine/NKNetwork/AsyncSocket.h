@@ -5,6 +5,7 @@
 // 13.08.27
 // async socket
 
+#include <list>
 #include "../NKCore.h"
 #include "Event.h"
 #include "RecvStream.h"
@@ -40,9 +41,17 @@ namespace NKNetwork
 	public:
 		inline NKCore::UniqueID getID(void) const { return _id; }
 
+		/// network events
+	public:
+		void registerCallback(const std::shared_ptr<ClientCallback>& callback);
+
 	protected:
 		virtual bool onProcess(EventContext& event_context, uint32_t transferred) override;
 		virtual bool onProcessFailed(EventContext& event_context, uint32_t transferred) override;
+
+	protected:
+		std::list<std::shared_ptr<ClientCallback>> _callback_list;
+		///
 		
 	protected:
 		static const int BUFFER_LENGTH_8K = 8000; // tbb small object size
@@ -51,7 +60,6 @@ namespace NKNetwork
 		SOCKET _socket;
 		NKWString _address;
 		RecvStream _recv_stream;
-		std::shared_ptr<ClientCallback> _callback;
 		NKCore::UniqueID _id;
 		
 	public:

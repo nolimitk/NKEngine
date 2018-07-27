@@ -16,7 +16,6 @@ namespace NKNetwork
 {
 	class AsyncServerSocket;
 	class ServiceServerCallback;
-	class ServiceClientCallback;
 
 	class Service
 	{
@@ -74,7 +73,7 @@ namespace NKNetwork
 
 	public:
 		ServiceClientCallback(Service& service);
-	};	
+	};
 }
 
 #endif // __SERVICE_HEADER__

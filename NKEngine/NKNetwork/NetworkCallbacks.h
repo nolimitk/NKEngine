@@ -14,14 +14,14 @@ namespace NKNetwork
 	class ServerCallback
 	{
 	public:
-		virtual void onAccepted(ConnectionSP& socket) = 0;
+		virtual void onAccepted(ConnectionSP& connection) = 0;
 		virtual void onClosed(void) = 0;
 	};
 
 	class DefaultServerCallback : ServerCallback
 	{
 	public:
-		void onAccepted(ConnectionSP& socket) override {}
+		void onAccepted(ConnectionSP& connection) override {}
 		void onClosed(void) override {}
 	};
 
@@ -31,21 +31,21 @@ namespace NKNetwork
 	class ClientCallback
 	{
 	public:
-		virtual void onConnected(const ConnectionSP& socket) = 0;
-		virtual void onReceived(const ConnectionSP& socket, const Packet& packet) = 0;
-		virtual void onSent(const ConnectionSP& socket) = 0;
-		virtual void onConnectFailed(const ConnectionSP& socket) = 0;
-		virtual void onClosed(const ConnectionSP& socket) = 0;
+		virtual void onConnected(const ConnectionSP& connection) = 0;
+		virtual void onReceived(const ConnectionSP& connection, const Packet& packet) = 0;
+		virtual void onSent(const ConnectionSP& connection) = 0;
+		virtual void onConnectFailed(const ConnectionSP& connection) = 0;
+		virtual void onClosed(const ConnectionSP& connection) = 0;
 	};
 
 	class DefaultClientCallback : public ClientCallback
 	{
 	public:
-		void onConnected(const ConnectionSP& socket) override {}
-		void onReceived(const ConnectionSP& socket, const Packet& packet) override {}
-		void onSent(const ConnectionSP& socket) override {}
-		void onConnectFailed(const ConnectionSP& socket) override {}
-		void onClosed(const ConnectionSP& socket) override {}
+		void onConnected(const ConnectionSP& connection) override {}
+		void onReceived(const ConnectionSP& connection, const Packet& packet) override {}
+		void onSent(const ConnectionSP& connection) override {}
+		void onConnectFailed(const ConnectionSP& connection) override {}
+		void onClosed(const ConnectionSP& connection) override {}
 	};
 }
 

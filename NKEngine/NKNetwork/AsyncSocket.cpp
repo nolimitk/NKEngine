@@ -15,9 +15,9 @@ using namespace std;
 
 AsyncSocket::AsyncSocket(SOCKET socket, const std::shared_ptr<ClientCallback>& callback)
 	: _socket(socket)
-	, _callback(callback)
 	, _recv_stream(make_shared<NKCore::Buffer>(BUFFER_LENGTH_8K))
 {
+	registerCallback(callback);
 }
 
 AsyncSocket::~AsyncSocket(void)
@@ -210,6 +210,11 @@ bool AsyncSocket::send(const SendStream& stream)
 	return true;
 }
 
+void NKNetwork::AsyncSocket::registerCallback(const std::shared_ptr<ClientCallback>& callback)
+{
+	_callback_list.push_back(callback);
+}
+
 bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 {
 	__GUARD__;
@@ -223,7 +228,10 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 			if( transferred == 0 )
 			{
 				close();
-				_callback->onClosed(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
+				for (auto iter : _callback_list)
+				{
+					iter->onClosed(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
+				}
 			}
 			else
 			{
@@ -263,7 +271,10 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 							return false;
 						}
 
-						_callback->onReceived(dynamic_pointer_cast<AsyncSocket>(event_context._event_object), packet);
+						for (auto iter : _callback_list)
+						{
+							iter->onReceived(dynamic_pointer_cast<AsyncSocket>(event_context._event_object), packet);
+						}
 
 						if(_recv_stream.getLength() != 0 )
 						{
@@ -286,7 +297,10 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 		{
 			NKENGINELOG_INFO( L"send completed,socket %I64u,length %d", _socket, transferred );
 
-			_callback->onSent(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
+			for (auto iter : _callback_list)
+			{
+				iter->onSent(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
+			}
 
 		}
 		break;
@@ -294,7 +308,10 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 		{
 			setsockopt( _socket, SOL_SOCKET, SO_UPDATE_CONNECT_CONTEXT, NULL, 0 );
 
-			_callback->onConnected(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
+			for (auto iter : _callback_list)
+			{
+				iter->onConnected(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
+			}
 
 			recv();
 			
@@ -335,7 +352,10 @@ bool AsyncSocket::onProcessFailed(EventContext& event_context, uint32_t transfer
 				close();
 			}
 
-			_callback->onClosed(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
+			for (auto iter : _callback_list)
+			{
+				iter->onClosed(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
+			}
 		}
 		break;
 	case EVENTCONTEXTTYPE::SEND:
@@ -359,7 +379,11 @@ bool AsyncSocket::onProcessFailed(EventContext& event_context, uint32_t transfer
 			}
 
 			close();
-			_callback->onConnectFailed(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
+
+			for (auto iter : _callback_list)
+			{
+				iter->onConnectFailed(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
+			}
 		}
 		break;
 	default:
