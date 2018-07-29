@@ -11,7 +11,7 @@
 namespace NKNetwork
 {
 	template<class CallBack>
-	inline std::shared_ptr<AsyncSocket> createSocket(void)
+	inline ConnectionSP createConnection(void)
 	{
 		SOCKET socket_handle = IOCPManager::getInstance()->openSocket();
 		if (socket_handle == INVALID_SOCKET)

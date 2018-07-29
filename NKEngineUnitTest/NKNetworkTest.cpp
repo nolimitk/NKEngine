@@ -354,14 +354,14 @@ NKTEST(Service_Test)
 	shared_ptr<MockServerCallback> server_callback = make_shared<MockServerCallback>();
 	_ASSERT(service.registerServerCallback(server_callback) == true);
 
-	shared_ptr<AsyncSocket> client_socket = createSocket<MockClientCallback>();
-	_ASSERT(client_socket);
+	ConnectionSP client_connection = createConnection<MockClientCallback>();
+	_ASSERT(client_connection);
 
-	_ASSERT(client_socket->connect("localhost", TEST_PORT) == true);
+	_ASSERT(client_connection->connect("localhost", TEST_PORT) == true);
 
 	WAITFOR(server_callback, onAccepted);
 
-	_ASSERT(client_socket->disconnect() == true);
+	_ASSERT(client_connection->disconnect() == true);
 	
 	service.close();
 
