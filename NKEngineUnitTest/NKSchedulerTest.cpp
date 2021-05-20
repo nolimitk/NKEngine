@@ -7,91 +7,63 @@
 #include "NKUnittestLog.h"
 
 using namespace std;
+using namespace std::chrono;
 
-/*
-NKTEST(EventSlot_Test)
+class MockJob : public NKScheduler::RealTimeJob
 {
-	class MockSlot : public NKScheduler::JobSlot
+public:
+	bool _onExecute;
+	NKCore::NKClock _clock;
+	milliseconds _elapsed_time;
+
+public:
+	virtual bool onExecute(uint64_t execute_index)
 	{
-	public:
-		bool _onProcess;
+		_elapsed_time = duration_cast<milliseconds>(_clock.getElapsedTime());
+		_onExecute = true;
+		return true;
+	}
 
-		virtual bool onProcess(NKNetwork::EventContext& event_context, uint32_t transferred) override
-		{
-			_onProcess = true;
-			return true;
-		}
-
-		MockSlot(void) :JobSlot(10),_onProcess(false) {}
-	};
-
-	shared_ptr<MockSlot> test_event = make_shared<MockSlot>();
-
-	_ASSERT(NKNetwork::IOCPManager::getInstance()->postEvent(dynamic_pointer_cast<NKNetwork::EventObject>(test_event), 0) == true);
-	WAITFOR(test_event, onProcess);
-
-	return true;
-}
-*/
+	MockJob(void)
+		: RealTimeJob()
+		, _elapsed_time(milliseconds::zero())
+		, _onExecute(false)
+	{}
+};
 
 NKTEST(Scheduler_Test)
 {
-	{
-		class MockNode2 : public NKCore::TNode2<MockNode2>
-		{
-		public:
-			int _v;
-
-		public:
-			MockNode2(void) :_v(0) {}
-			virtual ~MockNode2(void) { _v = 11; }
-		};
-		std::shared_ptr<MockNode2> node = make_shared<MockNode2>();
-		std::shared_ptr<MockNode2> next_node = make_shared<MockNode2>();
-		NKCore::TWaitFreeQueue<MockNode2> queue;
-
-		queue.push(node);
-		queue.push(next_node);
-	}
-	
-	class MockJob : public NKScheduler::RealTimeJob
-	{
-	public:
-		bool _onExecute;
-
-	public:
-		virtual bool onExecute(uint64_t execute_index)
-		{
-			_onExecute = true;
-			return true;
-		}
-
-		MockJob(void) :_onExecute(false) {}
-	};
+	const milliseconds LOW_TEST_MARGIN = 49ms;
+	const milliseconds HIGH_TEST_MARGIN = 10ms;
 
 	{
+		const milliseconds reserve_interval = 50ms;
+
 		NKScheduler::SerializerSP serializer = std::make_shared<NKScheduler::Serializer>();
-		_ASSERT(serializer);
+		assert(serializer);
 		shared_ptr<MockJob> job = std::make_shared<MockJob>();
-		_ASSERT(job);
-
-		uint64_t reserve_execution_index = NKScheduler::Scheduler::getInstance()->convertToExecutionIndex(50ms);
-		_ASSERT(serializer->addJob(job, reserve_execution_index) == true);
-		_ASSERT(NKScheduler::Scheduler::getInstance()->addSerializer(serializer, reserve_execution_index) == true);
-
-		WAITFOR(job, onExecute);
+		assert(job);
+		
+		assert(NKScheduler::addJob(serializer, job, reserve_interval) == true);
+		
+		WAITUNTIL(job, onExecute, 100ms);
+		assert(job->_elapsed_time > reserve_interval - LOW_TEST_MARGIN && job->_elapsed_time < reserve_interval + HIGH_TEST_MARGIN);
 	}
 
 	{
+		const milliseconds reserve_interval = 50ms;
+
 		NKScheduler::SerializerSP serializer = std::make_shared<NKScheduler::Serializer>();
-		_ASSERT(serializer);
+		assert(serializer);
 		shared_ptr<MockJob> job = std::make_shared<MockJob>();
-		_ASSERT(job);
+		assert(job);
 
-		_ASSERT(NKScheduler::addJob(job, serializer, 50ms) == true);
-		_ASSERT(NKScheduler::addJob(job, serializer, 50ms) == true);
+		// ?? 왜 같은 잡을 같은 시간에 2개? 무슨테스트야?
+		assert(NKScheduler::addJob(serializer, job, reserve_interval) == true);
+		assert(NKScheduler::addJob(serializer, job, reserve_interval) == true);
 
-		WAITFOR(job, onExecute);
+		WAITUNTIL(job, onExecute, 100ms);
+		assert(job->_elapsed_time > reserve_interval - LOW_TEST_MARGIN && job->_elapsed_time < reserve_interval + HIGH_TEST_MARGIN);
 	}
 
 	return true;
