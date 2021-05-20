@@ -6,13 +6,24 @@
 // worker thread
 
 #include "../NKCore.h"
+#include <list>
 
 namespace NKNetwork
 {
+	class WorkerCallback;
+
 	class WorkerThread : public NKCore::NKThread
 	{
+		/// worker events
 	public:
-		static const std::chrono::microseconds UPDATE_UNIT;
+		void registerCallback(const std::shared_ptr<WorkerCallback>& callback);
+
+	protected:
+		std::list<std::shared_ptr<WorkerCallback>> _callback_list;
+		///
+
+	public:
+		const static std::chrono::microseconds UPDATE_UNIT;
 
 	public:
 		virtual bool onStart(void) override;
@@ -23,7 +34,7 @@ namespace NKNetwork
 	protected:
 		const HANDLE _completion_port;
 		NKCore::NKClock _clock;
-		std::chrono::microseconds _update_tick;
+		std::chrono::microseconds _next_update_time;
 		
 	public:
 		WorkerThread(const HANDLE completion_port);

@@ -20,7 +20,9 @@ namespace NKNetwork
 		}
 
 		std::shared_ptr<CallBack> callback = std::make_shared<CallBack>();
-		return std::make_shared<AsyncSocket>(socket_handle, callback);
+		std::shared_ptr<AsyncSocket> socket = std::make_shared<AsyncSocket>(socket_handle, callback);
+		socket->bind();
+		return socket;
 	}
 }
 

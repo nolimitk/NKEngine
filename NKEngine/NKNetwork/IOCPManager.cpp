@@ -184,3 +184,11 @@ bool NKNetwork::IOCPManager::allWorkerThreadsJoinable(void)
 	}
 	return true;
 }
+
+void NKNetwork::IOCPManager::registerWorkerEvent(const std::shared_ptr<WorkerCallback>& callback)
+{
+	for (auto&& iter : _worker_thread_vector)
+	{
+		iter->registerCallback(callback);
+	}
+}

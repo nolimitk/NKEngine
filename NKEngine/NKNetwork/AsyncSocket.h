@@ -9,6 +9,7 @@
 #include "../NKCore.h"
 #include "Event.h"
 #include "RecvStream.h"
+#include "NetworkConstants.h"
 
 namespace NKNetwork
 {
@@ -24,6 +25,9 @@ namespace NKNetwork
 		bool send(const SendStream& stream);
 
 	public:
+		// @TODO it would be protected. createConnection에서 사용
+		bool bind(void);
+
 		// @TODO it would be protected. disconnect 통지가 오면 AsyncServerSocket에서 사용하는 함수 
 		bool close(void);
 
@@ -52,8 +56,11 @@ namespace NKNetwork
 	protected:
 		std::list<std::shared_ptr<ClientCallback>> _callback_list;
 		///
-		
+
 	protected:
+		void raiseCloseEvent(const ConnectionSP& connection);
+		
+	public:
 		static const int BUFFER_LENGTH_8K = 8000; // tbb small object size
 
 	protected:

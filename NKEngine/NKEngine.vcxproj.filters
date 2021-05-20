@@ -27,12 +27,6 @@
     <ClInclude Include="NKCore\DataStructures\TQueue.h">
       <Filter>NKCore\DataStructures</Filter>
     </ClInclude>
-    <ClInclude Include="NKCore\DataStructures\TSortedList.h">
-      <Filter>NKCore\DataStructures</Filter>
-    </ClInclude>
-    <ClInclude Include="NKCore\DataStructures\TIndexedQueue.h">
-      <Filter>NKCore\DataStructures</Filter>
-    </ClInclude>
     <ClInclude Include="NKCore\NKString.h">
       <Filter>NKCore</Filter>
     </ClInclude>
@@ -162,9 +156,6 @@
     <ClInclude Include="NKNetwork\NetworkCallbacks.h">
       <Filter>NKNetwork</Filter>
     </ClInclude>
-    <ClInclude Include="NKScheduler\JobSlot.h">
-      <Filter>NKScheduler</Filter>
-    </ClInclude>
     <ClInclude Include="NKCore\DataStructures\TWaitFreeQueue.h">
       <Filter>NKCore\DataStructures</Filter>
     </ClInclude>
@@ -186,15 +177,18 @@
     <ClInclude Include="NKNetwork\NetworkInterface.h">
       <Filter>NKNetwork</Filter>
     </ClInclude>
+    <ClInclude Include="NKScheduler\ExecutionIndex.h">
+      <Filter>NKScheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="NKCore\NKCoreDataTypes.h">
+      <Filter>NKCore</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NKCore\NKString.cpp">
       <Filter>NKCore</Filter>
     </ClCompile>
     <ClCompile Include="NKCore\NKThread.cpp">
-      <Filter>NKCore</Filter>
-    </ClCompile>
-    <ClCompile Include="NKCore\ByteStream.cpp">
       <Filter>NKCore</Filter>
     </ClCompile>
     <ClCompile Include="NKCore\Guard.cpp">
@@ -248,23 +242,14 @@
     <ClCompile Include="NKNetwork\Event.cpp">
       <Filter>NKNetwork</Filter>
     </ClCompile>
-    <ClCompile Include="NKNetwork\Packet.cpp">
-      <Filter>NKNetwork</Filter>
-    </ClCompile>
     <ClCompile Include="NKNetwork\AsyncServerSocket.cpp">
       <Filter>NKNetwork</Filter>
     </ClCompile>
     <ClCompile Include="NKNetwork\AsyncSocket.cpp">
       <Filter>NKNetwork</Filter>
     </ClCompile>
-    <ClCompile Include="NKNetwork\RecvStream.cpp">
-      <Filter>NKNetwork</Filter>
-    </ClCompile>
     <ClCompile Include="NKEngine.cpp">
       <Filter>NKEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="NKNetwork\SendStream.cpp">
-      <Filter>NKNetwork</Filter>
     </ClCompile>
     <ClCompile Include="Configuration.cpp">
       <Filter>NKEngine</Filter>
@@ -282,9 +267,6 @@
       <Filter>NKScheduler</Filter>
     </ClCompile>
     <ClCompile Include="NKScheduler\Scheduler.cpp">
-      <Filter>NKScheduler</Filter>
-    </ClCompile>
-    <ClCompile Include="NKScheduler\JobSlot.cpp">
       <Filter>NKScheduler</Filter>
     </ClCompile>
     <ClCompile Include="NKScheduler\Serializer.cpp">

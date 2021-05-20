@@ -15,7 +15,7 @@ using namespace std;
 
 AsyncSocket::AsyncSocket(SOCKET socket, const std::shared_ptr<ClientCallback>& callback)
 	: _socket(socket)
-	, _recv_stream(make_shared<NKCore::Buffer>(BUFFER_LENGTH_8K))
+	, _recv_stream(BUFFER_LENGTH_8K)
 {
 	registerCallback(callback);
 }
@@ -28,19 +28,6 @@ bool AsyncSocket::connect(const NKString& address, USHORT port)
 {
 	__GUARD__;
 
-	SOCKADDR_IN addr;
-	memset( &addr, 0, sizeof(addr) );
-	addr.sin_family = AF_INET;
-
-	int err = ::bind( _socket, (SOCKADDR *)&addr, sizeof(addr) );
-	if( err == SOCKET_ERROR )
-	{
-		NKENGINELOG_SOCKETERROR( WSAGetLastError(), L"failed to bind,socket %I64u", _socket );
-
-		close();
-		return false;
-	}
-	
 	SOCKADDR_IN serverAddr;
 	serverAddr.sin_family = AF_INET;
 
@@ -77,7 +64,7 @@ bool AsyncSocket::connect(const NKString& address, USHORT port)
 
 	NKENGINELOG_INFO(L"try to connect,socket %I64u,%S:%d", _socket, address.c_str(), port);
 	
-	if( IOCPManager::CONNECTEXFUNC( _socket, (SOCKADDR *)&serverAddr, sizeof(serverAddr), NULL, 0, NULL, pConnectContext ) == SOCKET_ERROR )
+	if( IOCPManager::CONNECTEXFUNC( _socket, (SOCKADDR *)&serverAddr, sizeof(serverAddr), NULL, 0, NULL, pConnectContext ) == FALSE )
 	{
 		if( WSAGetLastError() != WSA_IO_PENDING )
 		{
@@ -104,6 +91,24 @@ bool AsyncSocket::disconnect(void)
 	if (shutdown(_socket, SD_SEND) == SOCKET_ERROR)
 	{
 		NKENGINELOG_SOCKETERROR(WSAGetLastError(), L"failed to disconnect,socket %I64u", _socket);
+		close();
+		return false;
+	}
+
+	return true;
+}
+
+bool NKNetwork::AsyncSocket::bind(void)
+{
+	SOCKADDR_IN addr;
+	memset(&addr, 0, sizeof(addr));
+	addr.sin_family = AF_INET;
+
+	int err = ::bind(_socket, (SOCKADDR*)&addr, sizeof(addr));
+	if (err == SOCKET_ERROR)
+	{
+		NKENGINELOG_SOCKETERROR(WSAGetLastError(), L"failed to bind,socket %I64u", _socket);
+
 		close();
 		return false;
 	}
@@ -227,11 +232,7 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 		{
 			if( transferred == 0 )
 			{
-				close();
-				for (auto iter : _callback_list)
-				{
-					iter->onClosed(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
-				}
+				raiseCloseEvent(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
 			}
 			else
 			{
@@ -239,7 +240,9 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 				{
 					NKENGINELOG_ERROR( L"receive buffer is insufficient,socket %I64u,length %d", _socket, transferred );
 					NKENGINELOG_ERROR( L"FORCE CLOSE,socket %I64u", _socket );
-					disconnect();
+					
+					raiseCloseEvent(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
+
 					break;
 				}
 
@@ -254,7 +257,8 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 					{
 						NKENGINELOG_ERROR( L"wrong size packet,socket %I64u,length %d/%d,transferred %d", _socket, _recv_stream.getLength(), length, transferred );
 						NKENGINELOG_ERROR( L"FORCE CLOSE,socket %I64u", _socket );
-						disconnect();
+
+						raiseCloseEvent(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
 						return false;
 					}
 					// @nolimitk packet has completed.
@@ -262,12 +266,12 @@ bool AsyncSocket::onProcess(EventContext& event_context, uint32_t transferred)
 					{
 						NKENGINELOG_INFO(L"packet completed,socket %I64u,length %d/%d", _socket, length, transferred);
 
-						Packet packet;
-						if (packet.set(_recv_stream) == false)
+						Packet packet(_recv_stream);
+						if (packet.getSize() != length)
 						{
 							NKENGINELOG_INFO(L"packet read failed,socket %I64u,length %d, %d/%d", _socket, _recv_stream.getLength(), length, transferred);
 							_ASSERT(false);
-							disconnect();
+							raiseCloseEvent(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
 							return false;
 						}
 
@@ -339,6 +343,7 @@ bool AsyncSocket::onProcessFailed(EventContext& event_context, uint32_t transfer
 			switch( errorCode )
 			{
 				// peer가 정상적으로 종료되지 않음 [2014/11/17/ nolimitk]
+				// case 1 : bind a socket which is already binded
 			case ERROR_NETNAME_DELETED:
 				break;
 			default:
@@ -346,16 +351,7 @@ bool AsyncSocket::onProcessFailed(EventContext& event_context, uint32_t transfer
 				break;
 			}
 
-			// shutdown실패로 인해 이미 close 되어 있을수도 있다.
-			if( INVALID_SOCKET != _socket )
-			{
-				close();
-			}
-
-			for (auto iter : _callback_list)
-			{
-				iter->onClosed(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
-			}
+			raiseCloseEvent(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
 		}
 		break;
 	case EVENTCONTEXTTYPE::SEND:
@@ -378,8 +374,6 @@ bool AsyncSocket::onProcessFailed(EventContext& event_context, uint32_t transfer
 				break;
 			}
 
-			close();
-
 			for (auto iter : _callback_list)
 			{
 				iter->onConnectFailed(dynamic_pointer_cast<AsyncSocket>(event_context._event_object));
@@ -396,4 +390,18 @@ bool AsyncSocket::onProcessFailed(EventContext& event_context, uint32_t transfer
 	return true;
 
 	__UNGUARD__;
+}
+
+void AsyncSocket::raiseCloseEvent(const ConnectionSP& connection)
+{
+	// shutdown실패로 인해 이미 close 되어 있을수도 있다.
+	if (INVALID_SOCKET != _socket)
+	{
+		close();
+	}
+	
+	for (auto iter : _callback_list)
+	{
+		iter->onClosed(connection);
+	}
 }

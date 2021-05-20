@@ -5,45 +5,34 @@
 // 16.05.10
 // template node
 
-#include <cstdint>
+#include <memory>
 
 namespace NKCore
 {
-	template<typename T>
+	template<class T>
 	class TNode
 	{
-	public:
-		inline void setNext(T* node) { _next = node; }
-		inline T* getNext(void) const { return _next; }
-		inline void setPrev(T* node) { _prev = node; }
-		inline T* getPrev(void) const { return _prev; }
+	private:
+		using iterator_type = std::shared_ptr<TNode<T>>;
 
 	public:
-		inline bool operator < (T& param)
-		{
-			return _key < param._key;
-		}
-
-		inline bool operator > (uint64_t param)
-		{
-			return _key > param;
-		}
+		inline void setNext(const iterator_type& node) { _next = node; }
+		inline iterator_type getNext(void) const { return _next; }
+		inline T getValue(void) const { return _value; }
 
 	protected:
-		uint64_t _key;
-		T* _next;
-		T* _prev;
+		T _value;
+		iterator_type _next;
 
 	public:
 		TNode(void)
-			:TNode(0)
+			: _next(nullptr)
 		{
 		}
 
-		TNode(uint64_t key)
-			:_key(key)
+		TNode(const T& value)
+			: _value(value)
 			, _next(nullptr)
-			, _prev(nullptr)
 		{
 		}
 

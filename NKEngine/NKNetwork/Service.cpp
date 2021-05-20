@@ -28,6 +28,14 @@ bool NKNetwork::Service::close(void)
 {
 	if (_server_socket == nullptr) { _ASSERT(false);  return false; }
 
+	/*
+	std::lock_guard<std::mutex> _lock(__mutex_connection_map);
+	for (auto iter : _connection_map)
+	{
+		iter.second->disconnect();
+	}
+	*/
+
 	_server_socket->close();
 	return true;
 }

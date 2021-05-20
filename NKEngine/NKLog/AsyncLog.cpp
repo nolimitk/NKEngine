@@ -8,19 +8,20 @@ const std::chrono::milliseconds LogThread::DEFAULT_GAP_LOGWRITE(250);
 
 bool LogThread::onRun(void)
 {
-	LogDataSP log_data = AsyncLogSingleton::getInstance()->popLogdataQueue();
+	AsyncLog::LogQueue::iterator_type iter = AsyncLogSingleton::getInstance()->popLogdataQueue();
 	
-	if (log_data == false)
+	if (iter == false)
 	{
 		this_thread::sleep_for(DEFAULT_GAP_LOGWRITE);
 		return true;
 	}
 
-	while (log_data != nullptr)
+	while (iter != nullptr)
 	{
-		AsyncLogSingleton::getInstance()->writeDeviceDetails(log_data->_log_layout, log_data->_log_category, log_data->_log);
+		AsyncLogSingleton::getInstance()->writeDeviceDetails(
+			iter->getValue()->_log_layout, iter->getValue()->_log_category, iter->getValue()->_log);
 
-		log_data = log_data->getNext();
+		iter = iter->getNext();
 	}
 
 	this_thread::yield();
@@ -40,7 +41,7 @@ AsyncLog::~AsyncLog(void)
 	flush();
 }
 
-LogDataSP NKLog::AsyncLog::popLogdataQueue(void)
+AsyncLog::LogQueue::iterator_type NKLog::AsyncLog::popLogdataQueue(void)
 {
 	return _logdata_queue.popQueue();
 }

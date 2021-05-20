@@ -5,23 +5,30 @@
 // 16.05.24
 // send stream
 
-#include "../NKCore.h"
+// usally include NKCore.h but it is header only
+#include "../NKCore/ByteStream.h"
+#include "../NKCore/Buffer.h"
 
 namespace NKNetwork
 {
-	class SendStream : public NKCore::ByteStream
+	class SendStream : public NKCore::ByteStream<NKCore::Buffer>
 	{
 	private:
-		ByteStream::peek;
-		ByteStream::read;
-		ByteStream::size;
+		using ByteStream::peek;
+		using ByteStream::read;
+		using ByteStream::size;
 
 	public:
-		inline byte* get(void) const { return ByteStream::get(); }
+		inline NKCore::byte* get(void) const { return ByteStream::get(); }
 
 	public:
-		SendStream(const std::shared_ptr<NKCore::Buffer>& buffer);
-		virtual ~SendStream(void);
+		SendStream(size_t size)
+			:ByteStream(size)
+		{
+		}
+		virtual ~SendStream(void)
+		{
+		}
 	};
 }
 

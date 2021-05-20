@@ -38,20 +38,21 @@ namespace NKCore
 		}
 	};
 
-	// T must be derived from TNode
 	template<typename T, typename _Mutex>
 	class TQueueSafe
 	{
 	public:
-		bool push(T* node);
-		T* pop(void);
-		T* popQueue(void);
-		inline T* pick(void) const { return _head; }
+		using iterator_type = std::shared_ptr<TNode<T>>;
+
+	public:
+		bool push(const T& value);
+		iterator_type popQueue(void);
+		//iterator_type pick(void);
 
 	protected:
 		_Mutex _mutex;
-		T* _head;
-		T* _tail;
+		iterator_type _head;
+		iterator_type _tail;
 
 	public:
 		TQueueSafe(void)
@@ -68,9 +69,9 @@ namespace NKCore
 	};
 
 	template<typename T, typename _Mutex>
-	bool TQueueSafe<T, _Mutex>::push(T* node)
+	bool TQueueSafe<T, _Mutex>::push(const T& value)
 	{
-		if (node == nullptr) return false;
+		iterator_type node = std::make_shared<TNode<T>>(value);
 
 		node->setNext(nullptr);
 
@@ -87,30 +88,20 @@ namespace NKCore
 		}
 		return true;
 	}
+	
+	/*template<typename T, typename _Mutex>
+	typename TQueueSafe<T, _Mutex>::iterator_type TQueueSafe<T, _Mutex>::pick(void)
+	{
+		std::lock_guard<_Mutex> _lock(_mutex);
+		return _head;
+	}*/
 
 	template<typename T, typename _Mutex>
-	T* TQueueSafe<T, _Mutex>::pop(void)
+	typename TQueueSafe<T, _Mutex>::iterator_type TQueueSafe<T, _Mutex>::popQueue(void)
 	{
 		std::lock_guard<_Mutex> _lock(_mutex);
 
-		if (_head == nullptr) return nullptr;
-
-		T* node = _head;
-
-		if (node == _tail) { _tail = nullptr; }
-
-		_head = _head->getNext();
-		node->setNext(nullptr);
-
-		return node;
-	}
-
-	template<typename T, typename _Mutex>
-	T* TQueueSafe<T, _Mutex>::popQueue(void)
-	{
-		std::lock_guard<_Mutex> _lock(_mutex);
-
-		T* node = _head;
+		iterator_type node = _head;
 		_tail = _head = nullptr;
 
 		return node;

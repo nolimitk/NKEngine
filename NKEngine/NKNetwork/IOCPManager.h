@@ -14,6 +14,7 @@ namespace NKNetwork
 {
 	class WorkerThread;
 	class EventObject;
+	class WorkerCallback;
 
 	class IOCPManager : public NKCore::Singleton<IOCPManager>
 	{
@@ -37,6 +38,9 @@ namespace NKNetwork
 	protected:
 		bool postStop(void);
 		bool allWorkerThreadsJoinable(void);
+
+	public:
+		void registerWorkerEvent(const std::shared_ptr<WorkerCallback>& callback);
 
 	protected:
 		WinSockLib _win_sock_lib;

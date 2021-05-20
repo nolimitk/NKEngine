@@ -3,15 +3,17 @@
 #include "IOCPManager.h"
 #include "Event.h"
 #include "EventContext.h"
+#include "NetworkCallbacks.h"
 
 using namespace NKNetwork;
 using namespace std;
+using namespace std::chrono;
 
-const std::chrono::microseconds WorkerThread::UPDATE_UNIT = 50000us;
+const microseconds WorkerThread::UPDATE_UNIT = 50000us;
 
 WorkerThread::WorkerThread(const HANDLE completion_portr)
-	:_completion_port(completion_portr)
-	, _update_tick(0)
+	: _completion_port(completion_portr)
+	, _next_update_time(milliseconds::zero())
 {
 }
 
@@ -21,36 +23,50 @@ WorkerThread::~WorkerThread(void)
 
 bool WorkerThread::onStart(void)
 {
-	_update_tick = _clock.getElapsedTime();
-	NKENGINELOG_INFO( L"[WORKERTHREAD],%u,started", getThreadID() );
+	timeBeginPeriod(1);
+
+	_next_update_time = _clock.getElapsedTime();
+	NKENGINELOG_INFO( L"[WORKERTHREAD],%u,started", getThreadID());
 	return true;
 }
 
 bool WorkerThread::onRun(void)
 {
 	// event OnUpdate
-	std::chrono::microseconds current_tick = _clock.getElapsedTime();
-	std::chrono::microseconds update_elapsed_time = current_tick - _update_tick;
-	DWORD sleep_gap = 0;
-	
-	if (update_elapsed_time >= 0us)
+	DWORD sleep_duration = 0;
 	{
-		onUpdate(current_tick.count());
-		_update_tick = current_tick + UPDATE_UNIT;
-		sleep_gap = static_cast<DWORD>((UPDATE_UNIT / 1000).count());
-	}
-	else
-	{
-		sleep_gap = static_cast<DWORD>((_update_tick - current_tick).count() / 1000);
-		//NKENGINELOG_INFO(L"[WORKERTHREAD],%u,idle,sleep %d, %llu - %llu", getThreadID(), sleep_gap, _update_tick, current_tick);
+		/*	previous	0
+		current		0
+		elapsed		current - previous
+		next		current + 50
+		sleep		next - current	*/
+		microseconds current_time = _clock.getElapsedTime();
+		microseconds previous_time = _next_update_time - UPDATE_UNIT;
+		microseconds elapsed_time = current_time - previous_time;
+
+		//@TODO should apply marin of error
+		//@TODO handle delay...?
+		if (current_time >= _next_update_time)
+		{
+			onUpdate(current_time.count());
+			_next_update_time = current_time + UPDATE_UNIT;
+		}
+
+		sleep_duration = static_cast<DWORD>(duration_cast<milliseconds>(_next_update_time - current_time).count());
+
+		//@TODO need log level
+		/*NKENGINELOG_INFO(L"[WORKERTHREAD],%u,update stamp, previous %lld, current %lld, elapsed %lld, next %lld, sleep %u",
+			getThreadID(),
+			previous_time.count(), current_time.count(), elapsed_time.count(),
+			_next_update_time.count(), sleep_duration);*/
 	}
 	///
 
 	DWORD transferred = 0;
 	PULONG_PTR completion_key = nullptr;
 	EventContext* pEventContext = nullptr;
-			
-	BOOL ret = GetQueuedCompletionStatus( _completion_port, &transferred, (PULONG_PTR)&completion_key, (LPOVERLAPPED *)&pEventContext, sleep_gap);
+	
+	BOOL ret = GetQueuedCompletionStatus( _completion_port, &transferred, (PULONG_PTR)&completion_key, (LPOVERLAPPED *)&pEventContext, sleep_duration);
 
 	unique_ptr<EventContext> event_context(pEventContext);
 	bool keep_run = true;
@@ -100,6 +116,8 @@ bool WorkerThread::onRun(void)
 
 bool WorkerThread::onEnd(void)
 {
+	timeEndPeriod(1);
+
 	NKENGINELOG_INFO(L"[WORKERTHREAD],%u,exit", getThreadID());
 	return true;
 }
@@ -108,5 +126,16 @@ bool WorkerThread::onUpdate(int64_t delta)
 {
 	// TODO : make a log level
 	//NKENGINELOG_INFO(L"[WORKERTHREAD],%u,update,delta %lldus", getThreadID(), delta);
+
+	for (auto iter : _callback_list)
+	{
+		iter->onUpdate(delta);
+	}
+
 	return true;
+}
+
+void WorkerThread::registerCallback(const std::shared_ptr<WorkerCallback>& callback)
+{
+	_callback_list.push_back(callback);
 }

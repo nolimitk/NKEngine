@@ -15,7 +15,7 @@
 
 namespace NKLog
 {
-	class LogData : public NKCore::TNode2<LogData>
+	class LogData
 	{
 	public:
 		const LogLayout _log_layout;
@@ -56,14 +56,17 @@ namespace NKLog
 	public:
 		bool write(const LogLayout& layout, const LogCategory& category, const NKWString& log);
 		///
+
+	protected:
+		using LogQueue = NKCore::TSpinLockQueue<LogDataSP>;
 		
 	protected:
-		LogDataSP popLogdataQueue(void);
+		LogQueue::iterator_type popLogdataQueue(void);
 		bool write(const LogDataSP& pLogData);
 		bool flush(void);
 
 	protected:
-		NKCore::TWaitFreeQueue<LogData> _logdata_queue;
+		LogQueue _logdata_queue;
 
 		LogThread _log_thread;
 		std::atomic<bool> _start_thread;

@@ -5,105 +5,94 @@
 // 13.09.12
 // packet
 
-#include "../NKCore.h"
+// usally include NKCore.h but it is header only
+#include "../NKCore/ByteStream.h"
+#include "../NKCore/Buffer.h"
+#include "RecvStream.h"
+#include "SendStream.h"
 #include "Protocol.h"
 
 namespace NKNetwork
 {
-	class RecvStream;
-
-	class Packet// : public NKCore::ByteStream
+	class Packet
 	{
-		// for send by protobuf
-	public:
-		//byte *make(uint16_t command, uint16_t size);
-
-		// for send
-	public:
-		/*template<typename T>
-		T *set(uint16_t command);
-		inline bool set(uint16_t command) { return set(command, 0); }
-		template<typename T>
-		bool write(T value);
-		bool write(byte *value, uint16_t size);*/
-
-	protected:
-		//bool set(uint16_t command, uint16_t dataSize);
-
 		// for read by external library
 	public:
-		inline byte *getData(void) const { if (getDataSize() == 0) { return nullptr; } else { return _pProtocolData; } }
+		inline NKCore::byte *getData(void) const { if (getDataSize() == 0) { return nullptr; } else { return _pProtocolData; } }
 
-		// for read
-	public:
-		/*template<typename T>
-		T *getData(void);*/
+		inline PROTOCOLHEAD::size_type getSize(void) const { if (_pHeader != nullptr) { return _pHeader->_size; } return 0; }
 
 	public:
-		//inline bool isSystem(void) const { if (_pHeader != nullptr) { return (_pHeader->_system == (uint16_t)(PROTOCOLSYSTEM::SYSTEM)); } return false; }
-		//inline PROTOCOLSIDE getSide(void) const { if (_pHeader != nullptr) { return (PROTOCOLSIDE)_pHeader->_side; } return PROTOCOLSIDE::REQ; }
 		inline PROTOCOLHEAD::size_type getDataSize(void) const { if (_pHeader != nullptr) { return _pHeader->_size - sizeof(PROTOCOLHEAD); } return 0; }
-		//inline uint16_t getCommandID(void) const { if (_pHeader != nullptr) { return _pHeader->_commandid; } return 0; }
-		/*inline PACKETHEAD *getHeader(void) { return _pHeader; }*/
-
-		// for receive
-	public:
-		bool set(RecvStream& stream);
+		inline uint16_t getCommandID(void) const { if (_pHeader != nullptr) { return _pHeader->_commandid; } return 0; }
 				
 	protected:
 		// @nolimitk 구조체 접근을 위한 interface
 		PROTOCOLHEAD *_pHeader;
-		byte *_pProtocolData;
+		NKCore::byte *_pProtocolData;
 
-		//NKCore::Buffer _buffer;
+		// copy pakcet for asynchronous processing
+	protected:
+		NKCore::ByteStream<NKCore::Buffer> _copy_stream;
+
+	public:
+		Packet(const Packet& param)
+			: _pHeader(nullptr)
+			, _pProtocolData(nullptr)
+			, _copy_stream(param.getSize())
+		{
+			// copy stream
+			_copy_stream.write(reinterpret_cast<NKCore::byte*>(param._pHeader), sizeof(PROTOCOLHEAD));
+			if (param.getDataSize() > 0)
+			{
+				_copy_stream.write(param.getData(), param.getDataSize());
+			}
+
+			// set pointers
+			if (_copy_stream.read((NKCore::byte**)&_pHeader, sizeof(PROTOCOLHEAD)) == false) return;
+			if (getDataSize() > 0)
+			{
+				if (_copy_stream.read(&_pProtocolData, getDataSize()) == false) return;
+			}
+		}
+
+		Packet(RecvStream& stream)
+			: _pHeader(nullptr)
+			, _pProtocolData(nullptr)
+			, _copy_stream(0)
+		{
+			// @TODO exception...
+			if (stream.read((NKCore::byte**)&_pHeader, sizeof(PROTOCOLHEAD)) == false) return;
+			if (getDataSize() > 0)
+			{
+				if (stream.read(&_pProtocolData, getDataSize()) == false) return;
+			}
+		}
+
+		Packet(const SendStream& stream)
+			: _pHeader(nullptr)
+			, _pProtocolData(nullptr)
+			, _copy_stream(0)
+		{
+			_pHeader = reinterpret_cast<PROTOCOLHEAD*>(stream.get());
+			if (_pHeader->_size > sizeof(PROTOCOLHEAD) && stream.getLength() == _pHeader->_size)
+			{
+				_pProtocolData = (stream.get() + sizeof(PROTOCOLHEAD));
+			}
+		}
+		//
 				
 	public:
-		Packet(void);
-		//Packet(NKCore::Buffer&& buffer);
-		//Packet(Packet &param);
-		virtual ~Packet(void);
+		Packet(void)
+			: _pHeader(nullptr)
+			, _pProtocolData(nullptr)
+			, _copy_stream(0)
+		{
+		}
+		virtual ~Packet(void)
+		{
+		}
 	};
-
-	//template<typename T>
-	//T *Packet::set(uint16_t command)
-	//{
-	//	byte *data = Make(command, sizeof(T));
-	//	if (data == nullptr)
-	//	{
-	//		return nullptr;
-	//	}
-
-	//	return reinterpret_cast<T*>(data);
-	//}
-
-	//template<typename T>
-	//bool Packet::write(T value)
-	//{
-	//	if (getRemainSize() < sizeof(T)) return false;
-
-	//	if (ByteStream::write<T>(value) == false)
-	//	{
-	//		return false;
-	//	}
-
-	//	// data size를 업데이트 한다.
-	//	_pHeader->_size += sizeof(T);
-	//	return true;
-	//}
-
-	//template<typename T>
-	//T *Packet::getData(void)
-	//{
-	//	if (getDataSize() < sizeof(T))
-	//	{
-	//		return nullptr;
-	//	}
-	//	else
-	//	{
-	//		pop(sizeof(T) + sizeof(PACKETHEAD));
-	//		return reinterpret_cast<T*>(_pProtocolData);
-	//	}
-	//}
 }
 
 #endif // __PACKET_HEADER__

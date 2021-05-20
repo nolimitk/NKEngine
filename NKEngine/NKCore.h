@@ -13,8 +13,6 @@
 #include "NKCore/DataStructures/TNode.h"
 #include "NKCore/DataStructures/TQueue.h"
 #include "NKCore/DataStructures/TQueueSafe.h"
-#include "NKCore/DataStructures/TIndexedQueue.h"
-#include "NKCore/DataStructures/TSortedList.h"
 #include "NKCore/DataStructures/TWaitFreeQueue.h"
 
 #include "NKCore/NKThread.h"

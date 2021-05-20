@@ -6,66 +6,39 @@
 // realtime-job
 
 #include "..\NKCore.h"
+#include "Serializer.h"
+#include "ExecutionIndex.h"
 
 namespace NKScheduler
 {
-	//class Serializer;
-
 	class RealTimeJob
 	{
-		/*
+		/// references
 	public:
-		bool ReExecute(uint32_t tick);
-		bool ReExecute(void);
-
-	public:
-		void UnRegister(void);
-
-	public:
-		bool TryReserve(void);
-		void ReleaseReserve(void);
-		inline bool GetReserved(void) const { return (_reserved != 0); }
-
-	public:
-		inline void registerAsShort(int slotIndex, uint64_t executeIndex) { registerJob(1, slotIndex, executeIndex); }
-		inline void registerAsLong(uint64_t executeIndex) { registerJob(2, -1, executeIndex); }
-		inline void registerAsInstant(uint64_t executeIndex) { registerJob(3, -1, executeIndex); }
-		inline void registerJob(int slotType, int slotIndex, uint64_t executeIndex) { _slotType = slotType; _slotIndex = slotIndex; _executeSlotIndex = executeIndex; }
-
-	public:
-		inline int getSlotType(void) const { return _slotType; }
-		inline int getSlotIndex(void) const { return _slotIndex; }
-		inline uint64_t getExecuteSlotIndex(void) const { return _executeSlotIndex; }
-
-	public:
-		inline void SetContainer(Serializer *pSerializer) { _pContainer = pSerializer; }
-		inline void SetTick(uint32_t tick) { _tick = tick; }
-		*/
+		SerializerSP _serializer;
+		///
 
 	public:
 		virtual bool onExecute(uint64_t execute_index) = 0;
-		
-		/*
-	protected:
-		// 재등록을 위해 사용한다.
-		Serializer *_pContainer;
-		uint32_t _tick;
-
-	protected:
-		// @transaction reserved에 의해 모두 thread safe하다.
-		volatile uint32_t _reserved;
-		// 1 short, 2 long , 3 instant
-		int _slotType;
-		int _slotIndex;
-		uint64_t _executeSlotIndex;
-		*/
 
 	public:
-		RealTimeJob(void);
-		virtual ~RealTimeJob(void);
+		RealTimeJob(void)
+		{
+		}
+		virtual ~RealTimeJob(void)
+		{
+		}
 	};
 
-	using RealTimeJobSP = std::shared_ptr<RealTimeJob>;
+	class JobSlot : public NKNetwork::EventObject
+	{
+	public:
+		std::shared_ptr<RealTimeJob> _job;
+		std::chrono::milliseconds _interval;
+
+	public:
+		virtual bool onProcess(NKNetwork::EventContext& event_context, uint32_t transferred);
+	};
 }
 
 #endif // __REALTIMEJOB_HEADER__

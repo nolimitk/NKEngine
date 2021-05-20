@@ -6,11 +6,10 @@
 // buffer
 
 #include <memory>
+#include "NKCoreDataTypes.h"
 
 namespace NKCore
 {
-	using byte = unsigned char;
-
 	class Buffer
 	{
 	public:
@@ -28,6 +27,10 @@ namespace NKCore
 			if (size > 0)
 			{
 				_internal = std::make_unique<byte[]>(size);
+			}
+			else
+			{
+				_internal = nullptr;
 			}
 		}
 	};

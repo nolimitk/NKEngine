@@ -5,29 +5,52 @@
 // 16.05.24
 // receive stream
 
-#include "../NKCore.h"
+// usally include NKCore.h but it is header only
+#include "../NKCore/ByteStream.h"
+#include "../NKCore/Buffer.h"
 
 namespace NKNetwork
 {
-	class RecvStream : public NKCore::ByteStream
+	class RecvStream : public NKCore::ByteStream<NKCore::Buffer>
 	{
 	private:
-		ByteStream::write;
+		using ByteStream::write;
 
 	public:
 		// @write, when it write directly on buffer, update the length of buffer.
-		bool update(size_t length);
+		inline bool update(size_t length)
+		{
+			if (_length > size() - length) return false;
+			_length += length;
+			return true;
+		}
 
 	public:
-		bool moveRead(void);
+		bool moveRead(void)
+		{
+			if (_length < _offset) return false;
+			if (_offset == 0) return true;
+			if (_length > _offset)
+			{
+				memmove(get(), get() + _offset, _length - _offset);
+			}
+			_length -= _offset;
+			_offset = 0;
+			return true;
+		}
 
 	public:
-		inline byte* getRemainBuffer(void) const { return get() + _length; }
+		inline NKCore::byte* getRemainBuffer(void) const { return get() + _length; }
 		inline size_t getRemainSize(void) const { return size() - _length; }
 		
 	public:
-		RecvStream(const std::shared_ptr<NKCore::Buffer>& buffer);
-		virtual ~RecvStream(void);
+		RecvStream(size_t size)
+			:ByteStream(size)
+		{
+		}
+		virtual ~RecvStream(void)
+		{
+		}
 	};
 }
 

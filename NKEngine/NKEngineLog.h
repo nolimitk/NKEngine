@@ -6,6 +6,7 @@
 // engine log
 
 #include "NKLog.h"
+#include <cassert>
 
 class NKEngineLog : public NKLog::NKLogger
 {
@@ -31,5 +32,11 @@ using NKEngineLogSingleton = NKCore::Singleton<NKEngineLog>;
 
 #define NKENGINELOG_ERROR_ASSERT(fmt,...)				NKEngineLogSingleton::getInstance()->write(NKEngineLog::LAYOUT_ERROR, __FUNCTIONW__, __LINE__, fmt, __VA_ARGS__); _ASSERT(false);
 #define NKENGINELOG_SOCKETERROR_ASSERT(err,fmt,...) NKEngineLogSingleton::getInstance()->writeSocketError(__FUNCTIONW__, __LINE__, err, fmt, __VA_ARGS__); _ASSERT(false);
+
+/// NKDEBUG
+#define NKENGINELOG_ASSERT_RETURN(expression)			\
+	if (!(expression)) {								\
+		NKEngineLogSingleton::getInstance()->write(NKEngineLog::LAYOUT_ERROR, __FUNCTIONW__, __LINE__, L"assertion, %s", L ## #expression); assert(expression); return false; \
+	}
 
 #endif // __NKENGINELOG_HEADER__

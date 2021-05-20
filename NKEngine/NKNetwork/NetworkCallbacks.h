@@ -47,6 +47,12 @@ namespace NKNetwork
 		void onConnectFailed(const ConnectionSP& connection) override {}
 		void onClosed(const ConnectionSP& connection) override {}
 	};
+
+	class WorkerCallback
+	{
+	public:
+		virtual void onUpdate(int64_t delta) = 0;
+	};
 }
 
 #endif // __NETWORKCALLBACKS_HEADER__

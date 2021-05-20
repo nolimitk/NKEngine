@@ -6,22 +6,26 @@
 // template queue
 // @todo think about the cache hit
 
+#include "TNode.h"
+
 namespace NKCore
 {
-	// T must be derived from TNode
 	template<typename T>
 	class TQueue
 	{
 	public:
-		bool push(T* node);
-		T* pop(void);
-		T* popQueue(void);
-		inline T* pick(void) const { return _head; }
-		bool erase(T* node);
+		using iterator_type = std::shared_ptr<TNode<T>>;
+
+	public:
+		bool push(const T& value);
+		//iterator_type pop(void);
+		iterator_type popQueue(void);
+		inline iterator_type pick(void) const { return _head; };
+		//bool erase(T* node);
 
 	protected:
-		T* _head;
-		T* _tail;
+		iterator_type _head;
+		iterator_type _tail;
 
 	public:
 		TQueue(void)
@@ -40,9 +44,9 @@ namespace NKCore
 	};
 
 	template<typename T>
-	bool TQueue<T>::push(T* node)
+	bool TQueue<T>::push(const T& value)
 	{
-		if (node == nullptr) return false;
+		iterator_type node = std::make_shared<TNode<T>>(value);
 
 		node->setNext(nullptr);
 
@@ -59,7 +63,7 @@ namespace NKCore
 		return true;
 	}
 
-	template<typename T>
+	/*template<typename T>
 	T* TQueue<T>::pop(void)
 	{
 		if (_head == nullptr) return nullptr;
@@ -72,19 +76,19 @@ namespace NKCore
 		node->setNext(nullptr);
 
 		return node;
-	}
+	}*/
 
 	template<typename T>
-	T* TQueue<T>::popQueue(void)
+	typename TQueue<T>::iterator_type TQueue<T>::popQueue(void)
 	{
-		T* node = _head;
+		iterator_type node = _head;
 
 		_tail = _head = nullptr;
 
 		return node;
 	}
 
-	template<typename T>
+	/*template<typename T>
 	bool TQueue<T>::erase(T* node)
 	{
 		if (node == nullptr) return false;
@@ -108,7 +112,7 @@ namespace NKCore
 			node->getPrev()->setNext(node->getNext());
 		}
 		return true;
-	}
+	}*/
 }
 
 #endif // __TQUEUE_HEADER__
